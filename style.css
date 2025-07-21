@@ -30,7 +30,14 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1em;
+  gap: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.form-row label {
+  margin-bottom: 0;
+  min-width: 80px;
+  text-align: right;
 }
 
 label {
@@ -53,7 +60,6 @@ input[type="number"] {
 select:focus,
 input[type="number"]:focus {
   border: 1.5px solid #1976d2;
-  outline: none;
 }
 
 button {
@@ -76,6 +82,11 @@ button {
 button:disabled {
   background: #b0bec5;
   cursor: not-allowed;
+}
+
+.form-row button {
+  align-self: flex-end;
+  margin-top: 0;
 }
 
 h2 {
@@ -114,6 +125,11 @@ h2 {
     flex-direction: column;
     align-items: stretch;
     gap: 0.7em;
+    margin-bottom: 0;
+  }
+  .form-row label {
+    text-align: left;
+    min-width: 0;
   }
   select,
   input[type="number"] {
@@ -126,6 +142,10 @@ h2 {
     margin-right: 0;
     margin-top: 0.7em;
     font-size: 1em;
+  }
+  .form-row button {
+    align-self: stretch;
+    margin-top: 0.7em;
   }
   #result {
     font-size: 0.95em;
