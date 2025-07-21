@@ -21,6 +21,12 @@ ibanOption.textContent = "IBAN";
 typeSelect.appendChild(ibanOption);
 typeSelect.value = "iban"; // Preselect IBAN
 
+// Add UUID v4 option to the generation dropdown
+const uuidOption = document.createElement("option");
+uuidOption.value = "uuidv4";
+uuidOption.textContent = "UUID v4";
+typeSelect.appendChild(uuidOption);
+
 typeLabel.appendChild(typeSelect);
 // app.appendChild(typeLabel); // Moved
 
@@ -82,10 +88,13 @@ resultDiv.style.marginTop = "2em";
 let lastResults = [];
 
 // Import generator(s)
-import("./iban.js").then(({ generateIBAN }) => {
+Promise.all([import("./iban.js"), import("./uuid.js")]).then(([ibanModule, uuidModule]) => {
+  const { generateIBAN } = ibanModule;
+  const { generateUUID } = uuidModule;
   // Map of generator functions by type
   const generators = {
     iban: (args) => generateIBAN(args.country),
+    uuidv4: () => generateUUID(),
     // Add more generators here as needed
   };
 
@@ -96,6 +105,17 @@ import("./iban.js").then(({ generateIBAN }) => {
     }
     return {};
   }
+
+  function updateCountryDropdown() {
+    if (typeSelect.value === "iban") {
+      countryLabel.style.display = "";
+    } else {
+      countryLabel.style.display = "none";
+    }
+  }
+
+  typeSelect.addEventListener("change", updateCountryDropdown);
+  updateCountryDropdown();
 
   function generateData() {
     const type = typeSelect.value;
@@ -167,12 +187,17 @@ countryLabel.style.marginLeft = "";
 amountLabel.style.marginLeft = "";
 generateButton.style.marginLeft = "";
 
+// Create a group for the amount input and label
+const amountGroup = document.createElement("div");
+amountGroup.className = "amount-group";
+amountGroup.appendChild(amountLabel);
+
 // Create a form row container for all controls
 const formRow = document.createElement("div");
 formRow.className = "form-row";
 formRow.appendChild(typeLabel);
 formRow.appendChild(countryLabel);
-formRow.appendChild(amountLabel);
+formRow.appendChild(amountGroup);
 formRow.appendChild(generateButton);
 
 // Move all UI elements after heading

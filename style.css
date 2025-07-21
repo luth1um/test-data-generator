@@ -110,6 +110,25 @@ h2 {
   font-size: 1em;
 }
 
+.amount-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+@media (min-width: 601px) {
+  .amount-group {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  .form-row {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 600px) {
   h1 {
     font-size: 1.5rem;
@@ -150,6 +169,12 @@ h2 {
   #result {
     font-size: 0.95em;
     padding: 0.7em;
+  }
+  .amount-group {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
   }
 }
 
