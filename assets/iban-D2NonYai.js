@@ -1,0 +1,1 @@
+function s(t){if(t==="DE")return i();throw new Error(`IBAN generation for country code '${t}' is not supported.`)}function i(){const t=String(Math.floor(1e7+Math.random()*9e7)),n=String(Math.floor(Math.random()*1e10)).padStart(10,"0"),o=t+n,r="DE",e=o+"131400",a=BigInt(e)%97n,c=String(98n-a).padStart(2,"0");return`${r}${c}${t}${n}`}export{s as generateIBAN};
