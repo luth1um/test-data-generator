@@ -27,7 +27,6 @@ typeLabel.appendChild(typeSelect);
 // Country dropdown (only for IBAN)
 const countryLabel = document.createElement("label");
 countryLabel.textContent = " Country: ";
-countryLabel.style.marginLeft = "1em";
 const countrySelect = document.createElement("select");
 countrySelect.id = "country-select";
 const deOption = document.createElement("option");
@@ -54,7 +53,6 @@ updateCountryDropdown();
 // Number input for how many results to generate
 const amountLabel = document.createElement("label");
 amountLabel.textContent = " Amount: ";
-amountLabel.style.marginLeft = "1em";
 const amountInput = document.createElement("input");
 amountInput.type = "number";
 amountInput.min = "1";
@@ -66,7 +64,6 @@ amountLabel.appendChild(amountInput);
 // Generate button
 const generateButton = document.createElement("button");
 generateButton.textContent = "Generate";
-generateButton.style.marginLeft = "1em";
 // app.appendChild(generateButton); // Moved
 
 // Download button
@@ -123,10 +120,12 @@ import("./iban.js").then(({ generateIBAN }) => {
     if (results.length === 0) {
       downloadButton.style.display = "none";
       resultHeading.style.display = "none";
+      resultSection.style.display = "none";
     } else {
       downloadButton.style.display = "block";
       downloadButton.disabled = false;
       resultHeading.style.display = "block";
+      resultSection.style.display = "block";
     }
   }
 
@@ -160,9 +159,22 @@ resultSection.appendChild(resultHeading);
 resultSection.appendChild(downloadButton);
 resultSection.appendChild(resultDiv);
 
+// Initially hide the result section
+resultSection.style.display = "none";
+
+// Remove marginLeft styles from labels and button
+countryLabel.style.marginLeft = "";
+amountLabel.style.marginLeft = "";
+generateButton.style.marginLeft = "";
+
+// Create a form row container for all controls
+const formRow = document.createElement("div");
+formRow.className = "form-row";
+formRow.appendChild(typeLabel);
+formRow.appendChild(countryLabel);
+formRow.appendChild(amountLabel);
+formRow.appendChild(generateButton);
+
 // Move all UI elements after heading
-app.appendChild(typeLabel);
-app.appendChild(countryLabel);
-app.appendChild(amountLabel);
-app.appendChild(generateButton);
+app.appendChild(formRow);
 app.appendChild(resultSection);
