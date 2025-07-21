@@ -5,6 +5,11 @@ document.getElementById("app").innerText = "Hello, World!";
 const app = document.getElementById("app");
 app.innerHTML = "";
 
+// Add heading
+const heading = document.createElement("h1");
+heading.textContent = "Test Data Generator";
+app.appendChild(heading);
+
 // Dropdown for selecting what to generate
 const typeLabel = document.createElement("label");
 typeLabel.textContent = "Generate: ";
@@ -17,7 +22,7 @@ typeSelect.appendChild(ibanOption);
 typeSelect.value = "iban"; // Preselect IBAN
 
 typeLabel.appendChild(typeSelect);
-app.appendChild(typeLabel);
+// app.appendChild(typeLabel); // Moved
 
 // Country dropdown (only for IBAN)
 const countryLabel = document.createElement("label");
@@ -32,7 +37,7 @@ countrySelect.appendChild(deOption);
 countrySelect.value = "DE";
 
 countryLabel.appendChild(countrySelect);
-app.appendChild(countryLabel);
+// app.appendChild(countryLabel); // Moved
 
 // Show/hide country dropdown based on type selection
 function updateCountryDropdown() {
@@ -56,27 +61,26 @@ amountInput.min = "1";
 amountInput.value = "1";
 amountInput.style.width = "4em";
 amountLabel.appendChild(amountInput);
-app.appendChild(amountLabel);
+// app.appendChild(amountLabel); // Moved
 
 // Generate button
 const generateButton = document.createElement("button");
 generateButton.textContent = "Generate";
 generateButton.style.marginLeft = "1em";
-app.appendChild(generateButton);
+// app.appendChild(generateButton); // Moved
 
 // Download button
 const downloadButton = document.createElement("button");
 downloadButton.textContent = "Download";
 downloadButton.style.marginBottom = "1em";
-downloadButton.style.display = "block";
-downloadButton.disabled = true;
-app.appendChild(downloadButton);
+downloadButton.style.display = "none"; // Initially hidden
+// app.appendChild(downloadButton); // Moved
 
 // Result display
 const resultDiv = document.createElement("div");
 resultDiv.id = "result";
 resultDiv.style.marginTop = "2em";
-app.appendChild(resultDiv);
+// app.appendChild(resultDiv); // Moved
 
 let lastResults = [];
 
@@ -115,8 +119,15 @@ import("./iban.js").then(({ generateIBAN }) => {
     }
     lastResults = results;
     // Display all results
-    resultDiv.innerHTML = "<strong>Results:</strong><br>" + results.map((r) => `<div>${r}</div>`).join("");
-    downloadButton.disabled = results.length === 0;
+    resultDiv.innerHTML = results.map((r) => `<div>${r}</div>`).join("");
+    if (results.length === 0) {
+      downloadButton.style.display = "none";
+      resultHeading.style.display = "none";
+    } else {
+      downloadButton.style.display = "block";
+      downloadButton.disabled = false;
+      resultHeading.style.display = "block";
+    }
   }
 
   generateButton.addEventListener("click", generateData);
@@ -136,3 +147,22 @@ downloadButton.addEventListener("click", () => {
     URL.revokeObjectURL(url);
   }, 0);
 });
+
+// Result section
+const resultSection = document.createElement("div");
+resultSection.style.marginTop = "2em";
+
+const resultHeading = document.createElement("h2");
+resultHeading.textContent = "Results";
+// Initially hide the results heading
+resultHeading.style.display = "none";
+resultSection.appendChild(resultHeading);
+resultSection.appendChild(downloadButton);
+resultSection.appendChild(resultDiv);
+
+// Move all UI elements after heading
+app.appendChild(typeLabel);
+app.appendChild(countryLabel);
+app.appendChild(amountLabel);
+app.appendChild(generateButton);
+app.appendChild(resultSection);
