@@ -1,0 +1,33 @@
+{
+    "name": "test-data-generator",
+    "version": "0.0.1",
+    "type": "module",
+    "private": true,
+    "description": "A simple web app for generating test data.",
+    "main": "index.js",
+    "scripts": {
+        "start": "vite",
+        "clean": "rimraf dist",
+        "format": "prettier --write \"./**/*.{css,html,js,json,md,yaml}\"",
+        "lint": "eslint . --fix",
+        "build": "vite build",
+        "preview": "vite preview",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "deploy": "gh-pages -d dist/test-data-generator"
+    },
+    "keywords": [
+        "test data",
+        "generator"
+    ],
+    "author": "luth1um",
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/css": "0.10.0",
+        "@eslint/js": "9.31.0",
+        "eslint": "9.31.0",
+        "gh-pages": "6.3.0",
+        "prettier": "3.6.2",
+        "rimraf": "6.0.1",
+        "vite": "7.0.5"
+    }
+}
