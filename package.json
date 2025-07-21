@@ -13,7 +13,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gh-pages -d dist/test-data-generator",
+    "deployghpages": "gh-pages -d dist/test-data-generator",
     "prepare": "husky"
   },
   "keywords": [
