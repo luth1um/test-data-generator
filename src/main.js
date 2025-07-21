@@ -1,5 +1,4 @@
 /* global document, Blob, URL, setTimeout */
-document.getElementById("app").innerText = "Hello, World!";
 
 // Create the main container
 const app = document.getElementById("app");
@@ -203,3 +202,5 @@ formRow.appendChild(generateButton);
 // Move all UI elements after heading
 app.appendChild(formRow);
 app.appendChild(resultSection);
+import { initTheme } from "./theme.js";
+initTheme(app);

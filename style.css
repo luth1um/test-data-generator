@@ -4,6 +4,10 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  color: #222;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 h1 {
@@ -12,6 +16,7 @@ h1 {
   color: #222;
   letter-spacing: 1px;
   font-size: 2.2rem;
+  transition: color 0.2s;
 }
 
 #app {
@@ -24,6 +29,9 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1.2em;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-row {
@@ -40,6 +48,30 @@ h1 {
   text-align: right;
 }
 
+.amount-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+.theme-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin-top: 2em;
+  justify-content: flex-end;
+}
+
+.theme-row label {
+  font-weight: 500;
+  margin-bottom: 0;
+  min-width: 0;
+  text-align: left;
+}
+
 label {
   font-weight: 500;
   margin-right: 0.5em;
@@ -52,9 +84,13 @@ input[type="number"] {
   border-radius: 6px;
   font-size: 1em;
   background: #f5f7fa;
-  transition: border 0.2s;
+  transition:
+    border 0.2s,
+    background 0.2s,
+    color 0.2s;
   margin-right: 0;
   min-width: 120px;
+  color: inherit;
 }
 
 select:focus,
@@ -84,11 +120,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.form-row button {
-  align-self: flex-end;
-  margin-top: 0;
-}
-
 h2 {
   margin-top: 2.5em;
   margin-bottom: 0.5em;
@@ -96,6 +127,9 @@ h2 {
   font-size: 1.3em;
   border-bottom: 1px solid #e3e8ee;
   padding-bottom: 0.3em;
+  transition:
+    color 0.2s,
+    border-bottom 0.2s;
 }
 
 #result {
@@ -108,25 +142,15 @@ h2 {
   word-break: break-all;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   font-size: 1em;
+  color: #111;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
-.amount-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-
-@media (min-width: 601px) {
-  .amount-group {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-  .form-row {
-    flex-wrap: wrap;
-  }
+.form-row button {
+  align-self: flex-end;
+  margin-top: 0;
 }
 
 @media (max-width: 600px) {
@@ -162,10 +186,6 @@ h2 {
     margin-top: 0.7em;
     font-size: 1em;
   }
-  .form-row button {
-    align-self: stretch;
-    margin-top: 0.7em;
-  }
   #result {
     font-size: 0.95em;
     padding: 0.7em;
@@ -175,6 +195,10 @@ h2 {
     align-items: stretch;
     margin-top: 0.7em;
     margin-bottom: 0.7em;
+  }
+  .theme-row {
+    justify-content: flex-start;
+    margin-top: 1.2em;
   }
 }
 

@@ -1,0 +1,116 @@
+/* High-contrast dark mode */
+@media (prefers-color-scheme: dark) {
+  body:not(.light-mode) {
+    background: #181a1b;
+    color: #fff;
+  }
+  h1 {
+    color: #fff;
+  }
+  #app {
+    background: #23272b;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.32);
+  }
+  select,
+  input[type="number"] {
+    background: #23272b;
+    border: 1px solid #444;
+    color: #fff;
+  }
+  select:focus,
+  input[type="number"]:focus {
+    border: 1.5px solid #90caf9;
+  }
+  button {
+    background: #90caf9;
+    color: #181a1b;
+  }
+  button:disabled {
+    background: #444;
+    color: #888;
+  }
+  h2 {
+    color: #90caf9;
+    border-bottom: 1px solid #444;
+  }
+  #result {
+    background: #23272b;
+    color: #fff;
+  }
+}
+
+body.dark-mode {
+  background: #181a1b;
+  color: #fff;
+}
+body.dark-mode h1 {
+  color: #fff;
+}
+body.dark-mode #app {
+  background: #23272b;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.32);
+}
+body.dark-mode select,
+body.dark-mode input[type="number"] {
+  background: #23272b;
+  border: 1px solid #444;
+  color: #fff;
+}
+body.dark-mode select:focus,
+body.dark-mode input[type="number"]:focus {
+  border: 1.5px solid #90caf9;
+}
+body.dark-mode button {
+  background: #90caf9;
+  color: #181a1b;
+}
+body.dark-mode button:disabled {
+  background: #444;
+  color: #888;
+}
+body.dark-mode h2 {
+  color: #90caf9;
+  border-bottom: 1px solid #444;
+}
+body.dark-mode #result {
+  background: #23272b;
+  color: #fff;
+}
+
+body.light-mode {
+  background: #f7f9fb;
+  color: #222;
+}
+body.light-mode h1 {
+  color: #222;
+}
+body.light-mode #app {
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+body.light-mode select,
+body.light-mode input[type="number"] {
+  background: #f5f7fa;
+  border: 1px solid #cfd8dc;
+  color: #222;
+}
+body.light-mode select:focus,
+body.light-mode input[type="number"]:focus {
+  border: 1.5px solid #1976d2;
+}
+body.light-mode button {
+  background: #1976d2;
+  color: #fff;
+}
+body.light-mode button:disabled {
+  background: #b0bec5;
+  color: #fff;
+}
+body.light-mode h2 {
+  color: #1976d2;
+  border-bottom: 1px solid #e3e8ee;
+}
+body.light-mode #result {
+  background: #f5f7fa;
+  color: #111;
+}
