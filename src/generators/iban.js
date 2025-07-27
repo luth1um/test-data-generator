@@ -1,8 +1,6 @@
 /**
  * Generates a valid random IBAN for the specified country code.
  *
- * Currently, only 'DE' (Germany) is supported.
- *
  * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
  * @returns {string} A valid, randomly generated IBAN for the given country.
  * @throws {Error} If the country code is not supported.
@@ -12,13 +10,14 @@
  * console.log(iban); // e.g., 'DE44123456781234567890'
  */
 export function generateIBAN(countryCode) {
-  if (countryCode === "DE") {
-    return generateGermanIBAN();
+  switch (countryCode) {
+    case "DE":
+      return generateGermanIBAN();
+    case "NO":
+      return generateNorwegianIBAN();
+    default:
+      throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
   }
-  if (countryCode === "NO") {
-    return generateNorwegianIBAN();
-  }
-  throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
 }
 
 /**
@@ -46,13 +45,8 @@ function generateGermanIBAN() {
   const bban = bankCode + accountNumber;
 
   // Calculate check digits
-  // 1. Move country code and '00' to the end
-  // 2. Replace letters with numbers (A=10, B=11, ..., Z=35)
-  // 3. Calculate 98 - (number mod 97)
   const countryCode = "DE";
-  const replaced = bban + "131400"; // D=13, E=14, 00 for check digits
-  const mod97 = BigInt(replaced) % 97n;
-  const checkDigits = String(98n - mod97).padStart(2, "0");
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
 
   // Assemble IBAN
   return `${countryCode}${checkDigits}${bankCode}${accountNumber}`;
@@ -96,14 +90,25 @@ function generateNorwegianIBAN() {
 
   const bban = bban10 + nationalCheckDigit;
 
-  // Calculate IBAN check digits
+  const countryCode = "NO";
+  const ibanCheckDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  return `${countryCode}${ibanCheckDigits}${bban}`;
+}
+
+/**
+ * Calculates the IBAN check digits for a given country code and BBAN.
+ *
+ * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
+ * @param {string} bban - The BBAN part of the IBAN (country-specific format).
+ * @returns {string} The two check digits as a string.
+ */
+function calculateIBANCheckDigits(countryCode, bban) {
   // 1. Move country code and '00' to the end
   // 2. Replace letters with numbers (A=10, ..., Z=35)
   // 3. Calculate 98 - (number mod 97)
-  const countryCode = "NO";
-  const replaced = bban + "232400"; // N=23, O=24, 00 for check digits
-  const mod97 = BigInt(replaced) % 97n;
-  const ibanCheckDigits = String(98n - mod97).padStart(2, "0");
-
-  return `${countryCode}${ibanCheckDigits}${bban}`;
+  const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString());
+  const rearranged = bban + lettersToNumbers(countryCode) + "00";
+  const mod97 = BigInt(rearranged) % 97n;
+  return String(98n - mod97).padStart(2, "0");
 }
