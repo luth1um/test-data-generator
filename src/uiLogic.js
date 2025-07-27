@@ -38,7 +38,38 @@ export function setupUI(app) {
   amountInput.min = "1";
   amountInput.value = "1";
   amountInput.style.width = "4em";
-  amountLabel.appendChild(amountInput);
+
+  // Create minus and plus buttons
+  const minusButton = document.createElement("button");
+  minusButton.type = "button";
+  minusButton.textContent = "-";
+  minusButton.style.marginLeft = "0.5em";
+  const plusButton = document.createElement("button");
+  plusButton.type = "button";
+  plusButton.textContent = "+";
+  plusButton.style.marginLeft = "0.25em";
+
+  // Button event listeners
+  minusButton.addEventListener("click", () => {
+    let val = parseInt(amountInput.value, 10) || 1;
+    val = Math.max(1, val - 1);
+    amountInput.value = val;
+  });
+  plusButton.addEventListener("click", () => {
+    let val = parseInt(amountInput.value, 10) || 1;
+    val = val + 1;
+    amountInput.value = val;
+  });
+
+  // Group amount input and buttons in a flex row
+  const amountInputGroup = document.createElement("span");
+  amountInputGroup.style.display = "inline-flex";
+  amountInputGroup.style.alignItems = "center";
+  amountInputGroup.appendChild(amountInput);
+  amountInputGroup.appendChild(minusButton);
+  amountInputGroup.appendChild(plusButton);
+
+  amountLabel.appendChild(amountInputGroup);
 
   // Generate button
   const generateButton = document.createElement("button");
