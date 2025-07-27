@@ -21,6 +21,7 @@ class IBANTestConfiguration {
 describe("generateIBAN", () => {
   const COUNTRY_CONFIGS = {
     DE: new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
+    NO: new IBANTestConfiguration("Norwegian", "NO", 15, /^\d+$/),
   };
 
   describe("generateIBAN", () => {

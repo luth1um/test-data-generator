@@ -39,6 +39,12 @@ deOption.textContent = "Germany (DE)";
 countrySelect.appendChild(deOption);
 countrySelect.value = "DE";
 
+// Add Norway
+const noOption = document.createElement("option");
+noOption.value = "NO";
+noOption.textContent = "Norway (NO)";
+countrySelect.appendChild(noOption);
+
 countryLabel.appendChild(countrySelect);
 
 // Show/hide country dropdown based on type selection

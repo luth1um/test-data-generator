@@ -15,6 +15,9 @@ export function generateIBAN(countryCode) {
   if (countryCode === "DE") {
     return generateGermanIBAN();
   }
+  if (countryCode === "NO") {
+    return generateNorwegianIBAN();
+  }
   throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
 }
 
@@ -53,4 +56,54 @@ function generateGermanIBAN() {
 
   // Assemble IBAN
   return `${countryCode}${checkDigits}${bankCode}${accountNumber}`;
+}
+
+/**
+ * Generates a valid random Norwegian IBAN (International Bank Account Number).
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'NO'
+ * - Contain valid check digits
+ * - Use a random 4-digit bank code
+ * - Use a random 6-digit account number
+ *
+ * @returns {string} A valid, randomly generated Norwegian IBAN (e.g., 'NOkkbbbbccccccd')
+ *
+ * @example
+ * const iban = generateNorwegianIBAN();
+ * console.log(iban); // e.g., 'NO9386011117947'
+ */
+function generateNorwegianIBAN() {
+  // Generate random 4-digit bank code (cannot start with 0)
+  const bankCode = String(Math.floor(1000 + Math.random() * 9000));
+  // Generate random 6-digit account number (can start with 0)
+  const accountNumber = String(Math.floor(Math.random() * 1e6)).padStart(6, "0");
+
+  // Calculate Modulus 11 check digit for the 10-digit BBAN
+  let bban10 = bankCode + accountNumber;
+  let weights = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
+  let sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(bban10[i], 10) * weights[i];
+  }
+  let remainder = sum % 11;
+  let nationalCheckDigit = 11 - remainder;
+  if (nationalCheckDigit === 11) nationalCheckDigit = 0;
+  if (nationalCheckDigit === 10) {
+    // Invalid, regenerate
+    return generateNorwegianIBAN();
+  }
+
+  const bban = bban10 + nationalCheckDigit;
+
+  // Calculate IBAN check digits
+  // 1. Move country code and '00' to the end
+  // 2. Replace letters with numbers (A=10, ..., Z=35)
+  // 3. Calculate 98 - (number mod 97)
+  const countryCode = "NO";
+  const replaced = bban + "232400"; // N=23, O=24, 00 for check digits
+  const mod97 = BigInt(replaced) % 97n;
+  const ibanCheckDigits = String(98n - mod97).padStart(2, "0");
+
+  return `${countryCode}${ibanCheckDigits}${bban}`;
 }
