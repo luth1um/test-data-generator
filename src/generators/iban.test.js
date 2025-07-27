@@ -3,59 +3,81 @@ import { generateIBAN } from "./iban.js";
 
 const randomFunctionCallCount = 100;
 
+class IBANTestConfiguration {
+  /**
+   * @param {string} country - Country
+   * @param {string} countryCode - Two-letter country code
+   * @param {number} length - Expected IBAN length
+   * @param {RegExp} bban - Regex pattern for the BBAN part
+   */
+  constructor(country, countryCode, length, bban) {
+    this.country = country;
+    this.countryCode = countryCode;
+    this.length = length;
+    this.bbanFormatRegex = bban;
+  }
+}
+
 describe("generateIBAN", () => {
-  describe("The generator for German IBANs", () => {
-    it("should produce IBANs with correct length", () => {
-      // when
-      const ibans = generateRandomGermanIBANs(randomFunctionCallCount);
+  const COUNTRY_CONFIGS = {
+    DE: new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
+  };
 
-      // then
-      ibans.forEach((iban) => {
-        expect(iban.length).toBe(22);
+  describe("generateIBAN", () => {
+    Object.values(COUNTRY_CONFIGS).forEach((config) => {
+      describe(`The generator for ${config.country} IBANs`, () => {
+        it("should produce IBANs with correct length", () => {
+          // when
+          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+          // then
+          ibans.forEach((iban) => {
+            expect(iban.length).toBe(config.length);
+          });
+        });
+
+        it(`should produce IBANs starting with '${config.countryCode}'`, () => {
+          // when
+          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+
+          // then
+          ibans.forEach((iban) => {
+            const countryCode = iban.substring(0, 2);
+            expect(countryCode).toBe(config.countryCode);
+          });
+        });
+
+        it("should match the country format", () => {
+          // when
+          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+
+          // then
+          ibans.forEach((iban) => {
+            const bban = iban.substring(4);
+            expect(bban).toMatch(config.bbanFormatRegex);
+          });
+        });
+
+        it("should produce IBANs having valid check digits", () => {
+          // when
+          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+
+          // then
+          ibans.forEach((iban) => {
+            const checkDigits = iban.substring(2, 4);
+            const calculatedCheckDigits = generateIBANCheckDigits(iban);
+            expect(checkDigits).toBe(calculatedCheckDigits);
+          });
+        });
+
+        it("should produce different IBANs with each call", () => {
+          // when
+          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+
+          // then
+          const uniqueIbans = new Set(ibans);
+          expect(uniqueIbans.size).toBe(ibans.length);
+        });
       });
-    });
-
-    it("should produce IBANs starting with 'DE'", () => {
-      // when
-      const ibans = generateRandomGermanIBANs(randomFunctionCallCount);
-
-      // then
-      ibans.forEach((iban) => {
-        const countryCode = iban.substring(0, 2);
-        expect(countryCode).toBe("DE");
-      });
-    });
-
-    it("should only have numbers after 'DE'", () => {
-      // when
-      const ibans = generateRandomGermanIBANs(randomFunctionCallCount);
-
-      // then
-      ibans.forEach((iban) => {
-        const rest = iban.substring(2);
-        expect(rest).toMatch(/^\d+$/);
-      });
-    });
-
-    it("should produce IBANs having valid check digits", () => {
-      // when
-      const ibans = generateRandomGermanIBANs(randomFunctionCallCount);
-
-      // then
-      ibans.forEach((iban) => {
-        const checkDigits = iban.substring(2, 4);
-        const calculatedCheckDigits = generateIBANCheckDigits(iban);
-        expect(checkDigits).toBe(calculatedCheckDigits);
-      });
-    });
-
-    it("should produce different IBANs with each call", () => {
-      // when
-      const ibans = generateRandomGermanIBANs(randomFunctionCallCount);
-
-      // then
-      const uniqueIbans = new Set(ibans);
-      expect(uniqueIbans.size).toBe(ibans.length);
     });
   });
 
@@ -106,15 +128,6 @@ function generateRandomIBANs(countryCode, count) {
     ibans.push(generateIBAN(countryCode));
   }
   return ibans;
-}
-
-/**
- * Generates multiple German IBANs.
- * @param {number} count - The number of IBANs to generate.
- * @returns {string[]} Array of generated German IBANs.
- */
-function generateRandomGermanIBANs(count) {
-  return generateRandomIBANs("DE", count);
 }
 
 /**
