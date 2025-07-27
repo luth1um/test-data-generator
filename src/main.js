@@ -27,7 +27,6 @@ uuidOption.textContent = "UUID v4";
 typeSelect.appendChild(uuidOption);
 
 typeLabel.appendChild(typeSelect);
-// app.appendChild(typeLabel); // Moved
 
 // Country dropdown (only for IBAN)
 const countryLabel = document.createElement("label");
@@ -41,7 +40,6 @@ countrySelect.appendChild(deOption);
 countrySelect.value = "DE";
 
 countryLabel.appendChild(countrySelect);
-// app.appendChild(countryLabel); // Moved
 
 // Show/hide country dropdown based on type selection
 function updateCountryDropdown() {
@@ -64,30 +62,26 @@ amountInput.min = "1";
 amountInput.value = "1";
 amountInput.style.width = "4em";
 amountLabel.appendChild(amountInput);
-// app.appendChild(amountLabel); // Moved
 
 // Generate button
 const generateButton = document.createElement("button");
 generateButton.textContent = "Generate";
-// app.appendChild(generateButton); // Moved
 
 // Download button
 const downloadButton = document.createElement("button");
 downloadButton.textContent = "Download";
 downloadButton.style.marginBottom = "1em";
 downloadButton.style.display = "none"; // Initially hidden
-// app.appendChild(downloadButton); // Moved
 
 // Result display
 const resultDiv = document.createElement("div");
 resultDiv.id = "result";
 resultDiv.style.marginTop = "2em";
-// app.appendChild(resultDiv); // Moved
 
 let lastResults = [];
 
 // Import generator(s)
-Promise.all([import("./iban.js"), import("./uuid.js")]).then(([ibanModule, uuidModule]) => {
+Promise.all([import("./generators/iban.js"), import("./generators/uuid.js")]).then(([ibanModule, uuidModule]) => {
   const { generateIBAN } = ibanModule;
   const { generateUUID } = uuidModule;
   // Map of generator functions by type
