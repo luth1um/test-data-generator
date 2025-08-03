@@ -139,3 +139,9 @@ vite.config.ts.timestamp-*
 
 # other files
 .idea
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

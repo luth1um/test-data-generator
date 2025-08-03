@@ -13,6 +13,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "e2e": "playwright test",
     "deployghpages": "gh-pages -d dist/test-data-generator",
     "prepare": "husky"
   },
@@ -28,6 +29,8 @@
   "devDependencies": {
     "@eslint/css": "0.10.0",
     "@eslint/js": "9.32.0",
+    "@playwright/test": "1.54.2",
+    "@types/node": "24.1.0",
     "eslint": "9.32.0",
     "gh-pages": "6.3.0",
     "husky": "9.1.7",

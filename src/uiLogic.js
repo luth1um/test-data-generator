@@ -1,7 +1,14 @@
 /* global document, Blob, URL, setTimeout */
 
-import { createIbanOption, createCountryControls, showCountryControls, getIbanArgs } from "./ibanUi.js";
-import { createUuidOption, getUuidArgs } from "./uuidUi.js";
+import {
+  createIbanOption,
+  createCountryControls,
+  showCountryControls,
+  getIbanArgs,
+  IBAN_OPTION_VALUE,
+} from "./ibanUi.js";
+import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
+import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
 export function setupUI(app) {
   // Add heading
@@ -14,10 +21,11 @@ export function setupUI(app) {
   typeLabel.textContent = "Generate: ";
   const typeSelect = document.createElement("select");
   typeSelect.id = "type-select";
+  typeSelect.setAttribute(DATA_TEST_ID, "select-type");
   // Add IBAN and UUID options using extracted modules
   typeSelect.appendChild(createIbanOption());
   typeSelect.appendChild(createUuidOption());
-  typeSelect.value = "iban"; // Preselect IBAN
+  typeSelect.value = IBAN_OPTION_VALUE; // Preselect IBAN
   typeLabel.appendChild(typeSelect);
 
   // Country controls (only for IBAN)
@@ -73,6 +81,7 @@ export function setupUI(app) {
 
   // Generate button
   const generateButton = document.createElement("button");
+  generateButton.setAttribute(DATA_TEST_ID, "button-generate");
   generateButton.textContent = "Generate";
 
   // Download button
@@ -138,10 +147,10 @@ export function setupUI(app) {
 
     function getSelectedArgs() {
       const type = typeSelect.value;
-      if (type === "iban") {
+      if (type === IBAN_OPTION_VALUE) {
         return getIbanArgs(countrySelect);
       }
-      if (type === "uuidv4") {
+      if (type === UUIDV4_OPTION_VALUE) {
         return getUuidArgs();
       }
       return {};

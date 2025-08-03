@@ -1,8 +1,10 @@
 /* global document */
 
+export const UUIDV4_OPTION_VALUE = "uuidv4";
+
 export function createUuidOption() {
   const uuidOption = document.createElement("option");
-  uuidOption.value = "uuidv4";
+  uuidOption.value = UUIDV4_OPTION_VALUE;
   uuidOption.textContent = "UUID v4";
   return uuidOption;
 }
