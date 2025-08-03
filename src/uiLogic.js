@@ -10,6 +10,17 @@ import {
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
+/**
+ * Sets up the main user interface for the test data generator application.
+ * Creates all UI elements including type selection, country controls, amount input,
+ * generate button, download button, and result display area.
+ *
+ * @param {HTMLElement} app - The main app container element to append UI components to.
+ *
+ * @example
+ * const app = document.getElementById('app');
+ * setupUI(app);
+ */
 export function setupUI(app) {
   // Add heading
   const heading = document.createElement("h1");
@@ -31,10 +42,17 @@ export function setupUI(app) {
   // Country controls (only for IBAN)
   const { countryLabel, countrySelect } = createCountryControls();
 
-  // Show/hide country dropdown based on type selection
+  /**
+   * Updates the visibility of country controls based on the selected generation type.
+   * Shows country controls only when IBAN is selected.
+   *
+   * @example
+   * updateCountryDropdown(); // Updates visibility based on current selection
+   */
   function updateCountryDropdown() {
     showCountryControls(typeSelect.value, countryLabel);
   }
+
   typeSelect.addEventListener("change", updateCountryDropdown);
   updateCountryDropdown();
 
@@ -147,6 +165,15 @@ export function setupUI(app) {
       // Add more generators here as needed
     };
 
+    /**
+     * Gets the arguments for the currently selected generation type.
+     *
+     * @returns {Object} Arguments object for the selected generator type.
+     *
+     * @example
+     * const args = getSelectedArgs();
+     * // Returns: { country: 'DE' } for IBAN or {} for UUID
+     */
     function getSelectedArgs() {
       const type = typeSelect.value;
       if (type === IBAN_OPTION_VALUE) {
@@ -158,6 +185,13 @@ export function setupUI(app) {
       return {};
     }
 
+    /**
+     * Generates test data based on the current UI selections.
+     * Updates the result display and download button visibility.
+     *
+     * @example
+     * generateData(); // Generates data based on current form values
+     */
     function generateData() {
       const type = typeSelect.value;
       const amount = Math.max(1, parseInt(amountInput.value, 10) || 1);

@@ -31,6 +31,16 @@ export function initTheme(app) {
 
   app.appendChild(themeRow);
 
+  /**
+   * Applies the specified theme to the document body.
+   *
+   * @param {string} theme - The theme to apply ('dark', 'light', or 'system').
+   *
+   * @example
+   * applyTheme('dark'); // Applies dark theme
+   * applyTheme('light'); // Applies light theme
+   * applyTheme('system'); // Uses system preference
+   */
   function applyTheme(theme) {
     document.body.classList.remove("dark-mode", "light-mode");
     if (theme === "dark") {
@@ -48,6 +58,15 @@ export function initTheme(app) {
 
   // Listen for system theme changes if 'system' is selected
   let systemThemeListener = null;
+
+  /**
+   * Updates the system theme listener based on the current theme selection.
+   * If 'system' is selected, adds a listener for system theme changes.
+   * If another theme is selected, removes the listener if it exists.
+   *
+   * @example
+   * updateSystemThemeListener(); // Updates listener based on currentTheme
+   */
   function updateSystemThemeListener() {
     if (currentTheme === "system") {
       if (!systemThemeListener) {
