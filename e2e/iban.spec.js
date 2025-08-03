@@ -25,8 +25,8 @@ test.describe("The IBAN Generator", () => {
 
   test("should display country dropdown when IBAN is selected", async ({ page }) => {
     await page.goto(TEST_BASE_URL);
-    await page.selectOption("#type-select", IBAN_OPTION_VALUE);
-    await expect(page.locator("#country-select")).toBeVisible();
+    await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
+    await expect(page.getByTestId("select-country")).toBeVisible();
   });
 
   test("should generate multiple IBANs when amount is increased", async ({ page }) => {
@@ -34,11 +34,11 @@ test.describe("The IBAN Generator", () => {
     const country = IBAN_COUNTRIES[0];
     const amount = 3;
 
-    await page.selectOption("#type-select", IBAN_OPTION_VALUE);
-    await page.selectOption("#country-select", country.code);
-    await page.fill('input[type="number"]', "" + amount);
-    await page.click('button:has-text("Generate")');
-    await page.waitForSelector("#result div");
+    await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
+    await page.getByTestId("select-country").selectOption(country.code);
+    await page.getByTestId("input-amount").fill("" + amount);
+    await page.getByTestId("button-generate").click();
+    await page.getByTestId("div-result").waitFor({ state: "visible" });
 
     const results = await page.locator("#result div").all();
 

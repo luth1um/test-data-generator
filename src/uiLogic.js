@@ -46,6 +46,7 @@ export function setupUI(app) {
   amountInput.min = "1";
   amountInput.value = "1";
   amountInput.style.width = "4em";
+  amountInput.setAttribute(DATA_TEST_ID, "input-amount");
 
   // Create minus and plus buttons
   const minusButton = document.createElement("button");
@@ -93,6 +94,7 @@ export function setupUI(app) {
   // Result display
   const resultDiv = document.createElement("div");
   resultDiv.id = "result";
+  resultDiv.setAttribute(DATA_TEST_ID, "div-result");
   resultDiv.style.marginTop = "2em";
 
   let lastResults = [];

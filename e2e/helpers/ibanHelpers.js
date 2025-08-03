@@ -13,11 +13,8 @@ export async function generateIBANForCountry(page, countryCode) {
   await page.getByTestId("select-country").selectOption(countryCode);
   await page.getByTestId("button-generate").click();
 
-  // Wait for the result to appear
-  await page.waitForSelector("#result div");
-
-  // Get the generated IBAN
-  return await page.locator("#result div").first().textContent();
+  await page.getByTestId("div-result").waitFor({ state: "visible" });
+  return await page.getByTestId("div-result").first().textContent();
 }
 
 /**
