@@ -149,7 +149,7 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml', '**/playwright.config.js') }}
           restore-keys: |
-            ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml', '**/playwright.config.js') }}
+            ${{ runner.os }}-playwright-browsers-
 
       - name: Install browsers for Playwright
         run: pnpm playwright install --with-deps
