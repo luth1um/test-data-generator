@@ -116,3 +116,38 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
+
+  # Run end-to-end tests with Playwright
+  e2e:
+    needs:
+      - static-analysis
+      - build
+      - test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright dependencies
+        run: pnpm playwright install-deps
+
+      - name: Install browsers for Playwright
+        run: pnpm playwright install
+
+      - name: Run E2E tests
+        run: pnpm e2e
