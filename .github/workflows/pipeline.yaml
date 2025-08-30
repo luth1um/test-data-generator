@@ -84,5 +84,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Clean-up of the output directory for build
+        run: pnpm clean
+
       - name: Build the project
-        run: yarn build
+        run: pnpm build
