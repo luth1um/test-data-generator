@@ -11,6 +11,9 @@ on:
 
 env:
   HUSKY: 0
+  ACTIONS_CHECKOUT_VERSION: v4
+  ACTIONS_SETUP_PNPM_VERSION: v4
+  ACTIONS_SETUP_NODE_VERSION: v4
   PNPM_VERSION: "10"
   NODE_VERSION: "24"
 
@@ -20,15 +23,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@${{ env.ACTIONS_CHECKOUT_VERSION }}
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@${{ env.ACTIONS_SETUP_PNPM_VERSION }}
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@${{ env.ACTIONS_SETUP_NODE_VERSION }}
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
