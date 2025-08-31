@@ -72,16 +72,16 @@ jobs:
             STATIC_ANALYSIS_DEPS="@eslint/css|@eslint/js|eslint|husky|prettier"
             
             # Extract added/removed/modified dependencies
-            ADDED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^\+.*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^\+.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
-            REMOVED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^-.*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^-.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
-            MODIFIED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^[+-].*"\([^"]*\)".*/\1/' | sort | uniq -d | tr '\n' ' ')
+            ADDED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^\+.*\"($STATIC_ANALYSIS_DEPS)\":" | sed 's/^\+.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
+            REMOVED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^-.*\"($STATIC_ANALYSIS_DEPS)\":" | sed 's/^-.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
+            MODIFIED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"($STATIC_ANALYSIS_DEPS)\":" | sed 's/^[+-].*"\([^"]*\)".*/\1/' | sort | uniq -d | tr '\n' ' ')
             
             echo "Added dev deps: '$ADDED_DEPS'"
             echo "Removed dev deps: '$REMOVED_DEPS'"
             echo "Modified dev deps: '$MODIFIED_DEPS'"
             
             # Check if any other dependencies changed
-            OTHER_DEPS_CHANGED=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"[^@][^/]*\":" | grep -v -E "^[+-].*\"(STATIC_ANALYSIS_DEPS)\":" | wc -l)
+            OTHER_DEPS_CHANGED=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"[^@][^/]*\":" | grep -v -E "^[+-].*\"($STATIC_ANALYSIS_DEPS)\":" | wc -l)
             
             if [ "$OTHER_DEPS_CHANGED" -eq 0 ] && { [ -n "$ADDED_DEPS" ] || [ -n "$REMOVED_DEPS" ] || [ -n "$MODIFIED_DEPS" ]; }; then
               echo "only-static-analysis-deps-changed=true" >> $GITHUB_OUTPUT
