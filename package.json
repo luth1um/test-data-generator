@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "start": "vite",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist playwright-report test-results",
     "format": "prettier --write \"./**/*.{css,html,js,json,md,prettierrc,yaml}\"",
     "lint": "eslint . --fix",
     "build": "vite build",
