@@ -1,5 +1,11 @@
 /* global document, window */
 
+import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+
+export const TEST_ID_SELECT_THEME = "select-theme";
+export const THEME_OPTION_VALUE_LIGHT = "light";
+export const THEME_OPTION_VALUE_DARK = "dark";
+
 /**
  * Initializes the theme selector and logic.
  * Appends the theme dropdown to the provided container.
@@ -14,14 +20,15 @@ export function initTheme(app) {
   themeLabel.setAttribute("for", "theme-select");
   const themeSelect = document.createElement("select");
   themeSelect.id = "theme-select";
+  themeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_THEME);
   const optionSystem = document.createElement("option");
   optionSystem.value = "system";
   optionSystem.textContent = "System";
   const optionLight = document.createElement("option");
-  optionLight.value = "light";
+  optionLight.value = THEME_OPTION_VALUE_LIGHT;
   optionLight.textContent = "Light";
   const optionDark = document.createElement("option");
-  optionDark.value = "dark";
+  optionDark.value = THEME_OPTION_VALUE_DARK;
   optionDark.textContent = "Dark";
   themeSelect.appendChild(optionSystem);
   themeSelect.appendChild(optionLight);
