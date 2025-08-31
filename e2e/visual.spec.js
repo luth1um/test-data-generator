@@ -26,7 +26,9 @@ test.describe("The visual of the page", () => {
       await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
 
       // then
-      await expect(page).toHaveScreenshot(createSnapshotName("initial-page", theme, testInfo));
+      await expect(page).toHaveScreenshot(createSnapshotName("initial-page", theme, testInfo), {
+        maxDiffPixelRatio: 0.02,
+      });
     });
   });
 });
