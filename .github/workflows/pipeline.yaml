@@ -94,30 +94,8 @@ jobs:
             echo "Files other than lock files changed"
           fi
 
-  # Install dependencies and cache
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
   # Check linting and formatting
   static-analysis:
-    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -146,7 +124,6 @@ jobs:
   # Build the project
   build:
     needs:
-      - prepare
       - detect-dependency-changes
     runs-on: ubuntu-latest
     if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
@@ -177,7 +154,6 @@ jobs:
   # Run unit tests
   test:
     needs:
-      - prepare
       - detect-dependency-changes
     runs-on: ubuntu-latest
     if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
@@ -205,6 +181,7 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     needs:
+      - detect-dependency-changes
       - static-analysis
       - build
       - test
