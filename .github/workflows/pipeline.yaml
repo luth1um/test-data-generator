@@ -15,6 +15,86 @@ env:
   NODE_VERSION: "24"
 
 jobs:
+  # Detect changes in specific dependencies
+  detect-dependency-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      only-static-analysis-deps-changed: ${{ steps.check-changes.outputs.only-static-analysis-deps-changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes in specific dependencies
+        id: check-changes
+        run: |
+          # Get the list of changed files
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For pull requests, compare with the base branch
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            # For pushes, compare with the previous commit
+            CHANGED_FILES=$(git diff --name-only HEAD~1...HEAD)
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          # Check if only package.json and/or pnpm-lock.yaml changed
+          ONLY_LOCK_FILES_CHANGED=true
+          OTHER_FILES_CHANGED=false
+
+          while IFS= read -r file; do
+            if [ -n "$file" ]; then
+              if [ "$file" = "package.json" ] || [ "$file" = "pnpm-lock.yaml" ]; then
+                echo "Lock file changed: $file"
+              else
+                echo "Other file changed: $file"
+                OTHER_FILES_CHANGED=true
+                ONLY_LOCK_FILES_CHANGED=false
+                break
+              fi
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [ "$ONLY_LOCK_FILES_CHANGED" = true ] && [ "$OTHER_FILES_CHANGED" = false ]; then
+            echo "Only lock files changed, checking for specific dependency changes..."
+            
+            # Get the diff of package.json
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              PACKAGE_DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- package.json)
+            else
+              PACKAGE_DIFF=$(git diff HEAD~1...HEAD -- package.json)
+            fi
+            
+            # Check if only the specified dependencies changed
+            STATIC_ANALYSIS_DEPS="@eslint/css|@eslint/js|eslint|husky|prettier"
+            
+            # Extract added/removed/modified dependencies
+            ADDED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^\+.*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^\+.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
+            REMOVED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^-.*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^-.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
+            MODIFIED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"(STATIC_ANALYSIS_DEPS)\":" | sed 's/^[+-].*"\([^"]*\)".*/\1/' | sort | uniq -d | tr '\n' ' ')
+            
+            echo "Added dev deps: '$ADDED_DEPS'"
+            echo "Removed dev deps: '$REMOVED_DEPS'"
+            echo "Modified dev deps: '$MODIFIED_DEPS'"
+            
+            # Check if any other dependencies changed
+            OTHER_DEPS_CHANGED=$(echo "$PACKAGE_DIFF" | grep -E "^[+-].*\"[^@][^/]*\":" | grep -v -E "^[+-].*\"(STATIC_ANALYSIS_DEPS)\":" | wc -l)
+            
+            if [ "$OTHER_DEPS_CHANGED" -eq 0 ] && { [ -n "$ADDED_DEPS" ] || [ -n "$REMOVED_DEPS" ] || [ -n "$MODIFIED_DEPS" ]; }; then
+              echo "only-static-analysis-deps-changed=true" >> $GITHUB_OUTPUT
+              echo "Only development dependencies changed: $ADDED_DEPS $REMOVED_DEPS $MODIFIED_DEPS"
+            else
+              echo "only-static-analysis-deps-changed=false" >> $GITHUB_OUTPUT
+              echo "Other dependencies also changed or no dev deps changed"
+            fi
+          else
+            echo "only-static-analysis-deps-changed=false" >> $GITHUB_OUTPUT
+            echo "Files other than lock files changed"
+          fi
+
   # Install dependencies and cache
   prepare:
     runs-on: ubuntu-latest
@@ -66,8 +146,11 @@ jobs:
 
   # Build the project
   build:
-    needs: prepare
+    needs:
+      - prepare
+      - detect-dependency-changes
     runs-on: ubuntu-latest
+    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -94,8 +177,11 @@ jobs:
 
   # Run unit tests
   test:
-    needs: prepare
+    needs:
+      - prepare
+      - detect-dependency-changes
     runs-on: ubuntu-latest
+    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -120,11 +206,12 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     needs:
+      - detect-dependency-changes
       - static-analysis
       - build
       - test
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' && (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
