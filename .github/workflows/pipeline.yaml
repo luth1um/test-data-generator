@@ -205,6 +205,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Clean-up of the test results
+        run: pnpm clean
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
@@ -218,3 +221,10 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm e2e
+
+      - name: Upload Playwright results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: test-results/
