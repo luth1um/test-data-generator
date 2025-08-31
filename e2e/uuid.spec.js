@@ -9,7 +9,7 @@ import {
 } from "../src/uiLogic.js";
 import { UUIDV4_OPTION_VALUE } from "../src/uuidUi.js";
 
-const UUID_V4_LENGTH = 36;
+const UUID_V4_LENGTH = 35;
 
 test.describe("The UUID v4 generator", () => {
   test("should generate a valid UUID", async ({ page }) => {

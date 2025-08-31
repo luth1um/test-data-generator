@@ -7,7 +7,6 @@ const randomFunctionCallCount = 100;
 describe("generateUUID", () => {
   it("should only return strings", () => {
     // when
-    const a = "a";
     const uuids = Array.from({ length: randomFunctionCallCount }, generateUUID);
 
     // then
