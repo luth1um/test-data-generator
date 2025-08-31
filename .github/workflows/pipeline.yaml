@@ -13,6 +13,7 @@ env:
   HUSKY: 0
   PNPM_VERSION: "10"
   NODE_VERSION: "24"
+  STATIC_ANALYSIS_DEPS: "@eslint/css|@eslint/js|eslint|husky|prettier"
 
 jobs:
   # Detect changes in specific dependencies
@@ -69,8 +70,6 @@ jobs:
             fi
             
             # Check if only the specified dependencies changed
-            STATIC_ANALYSIS_DEPS="@eslint/css|@eslint/js|eslint|husky|prettier"
-            
             # Extract added/removed/modified dependencies
             ADDED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^\+.*\"($STATIC_ANALYSIS_DEPS)\":" | sed 's/^\+.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
             REMOVED_DEPS=$(echo "$PACKAGE_DIFF" | grep -E "^-.*\"($STATIC_ANALYSIS_DEPS)\":" | sed 's/^-.*"\([^"]*\)".*/\1/' | tr '\n' ' ')
@@ -150,7 +149,7 @@ jobs:
       - prepare
       - detect-dependency-changes
     runs-on: ubuntu-latest
-    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true'
+    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -181,7 +180,7 @@ jobs:
       - prepare
       - detect-dependency-changes
     runs-on: ubuntu-latest
-    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true'
+    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -206,12 +205,11 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     needs:
-      - detect-dependency-changes
       - static-analysis
       - build
       - test
     runs-on: ubuntu-latest
-    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' && (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request')
+    if: (needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' && (github.ref == 'refs/heads/main' || github.event_name == 'pull_request')) || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
