@@ -1,5 +1,6 @@
 import { TEST_BASE_URL } from "./endToEndTestConstants.js";
-import { IBAN_OPTION_VALUE } from "../../src/ibanUi.js";
+import { IBAN_OPTION_VALUE, TEST_ID_SELECT_COUNTRY } from "../../src/ibanUi.js";
+import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/uiLogic.js";
 
 /**
  * Helper function to generate an IBAN for a specific country using the UI
@@ -9,12 +10,12 @@ import { IBAN_OPTION_VALUE } from "../../src/ibanUi.js";
  */
 export async function generateIBANForCountry(page, countryCode) {
   await page.goto(TEST_BASE_URL);
-  await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
-  await page.getByTestId("select-country").selectOption(countryCode);
-  await page.getByTestId("button-generate").click();
+  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
+  await page.getByTestId(TEST_ID_SELECT_COUNTRY).selectOption(countryCode);
+  await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
 
-  await page.getByTestId("div-result").waitFor({ state: "visible" });
-  return await page.getByTestId("div-result").first().textContent();
+  await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
+  return await page.getByTestId(TEST_ID_DIV_RESULT).first().textContent();
 }
 
 /**
@@ -24,8 +25,8 @@ export async function generateIBANForCountry(page, countryCode) {
  */
 export async function getSupportedCountries(page) {
   await page.goto(TEST_BASE_URL);
-  await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
-  const countryOptions = await page.getByTestId("select-country").locator("option").all();
+  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
+  const countryOptions = await page.getByTestId(TEST_ID_SELECT_COUNTRY).locator("option").all();
 
   const countries = [];
   for (const option of countryOptions) {

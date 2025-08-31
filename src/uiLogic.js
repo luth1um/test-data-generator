@@ -10,6 +10,14 @@ import {
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
+export const RESULT_DIV_ID = "result";
+export const TEST_ID_SELECT_TYPE = "select-type";
+export const TEST_ID_BUTTON_GENERATE = "button-generate";
+export const TEST_ID_DIV_RESULT = "div-result";
+export const TEST_ID_INPUT_AMOUNT = "input-amount";
+export const TEST_ID_BUTTON_MINUS = "button-minus";
+export const TEST_ID_BUTTON_PLUS = "button-plus";
+
 /**
  * Sets up the main user interface for the test data generator application.
  * Creates all UI elements including type selection, country controls, amount input,
@@ -32,7 +40,7 @@ export function setupUI(app) {
   typeLabel.textContent = "Generate: ";
   const typeSelect = document.createElement("select");
   typeSelect.id = "type-select";
-  typeSelect.setAttribute(DATA_TEST_ID, "select-type");
+  typeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_TYPE);
   // Add IBAN and UUID options using extracted modules
   typeSelect.appendChild(createIbanOption());
   typeSelect.appendChild(createUuidOption());
@@ -64,17 +72,19 @@ export function setupUI(app) {
   amountInput.min = "1";
   amountInput.value = "1";
   amountInput.style.width = "4em";
-  amountInput.setAttribute(DATA_TEST_ID, "input-amount");
+  amountInput.setAttribute(DATA_TEST_ID, TEST_ID_INPUT_AMOUNT);
 
   // Create minus and plus buttons
   const minusButton = document.createElement("button");
   minusButton.type = "button";
   minusButton.textContent = "-";
   minusButton.style.marginLeft = "0.5em";
+  minusButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_MINUS);
   const plusButton = document.createElement("button");
   plusButton.type = "button";
   plusButton.textContent = "+";
   plusButton.style.marginLeft = "0.25em";
+  plusButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_PLUS);
 
   // Button event listeners
   minusButton.addEventListener("click", () => {
@@ -100,7 +110,7 @@ export function setupUI(app) {
 
   // Generate button
   const generateButton = document.createElement("button");
-  generateButton.setAttribute(DATA_TEST_ID, "button-generate");
+  generateButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_GENERATE);
   generateButton.textContent = "Generate";
 
   // Download button
@@ -111,8 +121,8 @@ export function setupUI(app) {
 
   // Result display
   const resultDiv = document.createElement("div");
-  resultDiv.id = "result";
-  resultDiv.setAttribute(DATA_TEST_ID, "div-result");
+  resultDiv.id = RESULT_DIV_ID;
+  resultDiv.setAttribute(DATA_TEST_ID, TEST_ID_DIV_RESULT);
   resultDiv.style.marginTop = "2em";
 
   let lastResults = [];

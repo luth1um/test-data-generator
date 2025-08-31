@@ -2,13 +2,22 @@
 import { test, expect } from "@playwright/test";
 import { generateIBANForCountry, getSupportedCountries } from "./helpers/ibanHelpers.js";
 import { TEST_BASE_URL } from "./helpers/endToEndTestConstants.js";
-import { IBAN_COUNTRIES, IBAN_OPTION_VALUE } from "../src/ibanUi.js";
+import { IBAN_COUNTRIES, IBAN_OPTION_VALUE, TEST_ID_SELECT_COUNTRY } from "../src/ibanUi.js";
+import {
+  RESULT_DIV_ID,
+  TEST_ID_BUTTON_GENERATE,
+  TEST_ID_DIV_RESULT,
+  TEST_ID_INPUT_AMOUNT,
+  TEST_ID_SELECT_TYPE,
+} from "../src/uiLogic.js";
 
-test.describe("The IBAN Generator", () => {
+test.describe("The IBAN generator", () => {
   IBAN_COUNTRIES.forEach((country) => {
     test(`should generate IBANs for ${country.code}`, async ({ page }) => {
+      // when
       const iban = await generateIBANForCountry(page, country.code);
 
+      // then
       expect(iban.substring(0, 2)).toEqual(country.code);
       expect(iban.length).toBeGreaterThanOrEqual(15);
       expect(iban.length).toBeLessThanOrEqual(34);
@@ -19,31 +28,40 @@ test.describe("The IBAN Generator", () => {
   test(`should have all ${IBAN_COUNTRIES.length} specified countries (${IBAN_COUNTRIES.map((c) => c.code).join(", ")}) as options`, async ({
     page,
   }) => {
+    // when
     const countries = await getSupportedCountries(page);
+
+    // then
     expect(countries.length).toEqual(IBAN_COUNTRIES.length);
   });
 
-  test("should display country dropdown when IBAN is selected", async ({ page }) => {
+  test("should display the country dropdown when IBAN is selected", async ({ page }) => {
+    // when
     await page.goto(TEST_BASE_URL);
-    await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
-    await expect(page.getByTestId("select-country")).toBeVisible();
+    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
+
+    // then
+    await expect(page.getByTestId(TEST_ID_SELECT_COUNTRY)).toBeVisible();
   });
 
   test("should generate multiple IBANs when amount is increased", async ({ page }) => {
-    await page.goto(TEST_BASE_URL);
+    // given
     const country = IBAN_COUNTRIES[0];
     const amount = 3;
 
-    await page.getByTestId("select-type").selectOption(IBAN_OPTION_VALUE);
-    await page.getByTestId("select-country").selectOption(country.code);
-    await page.getByTestId("input-amount").fill("" + amount);
-    await page.getByTestId("button-generate").click();
-    await page.getByTestId("div-result").waitFor({ state: "visible" });
+    // when
+    await page.goto(TEST_BASE_URL);
+    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
+    await page.getByTestId(TEST_ID_SELECT_COUNTRY).selectOption(country.code);
+    await page.getByTestId(TEST_ID_INPUT_AMOUNT).fill("" + amount);
+    await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
+    await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
 
-    const results = await page.locator("#result div").all();
+    const ibanResults = await page.locator(`#${RESULT_DIV_ID} div`).all();
 
-    expect(results).toHaveLength(amount);
-    for (const result of results) {
+    // then
+    expect(ibanResults).toHaveLength(amount);
+    for (const result of ibanResults) {
       const iban = await result.textContent();
       expect(iban).toMatch(/^[A-Z0-9]+$/);
     }

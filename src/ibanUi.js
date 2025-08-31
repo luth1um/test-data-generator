@@ -2,6 +2,8 @@
 
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
+export const TEST_ID_SELECT_COUNTRY = "select-country";
+
 export const IBAN_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
   { code: "NO", name: "Norway (NO)" },
@@ -41,7 +43,7 @@ export function createCountryControls() {
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select";
-  countrySelect.setAttribute(DATA_TEST_ID, "select-country");
+  countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_COUNTRY);
   IBAN_COUNTRIES.forEach(({ code, name }) => {
     const option = document.createElement("option");
     option.value = code;

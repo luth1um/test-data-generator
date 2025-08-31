@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateUUID } from "./uuid.js";
 
+const UUID_V4_LENGTH = 36;
 const randomFunctionCallCount = 100;
 
 describe("generateUUID", () => {
@@ -14,13 +15,13 @@ describe("generateUUID", () => {
     });
   });
 
-  it("should return strings with a length of 36 characters", () => {
+  it(`should return strings with a length of ${UUID_V4_LENGTH} characters`, () => {
     // when
     const uuids = Array.from({ length: randomFunctionCallCount }, generateUUID);
 
     // then
     uuids.forEach((uuid) => {
-      expect(uuid).toHaveLength(36);
+      expect(uuid).toHaveLength(UUID_V4_LENGTH);
     });
   });
 
