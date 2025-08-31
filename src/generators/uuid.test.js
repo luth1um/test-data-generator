@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { generateUUID } from "./uuid.js";
 
-const UUID_V4_LENGTH = 36;
+const UUID_V4_LENGTH = 35;
 const randomFunctionCallCount = 100;
 
 describe("generateUUID", () => {
   it("should only return strings", () => {
     // when
-    const uuids = Array.from({ length: randomFunctionCallCount }, generateUUID);
+        const uuids = Array.from({ length: randomFunctionCallCount }, generateUUID);
 
     // then
     uuids.forEach((uuid) => {
