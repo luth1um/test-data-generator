@@ -18,101 +18,100 @@ class IBANTestConfiguration {
   }
 }
 
+const COUNTRY_CONFIGS = [
+  new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
+  new IBANTestConfiguration("Norwegian", "NO", 15, /^\d+$/),
+];
+
 describe("generateIBAN", () => {
-  const COUNTRY_CONFIGS = {
-    DE: new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
-    NO: new IBANTestConfiguration("Norwegian", "NO", 15, /^\d+$/),
-  };
+  COUNTRY_CONFIGS.forEach((config) => {
+    describe(`The generator for ${config.country} IBANs`, () => {
+      it("should produce IBANs with correct length", () => {
+        // when
+        const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
 
-  describe("generateIBAN", () => {
-    Object.values(COUNTRY_CONFIGS).forEach((config) => {
-      describe(`The generator for ${config.country} IBANs`, () => {
-        it("should produce IBANs with correct length", () => {
-          // when
-          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
-          // then
-          ibans.forEach((iban) => {
-            expect(iban.length).toBe(config.length);
-          });
+        // then
+        ibans.forEach((iban) => {
+          expect(iban.length).toBe(config.length);
         });
+      });
 
-        it(`should produce IBANs starting with '${config.countryCode}'`, () => {
-          // when
-          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+      it(`should produce IBANs starting with '${config.countryCode}'`, () => {
+        // when
+        const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
 
-          // then
-          ibans.forEach((iban) => {
-            const countryCode = iban.substring(0, 2);
-            expect(countryCode).toBe(config.countryCode);
-          });
+        // then
+        ibans.forEach((iban) => {
+          const countryCode = iban.substring(0, 2);
+          expect(countryCode).toBe(config.countryCode);
         });
+      });
 
-        it("should match the country format", () => {
-          // when
-          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+      it("should match the country format", () => {
+        // when
+        const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
 
-          // then
-          ibans.forEach((iban) => {
-            const bban = iban.substring(4);
-            expect(bban).toMatch(config.bbanFormatRegex);
-          });
+        // then
+        ibans.forEach((iban) => {
+          const bban = iban.substring(4);
+          expect(bban).toMatch(config.bbanFormatRegex);
         });
+      });
 
-        it("should produce IBANs having valid check digits", () => {
-          // when
-          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+      it("should produce IBANs having valid check digits", () => {
+        // when
+        const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
 
-          // then
-          ibans.forEach((iban) => {
-            const checkDigits = iban.substring(2, 4);
-            const calculatedCheckDigits = generateIBANCheckDigits(iban);
-            expect(checkDigits).toBe(calculatedCheckDigits);
-          });
+        // then
+        ibans.forEach((iban) => {
+          const checkDigits = iban.substring(2, 4);
+          const calculatedCheckDigits = generateIBANCheckDigits(iban);
+          expect(checkDigits).toBe(calculatedCheckDigits);
         });
+      });
 
-        it("should produce different IBANs with each call", () => {
-          // when
-          const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+      it("should produce different IBANs with each call", () => {
+        // when
+        const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
 
-          // then
-          const uniqueIbans = new Set(ibans);
-          expect(uniqueIbans.size).toBe(ibans.length);
-        });
+        // then
+        const uniqueIbans = new Set(ibans);
+        expect(uniqueIbans.size).toBe(ibans.length);
       });
     });
   });
+});
 
-  describe("The error handling", () => {
-    it("should throw an error for unsupported country codes", () => {
-      // given
-      const unsupportedCountries = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
+describe("The error handling of the IBAN generator", () => {
+  it("should throw an error for unsupported country codes", () => {
+    // given
+    const unsupportedCountries = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
 
-      // when / then
-      unsupportedCountries.forEach((countryCode) => {
-        expect(() => generateIBAN(countryCode)).toThrow(
-          `IBAN generation for country code '${countryCode}' is not supported.`
-        );
-      });
+    // when / then
+    unsupportedCountries.forEach((countryCode) => {
+      expect(() => generateIBAN(countryCode)).toThrow(
+        `IBAN generation for country code '${countryCode}' is not supported.`
+      );
     });
+  });
 
-    it("should throw an error for invalid country code format", () => {
-      // given
-      const invalidCountryCodes = ["", "D", "DEU", "de"];
+  it("should throw an error for invalid country code format", () => {
+    // given
+    const invalidCountryCodes = ["", "D", "DEU", "de"];
 
-      // when / then
-      invalidCountryCodes.forEach((invalidCountryCode) => {
-        expect(() => generateIBAN(invalidCountryCode)).toThrow();
-      });
+    // when / then
+    invalidCountryCodes.forEach((invalidCountryCode) => {
+      expect(() => generateIBAN(invalidCountryCode)).toThrow();
     });
+  });
 
-    it("should throw an error for non-string inputs", () => {
-      // given
-      const nonStringInputs = [null, undefined, 123, {}, []];
+  it("should throw an error for non-string inputs", () => {
+    // given
+    const nonStringInputs = [null, undefined, 123, {}, []];
 
-      // when / then
-      nonStringInputs.forEach((input) => {
-        expect(() => generateIBAN(input)).toThrow();
-      });
+    // when / then
+    nonStringInputs.forEach((input) => {
+      expect(() => generateIBAN(input)).toThrow();
     });
   });
 });
