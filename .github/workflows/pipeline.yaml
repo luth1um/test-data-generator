@@ -287,8 +287,9 @@ jobs:
           result_e2e="${{ needs.e2e.result }}"
           fail=0
           for result in result_static_analysis result_build result_test result_e2e; do
-            echo "result value: $result"
-            if [ "$result" = "failure" ]; then
+            value="${!var}"
+            echo "result value: $value"
+            if [ "$value" = "failure" ]; then
               fail=1
             fi
           done
