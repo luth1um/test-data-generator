@@ -20,7 +20,7 @@ env:
 
 jobs:
   # Detect changes in specific dependencies
-  detect-dependency-changes:
+  detect-dep-changes:
     runs-on: ubuntu-latest
     outputs:
       only-static-analysis-deps-changed: ${{ steps.check-changes.outputs.only-static-analysis-deps-changed }}
@@ -127,9 +127,9 @@ jobs:
   # Build the project
   build:
     needs:
-      - detect-dependency-changes
+      - detect-dep-changes
     runs-on: ubuntu-latest
-    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.detect-dep-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -157,9 +157,9 @@ jobs:
   # Run unit tests
   test:
     needs:
-      - detect-dependency-changes
+      - detect-dep-changes
     runs-on: ubuntu-latest
-    if: needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.detect-dep-changes.outputs.only-static-analysis-deps-changed != 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
