@@ -49,7 +49,7 @@ test.describe("The buttons for increasing and decreased the amount of results", 
     const results = await page.locator(`#${RESULT_DIV_ID} div`).all();
 
     // then
-    expect(results).toHaveLength(1);
+    expect(results).toHaveLength(2);
   });
 });
 
