@@ -287,11 +287,9 @@ jobs:
           result_e2e="${{ needs.e2e.result }}"
           fail=0
           for result in result_static_analysis result_build result_test result_e2e; do
+            echo "result value: $result"
             if [ "$result" = "failure" ]; then
-              echo "$job failed"
               fail=1
-            else
-              echo "$job: $result" # success and skipped count as pass
             fi
           done
           if [ $fail -eq 1 ]; then
