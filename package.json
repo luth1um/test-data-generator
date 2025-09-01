@@ -26,7 +26,7 @@
   "author": "luth1um",
   "license": "MIT",
   "dependencies": {
-    "uuid": "10.0.0"
+    "uuid": "11.1.0"
   },
   "devDependencies": {
     "@eslint/css": "0.11.0",
