@@ -13,7 +13,7 @@ env:
   HUSKY: 0
   PNPM_VERSION: "10"
   NODE_VERSION: "24"
-  STATIC_ANALYSIS_DEPS: "@eslint/css|@eslint/js|eslint|husky|prettier"
+  STATIC_ANALYSIS_DEPS: "@eslint/css|@eslint/js|eslint|gh-pages|husky|lint-staged|prettier"
 
 jobs:
   # Detect changes in specific dependencies
@@ -181,12 +181,11 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     needs:
-      - detect-dependency-changes
       - static-analysis
       - build
       - test
     runs-on: ubuntu-latest
-    if: (needs.detect-dependency-changes.outputs.only-static-analysis-deps-changed != 'true' && (github.ref == 'refs/heads/main' || github.event_name == 'pull_request')) || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
