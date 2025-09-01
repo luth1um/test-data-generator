@@ -61,6 +61,7 @@ describe("generateIBAN", () => {
       it("should produce IBANs having valid check digits", () => {
         // when
         const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
+        console.log("This is a test.");
 
         // then
         ibans.forEach((iban) => {
