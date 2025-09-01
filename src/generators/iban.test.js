@@ -61,7 +61,6 @@ describe("generateIBAN", () => {
       it("should produce IBANs having valid check digits", () => {
         // when
         const ibans = generateRandomIBANs(config.countryCode, randomFunctionCallCount);
-        console.log("This is a test.");
 
         // then
         ibans.forEach((iban) => {
@@ -83,7 +82,7 @@ describe("generateIBAN", () => {
   });
 });
 
-describe("The error handling of the IBAN generator", () => {
+describe("Test: The error handling of the IBAN generator", () => {
   it("should throw an error for unsupported country codes", () => {
     // given
     const unsupportedCountries = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
