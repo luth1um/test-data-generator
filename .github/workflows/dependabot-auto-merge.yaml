@@ -5,6 +5,9 @@ permissions:
   pull-requests: write
   contents: write
 
+env:
+  GH_TOKEN: ${{ secrets.WORKFLOW_UPDATES }}
+
 jobs:
   dependabot:
     runs-on: ubuntu-latest
@@ -16,5 +19,3 @@ jobs:
 
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
-        env:
-          GH_TOKEN: ${{ secrets.WORKFLOW_UPDATES }}
