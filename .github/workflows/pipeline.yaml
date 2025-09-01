@@ -281,9 +281,12 @@ jobs:
     steps:
       - name: Check job status
         run: |
+          result_static_analysis="${{ needs.static-analysis.result }}"
+          result_build="${{ needs.build.result }}"
+          result_test="${{ needs.test.result }}"
+          result_e2e="${{ needs.e2e.result }}"
           fail=0
-          for job in static-analysis build test e2e; do
-            result="${{ needs[$job].result }}"
+          for result in result_static_analysis result_build result_test result_e2e; do
             if [ "$result" = "failure" ]; then
               echo "$job failed"
               fail=1
