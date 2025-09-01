@@ -1,4 +1,3 @@
-// Generates a random UUID v4 using the 'uuid' package
 import { v4 as uuidv4 } from "uuid";
 
 /**
