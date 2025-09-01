@@ -11,12 +11,15 @@ import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js"
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
 export const RESULT_DIV_ID = "result";
+export const DOWNLOAD_FILENAME = "test-data.txt";
+
 export const TEST_ID_SELECT_TYPE = "select-type";
 export const TEST_ID_BUTTON_GENERATE = "button-generate";
 export const TEST_ID_DIV_RESULT = "div-result";
 export const TEST_ID_INPUT_AMOUNT = "input-amount";
 export const TEST_ID_BUTTON_MINUS = "button-minus";
 export const TEST_ID_BUTTON_PLUS = "button-plus";
+export const TEST_ID_BUTTON_DOWNLOAD = "button-download";
 
 /**
  * Sets up the main user interface for the test data generator application.
@@ -118,6 +121,7 @@ export function setupUI(app) {
   downloadButton.textContent = "Download";
   downloadButton.style.marginBottom = "1em";
   downloadButton.style.display = "none"; // Initially hidden
+  downloadButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_DOWNLOAD);
 
   // Result display
   const resultDiv = document.createElement("div");
@@ -243,7 +247,7 @@ export function setupUI(app) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "test-data.txt";
+    a.download = DOWNLOAD_FILENAME;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {

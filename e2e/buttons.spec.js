@@ -1,13 +1,18 @@
 import { test, expect } from "@playwright/test";
 import { TEST_BASE_URL } from "./helpers/endToEndTestConstants.js";
 import {
+  DOWNLOAD_FILENAME,
   RESULT_DIV_ID,
+  TEST_ID_BUTTON_DOWNLOAD,
   TEST_ID_BUTTON_GENERATE,
   TEST_ID_BUTTON_MINUS,
   TEST_ID_BUTTON_PLUS,
   TEST_ID_DIV_RESULT,
 } from "../src/uiLogic.js";
 import { clickButton } from "./helpers/buttonHelpers.js";
+import { generateIBANForCountry } from "./helpers/ibanHelpers.js";
+import { IBAN_COUNTRIES } from "../src/ibanUi.js";
+import fs from "fs/promises";
 
 test.describe("The buttons for increasing and decreased the amount of results", () => {
   test("should increase and decrease the number of results correctly", async ({ page }) => {
@@ -45,5 +50,24 @@ test.describe("The buttons for increasing and decreased the amount of results", 
 
     // then
     expect(results).toHaveLength(1);
+  });
+});
+
+test.describe("When pressing the download button", () => {
+  test("the generator results should be downloaded", async ({ page }) => {
+    // given
+    const generatedIban = await generateIBANForCountry(page, IBAN_COUNTRIES[0].code);
+
+    // when
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByTestId(TEST_ID_BUTTON_DOWNLOAD).click(),
+    ]);
+
+    // then
+    expect(download.suggestedFilename()).toBe(DOWNLOAD_FILENAME);
+    const path = await download.path();
+    const content = await fs.readFile(path, "utf-8");
+    expect(content).toEqual(generatedIban);
   });
 });
