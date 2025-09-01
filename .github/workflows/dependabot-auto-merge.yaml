@@ -6,7 +6,8 @@ permissions:
   contents: write
 
 env:
-  GH_TOKEN: ${{ secrets.WORKFLOW_UPDATES }}
+  GH_TOKEN: ${{ github.token }}
+  #GH_TOKEN: ${{ secrets.WORKFLOW_UPDATES }} # TODO: delete this line?
 
 jobs:
   dependabot:
