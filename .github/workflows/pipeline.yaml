@@ -268,3 +268,29 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist/test-data-generator
+
+  # Check whether all jobs succeeded/skipped that are potentially run for pull requests (needed to block PRs in case of pipeline fails)
+  pr-jobs-succeeded:
+    needs:
+      - static-analysis
+      - build
+      - test
+      - e2e
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check job status
+        run: |
+          fail=0
+          for job in static-analysis build test e2e; do
+            result="${{ needs[$job].result }}"
+            if [ "$result" = "failure" ]; then
+              echo "$job failed"
+              fail=1
+            else
+              echo "$job: $result" # success and skipped count as pass
+            fi
+          done
+          if [ $fail -eq 1 ]; then
+            exit 1
+          fi
