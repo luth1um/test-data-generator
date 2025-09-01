@@ -66,7 +66,7 @@ describe("generateIBAN", () => {
         ibans.forEach((iban) => {
           const checkDigits = iban.substring(2, 4);
           const calculatedCheckDigits = generateIBANCheckDigits(iban);
-          expect(checkDigits).toBe(calculatedCheckDigits);
+          expect(checkDigits).toBe(calculatedCheckDigits + "a");
         });
       });
 
