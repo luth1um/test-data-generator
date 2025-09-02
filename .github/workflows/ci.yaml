@@ -1,7 +1,8 @@
-name: CI/CD pipeline
+name: CI pipeline
 
 # Note: combination of "on push" and "on pull_request_target" results in two pipelines if a PR is merged with a merge
-# commit. However, that rarely happens and will not be fixed.
+# commit. However, that rarely happens and will not be fixed. "On push" is needed to trigger the workflow on direct
+# pushes to main. "on pull_request_target" is needed for fast-forward merges.
 on:
   push:
     branches:
