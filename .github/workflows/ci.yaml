@@ -1,18 +1,10 @@
 name: CI pipeline
 
-# Note: combination of "on push" and "on pull_request_target" results in two pipelines if a PR is merged with a merge
-# commit. However, that rarely happens and will not be fixed. "On push" is needed to trigger the workflow on direct
-# pushes to main. "on pull_request_target" is needed for fast-forward merges.
 on:
   push:
     branches:
       - "**"
   pull_request:
-    branches:
-      - main
-  pull_request_target:
-    types:
-      - closed
     branches:
       - main
   workflow_dispatch:
@@ -29,7 +21,6 @@ jobs:
   # Check linting and formatting
   static-analysis:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' || github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -57,7 +48,6 @@ jobs:
   # Build the project
   build:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' || github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -85,7 +75,6 @@ jobs:
   # Run unit tests
   test:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' || github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
