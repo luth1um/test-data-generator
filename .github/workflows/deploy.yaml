@@ -26,37 +26,44 @@ jobs:
         with:
           ref: main
 
-      - name: Verify commit is on main
+      - id: verify_commit
         run: |
           COMMIT_SHA=${{ github.event.workflow_run.head_sha }}
           if git merge-base --is-ancestor $COMMIT_SHA HEAD; then
             echo "Commit is on main, continue"
+            echo "on_main=true" >> $GITHUB_OUTPUT
           else
             echo "Commit not on main, skipping deploy"
-            exit 0
+            echo "on_main=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Setup pnpm
+        if: steps.verify_commit.outputs.on_main == 'true'
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
+        if: steps.verify_commit.outputs.on_main == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
 
       - name: Install dependencies
+        if: steps.verify_commit.outputs.on_main == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Clean-up of the output directory
+        if: steps.verify_commit.outputs.on_main == 'true'
         run: pnpm clean
 
       - name: Build the project
+        if: steps.verify_commit.outputs.on_main == 'true'
         run: pnpm build
 
       - name: Deploy to GitHub Pages
+        if: steps.verify_commit.outputs.on_main == 'true'
         uses: JamesIves/github-pages-deploy-action@15de0f09300eea763baee31dff6c6184995c5f6a #v4.7.2
         with:
           folder: dist/test-data-generator
