@@ -1,4 +1,4 @@
-name: CI pipeline
+name: CI/CD pipeline
 
 on:
   push:
@@ -14,8 +14,8 @@ permissions:
 
 env:
   HUSKY: 0
-  PNPM_VERSION: "10"
-  NODE_VERSION: "24"
+  PNPM_VERSION: "10.4.0"
+  NODE_VERSION: "24.6.0"
 
 jobs:
   # Check linting and formatting
@@ -31,7 +31,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
@@ -58,7 +58,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
@@ -85,7 +85,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
@@ -114,7 +114,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
@@ -141,8 +141,45 @@ jobs:
 
       - name: Upload Playwright results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
         with:
           name: playwright-results
           path: test-results/
           retention-days: 21
+
+  # Deploy to GitHub Pages
+  deploy:
+    needs:
+      - e2e
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: deploy_gh_pages
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e #v4.3.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Clean-up of the test results
+        run: pnpm clean
+
+      - name: Build the project
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3
+        with:
+          folder: dist/test-data-generator
