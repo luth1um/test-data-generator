@@ -1,10 +1,17 @@
 name: CI/CD pipeline
 
+# Note: combination of "on push" and "on pull_request_target" results in two pipelines if a PR is merged with a merge
+# commit. However, that rarely happens and will not be fixed.
 on:
   push:
     branches:
       - "**"
   pull_request:
+    branches:
+      - main
+  pull_request_target:
+    types:
+      - closed
     branches:
       - main
   workflow_dispatch:
