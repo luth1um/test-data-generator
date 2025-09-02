@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows:
+      - "CI pipeline"
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+env:
+  HUSKY: 0
+  PNPM_VERSION: "10"
+  NODE_VERSION: "24"
+
+jobs:
+  # Deploy to GitHub Pages
+  deploy-gh-pages:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: main
+
+      - name: Verify commit is on main
+        run: |
+          COMMIT_SHA=${{ github.event.workflow_run.head_sha }}
+          if git merge-base --is-ancestor $COMMIT_SHA HEAD; then
+            echo "Commit is on main, continue"
+          else
+            echo "Commit not on main, skipping deploy"
+            exit 0
+          fi
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Clean-up of the output directory
+        run: pnpm clean
+
+      - name: Build the project
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/test-data-generator
