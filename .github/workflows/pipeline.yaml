@@ -9,7 +9,8 @@ on:
       - main
   # schedule for periodic deployments of Dependabot updates
   schedule:
-    - cron: "1 14 * * 2"
+    - cron: "10 14 * * *"
+    - cron: "15 16 * * *"
   workflow_dispatch:
 
 permissions:
