@@ -19,6 +19,7 @@ env:
   HUSKY: 0
   PNPM_VERSION: "10"
   NODE_VERSION: "24"
+  BUILD_ARTIFACT_NAME: "test-data-generator-build-output"
 
 jobs:
   # Check linting and formatting
@@ -74,6 +75,14 @@ jobs:
 
       - name: Build the project
         run: pnpm build
+
+      - name: Upload build artifact
+        uses: upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
+        with:
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: "dist/"
+          if-no-files-found: "error"
+          retention-days: 1
 
   # Run unit tests
   test:
@@ -148,7 +157,7 @@ jobs:
         with:
           name: playwright-results
           path: test-results/
-          retention-days: 21
+          retention-days: 7
 
   # Deploy to GitHub Pages
   deploy:
@@ -159,28 +168,10 @@ jobs:
     concurrency:
       group: deploy_gh_pages
     steps:
-      - name: Checkout code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
+      - name: Download build artifact
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 #v5.0.0
         with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 #v4.4.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Clean-up of the test results
-        run: pnpm clean
-
-      - name: Build the project
-        run: pnpm build
+          name: ${{ env.BUILD_ARTIFACT_NAME }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3
