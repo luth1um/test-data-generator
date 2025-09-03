@@ -20,6 +20,7 @@ env:
   PNPM_VERSION: "10"
   NODE_VERSION: "24"
   BUILD_ARTIFACT_NAME: "test-data-generator-build-output"
+  BUILD_ARTIFACT_DOWNLOAD_FOLDER: "build-test-data-generator"
 
 jobs:
   # Check linting and formatting
@@ -172,8 +173,9 @@ jobs:
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 #v5.0.0
         with:
           name: ${{ env.BUILD_ARTIFACT_NAME }}
+          path: ${{ env.BUILD_ARTIFACT_DOWNLOAD_FOLDER }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3
         with:
-          folder: "test-data-generator"
+          folder: ${{ env.BUILD_ARTIFACT_DOWNLOAD_FOLDER }}
