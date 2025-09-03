@@ -78,6 +78,7 @@ jobs:
         run: pnpm build
 
       - name: Upload build artifact
+        if: github.ref == 'refs/heads/main' # build artifact is only needed for deployment
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
         with:
           name: ${{ env.BUILD_ARTIFACT_NAME }}
