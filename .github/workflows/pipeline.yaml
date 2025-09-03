@@ -179,6 +179,11 @@ jobs:
           name: ${{ env.BUILD_ARTIFACT_NAME }}
           path: ${{ env.BUILD_ARTIFACT_FOLDER }}
 
+      - name: List downloaded artifact files
+        run: |
+          echo "Contents of ${{ env.BUILD_ARTIFACT_FOLDER }}:"
+          ls -R "${{ env.BUILD_ARTIFACT_FOLDER }}"
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3
         with:
