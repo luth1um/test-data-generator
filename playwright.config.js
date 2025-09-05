@@ -1,7 +1,10 @@
 /* global process */
 // @ts-check
 import { defineConfig, devices } from "@playwright/test";
-import { TEST_BASE_URL } from "./e2e/helpers/endToEndTestConstants.js";
+
+export const PROJECT_NAME_MOBILE_CHROME = "Mobile Chrome";
+export const PROJECT_NAME_MOBILE_SAFARI = "Mobile Safari";
+export const TEST_BASE_URL = "http://localhost:5173/test-data-generator/";
 
 /**
  * Read environment variables from file.
@@ -54,11 +57,11 @@ export default defineConfig({
 
     /* Test against mobile viewports. */
     {
-      name: "Mobile Chrome",
+      name: PROJECT_NAME_MOBILE_CHROME,
       use: { ...devices["Pixel 7"] },
     },
     {
-      name: "Mobile Safari",
+      name: PROJECT_NAME_MOBILE_SAFARI,
       use: { ...devices["iPhone 15"] },
     },
 

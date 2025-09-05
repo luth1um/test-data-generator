@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { TEST_BASE_URL } from "./helpers/endToEndTestConstants.js";
+import { TEST_BASE_URL } from "../playwright.config.js";
 import { TEST_ID_SELECT_THEME, THEME_OPTION_VALUE_DARK, THEME_OPTION_VALUE_LIGHT } from "../src/theme.js";
 import { TEST_ID_BUTTON_GENERATE, TEST_ID_SELECT_TYPE } from "../src/uiLogic.js";
 import { UUIDV4_OPTION_VALUE } from "../src/uuidUi.js";

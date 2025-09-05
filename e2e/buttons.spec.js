@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { TEST_BASE_URL } from "./helpers/endToEndTestConstants.js";
+import { TEST_BASE_URL } from "../playwright.config.js";
 import {
   DOWNLOAD_FILENAME,
   RESULT_DIV_ID,
@@ -13,9 +13,12 @@ import { clickButton } from "./helpers/buttonHelpers.js";
 import { generateIBANForCountry } from "./helpers/ibanHelpers.js";
 import { IBAN_COUNTRIES } from "../src/ibanUi.js";
 import fs from "fs/promises";
+import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 
 test.describe("The buttons for increasing and decreased the amount of results", () => {
-  test("should increase and decrease the number of results correctly", async ({ page }) => {
+  test("should increase and decrease the number of results correctly", async ({ page }, testInfo) => {
+    skipMobileBrowsers(testInfo);
+
     // given
     const plusClicks = 8;
     const minusClicks = 3;
@@ -36,7 +39,9 @@ test.describe("The buttons for increasing and decreased the amount of results", 
     expect(results).toHaveLength(expectedResults);
   });
 
-  test("should never go below an amount of 1", async ({ page }) => {
+  test("should never go below an amount of 1", async ({ page }, testInfo) => {
+    skipMobileBrowsers(testInfo);
+
     // given
     const minusClicks = 10;
 

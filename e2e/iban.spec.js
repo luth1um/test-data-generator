@@ -1,7 +1,7 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
 import { generateIBANForCountry, getSupportedCountries } from "./helpers/ibanHelpers.js";
-import { TEST_BASE_URL } from "./helpers/endToEndTestConstants.js";
+import { TEST_BASE_URL } from "../playwright.config.js";
 import { IBAN_COUNTRIES, IBAN_OPTION_VALUE, TEST_ID_SELECT_COUNTRY } from "../src/ibanUi.js";
 import {
   RESULT_DIV_ID,
@@ -10,10 +10,13 @@ import {
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
 } from "../src/uiLogic.js";
+import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 
 test.describe("The IBAN generator", () => {
   IBAN_COUNTRIES.forEach((country) => {
-    test(`should generate IBANs for ${country.code}`, async ({ page }) => {
+    test(`should generate IBANs for ${country.code}`, async ({ page }, testInfo) => {
+      skipMobileBrowsers(testInfo);
+
       // when
       const iban = await generateIBANForCountry(page, country.code);
 
@@ -27,7 +30,9 @@ test.describe("The IBAN generator", () => {
 
   test(`should have all ${IBAN_COUNTRIES.length} specified countries (${IBAN_COUNTRIES.map((c) => c.code).join(", ")}) as options`, async ({
     page,
-  }) => {
+  }, testInfo) => {
+    skipMobileBrowsers(testInfo);
+
     // when
     const countries = await getSupportedCountries(page);
 
@@ -35,7 +40,9 @@ test.describe("The IBAN generator", () => {
     expect(countries.length).toEqual(IBAN_COUNTRIES.length);
   });
 
-  test("should display the country dropdown when IBAN is selected", async ({ page }) => {
+  test("should display the country dropdown when IBAN is selected", async ({ page }, testInfo) => {
+    skipMobileBrowsers(testInfo);
+
     // when
     await page.goto(TEST_BASE_URL);
     await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
@@ -44,7 +51,9 @@ test.describe("The IBAN generator", () => {
     await expect(page.getByTestId(TEST_ID_SELECT_COUNTRY)).toBeVisible();
   });
 
-  test("should generate multiple IBANs when amount is increased", async ({ page }) => {
+  test("should generate multiple IBANs when amount is increased", async ({ page }, testInfo) => {
+    skipMobileBrowsers(testInfo);
+
     // given
     const country = IBAN_COUNTRIES[0];
     const amount = 3;

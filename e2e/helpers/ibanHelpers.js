@@ -1,4 +1,4 @@
-import { TEST_BASE_URL } from "./endToEndTestConstants.js";
+import { TEST_BASE_URL } from "../../playwright.config.js";
 import { IBAN_OPTION_VALUE, TEST_ID_SELECT_COUNTRY } from "../../src/ibanUi.js";
 import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/uiLogic.js";
 
