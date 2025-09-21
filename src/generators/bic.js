@@ -1,3 +1,5 @@
+export const BIC_SUPPORTED_COUNTRY_CODES = ["DE", "NO"];
+
 const ALL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const ALL_LETTERS_AND_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const ALL_LETTERS_AND_DIGITS_EXCPECT_X = "ABCDEFGHIJKLMNOPQRSTUVWYZ0123456789";
@@ -15,12 +17,10 @@ const ALL_LETTERS_AND_DIGITS_EXCEPT_0_1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789";
  * console.log(bic); // e.g., 'DEUTDEFF500'
  */
 export function generateBIC(countryCode) {
-  switch (countryCode) {
-    case "DE":
-      return generateGermanBIC();
-    default:
-      throw new Error(`BIC generation for country code '${countryCode}' is not supported.`);
+  if (!BIC_SUPPORTED_COUNTRY_CODES.includes(countryCode)) {
+    throw new Error(`BIC generation for country code '${countryCode}' is not supported.`);
   }
+  return generateRandomBIC(countryCode);
 }
 
 /**
@@ -32,17 +32,18 @@ export function generateBIC(countryCode) {
  * - Use a random 2-character location code
  * - Use a random 3-character branch code (or an empty string)
  *
+ * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
  * @returns {string} A valid, randomly generated German BIC (e.g., 'DEUTDEFF500')
  *
  * @example
  * const bic = generateGermanBIC();
  * console.log(bic); // e.g., 'DEUTDEFF500'
  */
-function generateGermanBIC() {
+function generateRandomBIC(countryCode) {
   const bankCode = generateRandomBankCode();
   const locationCode = generateRandomLocationCode();
   const branchCode = generateRandomBranchCode();
-  return `${bankCode}DE${locationCode}${branchCode}`;
+  return `${bankCode}${countryCode}${locationCode}${branchCode}`;
 }
 
 /**
