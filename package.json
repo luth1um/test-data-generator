@@ -17,7 +17,6 @@
     "e2e": "playwright test",
     "e2e-ui": "playwright test --ui",
     "e2e-update-snapshots": "playwright test --update-snapshots",
-    "deployghpages": "gh-pages -d dist/test-data-generator",
     "prepare": "husky"
   },
   "keywords": [
@@ -34,7 +33,6 @@
     "@eslint/js": "9.37.0",
     "@playwright/test": "1.56.0",
     "eslint": "9.37.0",
-    "gh-pages": "6.3.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.4",
     "prettier": "3.6.2",
