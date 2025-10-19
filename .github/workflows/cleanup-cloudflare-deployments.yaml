@@ -52,7 +52,7 @@ jobs:
           deployments="{\"result\": $all_results}"
 
           successful_ids=($(echo "$deployments" | jq -r '.result | sort_by(.created_on) | reverse | map(select(.latest_stage.status == "success")) | .[].id'))
-          keep_ids=("${successful_ids[@]:0:5}")
+          keep_ids=("${successful_ids[@]:0:3}")
           echo "Keeping the latest ${#keep_ids[@]} successful deployments"
 
           all_ids=($(echo "$deployments" | jq -r '.result[].id'))
