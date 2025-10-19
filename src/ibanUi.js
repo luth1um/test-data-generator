@@ -2,7 +2,7 @@
 
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
-export const TEST_ID_SELECT_COUNTRY = "select-country";
+export const TEST_ID_SELECT_COUNTRY = "select-country-iban";
 
 export const IBAN_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
@@ -42,7 +42,7 @@ export function createCountryControls() {
   const countryLabel = document.createElement("label");
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
-  countrySelect.id = "country-select";
+  countrySelect.id = "country-select-iban";
   countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_COUNTRY);
   IBAN_COUNTRIES.forEach(({ code, name }) => {
     const option = document.createElement("option");
@@ -65,7 +65,7 @@ export function createCountryControls() {
  * showCountryControls('iban', countryLabel); // Shows the controls
  * showCountryControls('uuidv4', countryLabel); // Hides the controls
  */
-export function showCountryControls(type, countryLabel) {
+export function showIbanCountryControls(type, countryLabel) {
   countryLabel.style.display = type === IBAN_OPTION_VALUE ? "" : "none";
 }
 
@@ -74,7 +74,6 @@ export function showCountryControls(type, countryLabel) {
  *
  * @param {HTMLSelectElement} countrySelect - The country selection dropdown element.
  * @returns {Object} An object containing the selected country code.
- * @returns {string} returns.country - The two-letter country code (e.g., 'DE', 'NO').
  *
  * @example
  * const args = getIbanArgs(countrySelect);
