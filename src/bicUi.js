@@ -1,5 +1,9 @@
 /* global document */
 
+import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+
+export const TEST_ID_SELECT_BIC_COUNTRY = "select-country-bic";
+
 export const BIC_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
   { code: "NO", name: "Norway (NO)" },
@@ -39,6 +43,7 @@ export function createBicCountryControls() {
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select-bic";
+  countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_BIC_COUNTRY);
   BIC_COUNTRIES.forEach(({ code, name }) => {
     const option = document.createElement("option");
     option.value = code;

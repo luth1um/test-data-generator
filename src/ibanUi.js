@@ -2,7 +2,7 @@
 
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 
-export const TEST_ID_SELECT_COUNTRY = "select-country-iban";
+export const TEST_ID_SELECT_IBAN_COUNTRY = "select-country-iban";
 
 export const IBAN_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
@@ -43,7 +43,7 @@ export function createCountryControls() {
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select-iban";
-  countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_COUNTRY);
+  countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_IBAN_COUNTRY);
   IBAN_COUNTRIES.forEach(({ code, name }) => {
     const option = document.createElement("option");
     option.value = code;
