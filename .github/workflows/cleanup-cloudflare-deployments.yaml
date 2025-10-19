@@ -1,0 +1,76 @@
+name: Cleanup old Cloudflare Pages deployments
+
+on:
+  schedule:
+    - cron: "0 0 * * 2" # Every Tuesday at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    name: Cleanup old deployments
+    runs-on: ubuntu-latest
+
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PROJECT_NAME: test-data-gen
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+    steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Cleanup old Cloudflare Pages deployments
+        run: |
+          set -euo pipefail
+
+          API_BASE="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/deployments"
+
+          echo "Fetching all deployments for project ${CLOUDFLARE_PROJECT_NAME} ..."
+
+          page=1
+          per_page=25
+          all_results="[]"
+
+          while :; do
+            echo "Fetching page $page..."
+            response=$(curl -s -X GET \
+              "${API_BASE}?page=${page}&per_page=${per_page}" \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              -H "Content-Type: application/json")
+
+            page_results=$(echo "$response" | jq '.result')
+
+            if [[ $(echo "$page_results" | jq 'length') -eq 0 ]]; then
+              break
+            fi
+
+            all_results=$(jq -s 'add' <(echo "$all_results") <(echo "$page_results"))
+
+            ((page++))
+          done
+
+          deployments="{\"result\": $all_results}"
+
+          successful_ids=($(echo "$deployments" | jq -r '.result | sort_by(.created_on) | reverse | map(select(.latest_stage.status == "success")) | .[].id'))
+          keep_ids=("${successful_ids[@]:0:5}")
+          echo "Keeping the latest ${#keep_ids[@]} successful deployments"
+
+          all_ids=($(echo "$deployments" | jq -r '.result[].id'))
+
+          delete_ids=()
+          for id in "${all_ids[@]}"; do
+            if [[ ! " ${keep_ids[*]} " =~ " ${id} " ]]; then
+              delete_ids+=("$id")
+            fi
+          done
+
+          echo
+          echo "Deleting ${#delete_ids[@]} old or skipped deployments..."
+
+          for id in "${delete_ids[@]}"; do
+            echo "Deleting deployment: $id"
+            curl -s -X DELETE \
+              "${API_BASE}/${id}" \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              -H "Content-Type: application/json" > /dev/null
+          done
