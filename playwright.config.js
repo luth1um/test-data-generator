@@ -1,5 +1,4 @@
 /* global process */
-// @ts-check
 import { defineConfig, devices } from "@playwright/test";
 
 export const PROJECT_NAME_MOBILE_CHROME = "Mobile Chrome";

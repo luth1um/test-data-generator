@@ -1,8 +1,7 @@
-// @ts-check
 import { test, expect } from "@playwright/test";
-import { generateIBANForCountry, getSupportedCountries } from "./helpers/ibanHelpers.js";
+import { generateIbanForCountry, getIbanSupportedCountries } from "./helpers/ibanHelpers.js";
 import { TEST_BASE_URL } from "../playwright.config.js";
-import { IBAN_COUNTRIES, IBAN_OPTION_VALUE, TEST_ID_SELECT_COUNTRY } from "../src/ibanUi.js";
+import { IBAN_COUNTRIES, IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ibanUi.js";
 import {
   RESULT_DIV_ID,
   TEST_ID_BUTTON_GENERATE,
@@ -18,7 +17,7 @@ test.describe("The IBAN generator", () => {
       skipMobileBrowsers(testInfo);
 
       // when
-      const iban = await generateIBANForCountry(page, country.code);
+      const iban = await generateIbanForCountry(page, country.code);
 
       // then
       expect(iban.substring(0, 2)).toEqual(country.code);
@@ -34,7 +33,7 @@ test.describe("The IBAN generator", () => {
     skipMobileBrowsers(testInfo);
 
     // when
-    const countries = await getSupportedCountries(page);
+    const countries = await getIbanSupportedCountries(page);
 
     // then
     expect(countries.length).toEqual(IBAN_COUNTRIES.length);
@@ -48,7 +47,7 @@ test.describe("The IBAN generator", () => {
     await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
 
     // then
-    await expect(page.getByTestId(TEST_ID_SELECT_COUNTRY)).toBeVisible();
+    await expect(page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY)).toBeVisible();
   });
 
   test("should generate multiple IBANs when amount is increased", async ({ page }, testInfo) => {
@@ -61,7 +60,7 @@ test.describe("The IBAN generator", () => {
     // when
     await page.goto(TEST_BASE_URL);
     await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
-    await page.getByTestId(TEST_ID_SELECT_COUNTRY).selectOption(country.code);
+    await page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(country.code);
     await page.getByTestId(TEST_ID_INPUT_AMOUNT).fill("" + amount);
     await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
     await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });

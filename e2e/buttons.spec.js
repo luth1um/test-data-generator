@@ -10,7 +10,7 @@ import {
   TEST_ID_DIV_RESULT,
 } from "../src/uiLogic.js";
 import { clickButton } from "./helpers/buttonHelpers.js";
-import { generateIBANForCountry } from "./helpers/ibanHelpers.js";
+import { generateIbanForCountry } from "./helpers/ibanHelpers.js";
 import { IBAN_COUNTRIES } from "../src/ibanUi.js";
 import fs from "fs/promises";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
@@ -61,7 +61,7 @@ test.describe("The buttons for increasing and decreased the amount of results", 
 test.describe("When pressing the download button", () => {
   test("the generator results should be downloaded", async ({ page }) => {
     // given
-    const generatedIban = await generateIBANForCountry(page, IBAN_COUNTRIES[0].code);
+    const generatedIban = await generateIbanForCountry(page, IBAN_COUNTRIES[0].code);
 
     // when
     const [download] = await Promise.all([

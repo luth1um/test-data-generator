@@ -3,13 +3,21 @@
 import {
   createIbanOption,
   createCountryControls,
-  showCountryControls,
+  showIbanCountryControls,
   getIbanArgs,
   IBAN_OPTION_VALUE,
 } from "./ibanUi.js";
+import {
+  createBicOption,
+  createBicCountryControls,
+  showBicCountryControls,
+  getBicArgs,
+  BIC_OPTION_VALUE,
+} from "./bicUi.js";
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
 import { generateIBAN } from "./generators/iban.js";
+import { generateBIC } from "./generators/bic.js";
 import { generateUUID } from "./generators/uuid.js";
 
 export const RESULT_DIV_ID = "result";
@@ -46,24 +54,28 @@ export function setupUI(app) {
   const typeSelect = document.createElement("select");
   typeSelect.id = "type-select";
   typeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_TYPE);
-  // Add IBAN and UUID options using extracted modules
+  // Add IBAN, BIC, and UUID options using extracted modules
+  typeSelect.appendChild(createBicOption());
   typeSelect.appendChild(createIbanOption());
   typeSelect.appendChild(createUuidOption());
   typeSelect.value = IBAN_OPTION_VALUE; // Preselect IBAN
   typeLabel.appendChild(typeSelect);
 
-  // Country controls (only for IBAN)
-  const { countryLabel, countrySelect } = createCountryControls();
+  // Country controls (for IBAN and BIC)
+  const { countryLabel: ibanCountryLabel, countrySelect: ibanCountrySelect } = createCountryControls();
+  const { countryLabel: bicCountryLabel, countrySelect: bicCountrySelect } = createBicCountryControls();
 
   /**
    * Updates the visibility of country controls based on the selected generation type.
-   * Shows country controls only when IBAN is selected.
+   * Shows country controls only when IBAN or BIC is selected.
    *
    * @example
    * updateCountryDropdown(); // Updates visibility based on current selection
    */
   function updateCountryDropdown() {
-    showCountryControls(typeSelect.value, countryLabel);
+    const type = typeSelect.value;
+    showIbanCountryControls(type, ibanCountryLabel);
+    showBicCountryControls(type, bicCountryLabel);
   }
 
   typeSelect.addEventListener("change", updateCountryDropdown);
@@ -73,6 +85,7 @@ export function setupUI(app) {
   const amountLabel = document.createElement("label");
   amountLabel.textContent = " Amount: ";
   const amountInput = document.createElement("input");
+  amountInput.id = "amount-input";
   amountInput.type = "number";
   amountInput.min = "1";
   amountInput.value = "1";
@@ -149,7 +162,8 @@ export function setupUI(app) {
   resultSection.style.display = "none";
 
   // Remove marginLeft styles from labels and button
-  countryLabel.style.marginLeft = "";
+  ibanCountryLabel.style.marginLeft = "";
+  bicCountryLabel.style.marginLeft = "";
   amountLabel.style.marginLeft = "";
   generateButton.style.marginLeft = "";
 
@@ -162,7 +176,8 @@ export function setupUI(app) {
   const formRow = document.createElement("div");
   formRow.className = "form-row";
   formRow.appendChild(typeLabel);
-  formRow.appendChild(countryLabel);
+  formRow.appendChild(bicCountryLabel);
+  formRow.appendChild(ibanCountryLabel);
   formRow.appendChild(amountGroup);
   formRow.appendChild(generateButton);
 
@@ -173,6 +188,7 @@ export function setupUI(app) {
   // Map of generator functions by type
   const generators = {
     iban: (args) => generateIBAN(args.country),
+    bic: (args) => generateBIC(args.country),
     uuidv4: () => generateUUID(),
     // Add more generators here as needed
   };
@@ -184,12 +200,15 @@ export function setupUI(app) {
    *
    * @example
    * const args = getSelectedArgs();
-   * // Returns: { country: 'DE' } for IBAN or {} for UUID
+   * // Returns: { country: 'DE' } for IBAN and BIC, or {} for UUID
    */
   function getSelectedArgs() {
     const type = typeSelect.value;
     if (type === IBAN_OPTION_VALUE) {
-      return getIbanArgs(countrySelect);
+      return getIbanArgs(ibanCountrySelect);
+    }
+    if (type === BIC_OPTION_VALUE) {
+      return getBicArgs(bicCountrySelect);
     }
     if (type === UUIDV4_OPTION_VALUE) {
       return getUuidArgs();

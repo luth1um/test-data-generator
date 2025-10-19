@@ -1,17 +1,17 @@
 import { TEST_BASE_URL } from "../../playwright.config.js";
-import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ibanUi.js";
 import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/uiLogic.js";
+import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/bicUi.js";
 
 /**
- * Helper function to generate an IBAN for a specific country using the UI
+ * Helper function to generate a BIC for a specific country using the UI
  * @param {import('@playwright/test').Page} page - Playwright page object
  * @param {string} countryCode - The country code (e.g., 'DE', 'NO')
- * @returns {Promise<string>} The generated IBAN
+ * @returns {Promise<string>} The generated BIC
  */
-export async function generateIbanForCountry(page, countryCode) {
+export async function generateBicForCountry(page, countryCode) {
   await page.goto(TEST_BASE_URL);
-  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
-  await page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(countryCode);
+  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(BIC_OPTION_VALUE);
+  await page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY).selectOption(countryCode);
   await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
 
   await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
@@ -19,14 +19,14 @@ export async function generateIbanForCountry(page, countryCode) {
 }
 
 /**
- * Get all supported IBAN countries from the UI
+ * Get all supported BIC countries from the UI
  * @param {import('@playwright/test').Page} page - Playwright page object
  * @returns {Promise<Array<{code: string, name: string}>>} Array of country objects
  */
-export async function getIbanSupportedCountries(page) {
+export async function getBicSupportedCountries(page) {
   await page.goto(TEST_BASE_URL);
-  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
-  const countryOptions = await page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).locator("option").all();
+  await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(BIC_OPTION_VALUE);
+  const countryOptions = await page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY).locator("option").all();
 
   const countries = [];
   for (const option of countryOptions) {
