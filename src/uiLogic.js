@@ -9,6 +9,8 @@ import {
 } from "./ibanUi.js";
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+import { generateIBAN } from "./generators/iban.js";
+import { generateUUID } from "./generators/uuid.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";
@@ -168,78 +170,73 @@ export function setupUI(app) {
   app.appendChild(formRow);
   app.appendChild(resultSection);
 
-  // Import generator(s)
-  Promise.all([import("./generators/iban.js"), import("./generators/uuid.js")]).then(([ibanModule, uuidModule]) => {
-    const { generateIBAN } = ibanModule;
-    const { generateUUID } = uuidModule;
-    // Map of generator functions by type
-    const generators = {
-      iban: (args) => generateIBAN(args.country),
-      uuidv4: () => generateUUID(),
-      // Add more generators here as needed
-    };
+  // Map of generator functions by type
+  const generators = {
+    iban: (args) => generateIBAN(args.country),
+    uuidv4: () => generateUUID(),
+    // Add more generators here as needed
+  };
 
-    /**
-     * Gets the arguments for the currently selected generation type.
-     *
-     * @returns {Object} Arguments object for the selected generator type.
-     *
-     * @example
-     * const args = getSelectedArgs();
-     * // Returns: { country: 'DE' } for IBAN or {} for UUID
-     */
-    function getSelectedArgs() {
-      const type = typeSelect.value;
-      if (type === IBAN_OPTION_VALUE) {
-        return getIbanArgs(countrySelect);
-      }
-      if (type === UUIDV4_OPTION_VALUE) {
-        return getUuidArgs();
-      }
-      return {};
+  /**
+   * Gets the arguments for the currently selected generation type.
+   *
+   * @returns {Object} Arguments object for the selected generator type.
+   *
+   * @example
+   * const args = getSelectedArgs();
+   * // Returns: { country: 'DE' } for IBAN or {} for UUID
+   */
+  function getSelectedArgs() {
+    const type = typeSelect.value;
+    if (type === IBAN_OPTION_VALUE) {
+      return getIbanArgs(countrySelect);
     }
+    if (type === UUIDV4_OPTION_VALUE) {
+      return getUuidArgs();
+    }
+    return {};
+  }
 
-    /**
-     * Generates test data based on the current UI selections.
-     * Updates the result display and download button visibility.
-     *
-     * @example
-     * generateData(); // Generates data based on current form values
-     */
-    function generateData() {
-      const type = typeSelect.value;
-      const amount = Math.max(1, parseInt(amountInput.value, 10) || 1);
-      const args = getSelectedArgs();
-      const generator = generators[type];
-      if (!generator) {
-        resultDiv.textContent = "No generator available for selected type.";
-        return;
-      }
-      const results = [];
-      for (let i = 0; i < amount; i++) {
-        try {
-          results.push(generator(args));
-        } catch (e) {
-          results.push("Error: " + e.message);
-        }
-      }
-      lastResults = results;
-      // Display all results
-      resultDiv.innerHTML = results.map((r) => `<div>${r}</div>`).join("");
-      if (results.length === 0) {
-        downloadButton.style.display = "none";
-        resultHeading.style.display = "none";
-        resultSection.style.display = "none";
-      } else {
-        downloadButton.style.display = "block";
-        downloadButton.disabled = false;
-        resultHeading.style.display = "block";
-        resultSection.style.display = "block";
+  /**
+   * Generates test data based on the current UI selections.
+   * Updates the result display and download button visibility.
+   *
+   * @example
+   * generateData(); // Generates data based on current form values
+   */
+  function generateData() {
+    const type = typeSelect.value;
+    const amount = Math.max(1, parseInt(amountInput.value, 10) || 1);
+    const args = getSelectedArgs();
+    const generator = generators[type];
+    if (!generator) {
+      resultDiv.textContent = "No generator available for selected type.";
+      return;
+    }
+    const results = [];
+    for (let i = 0; i < amount; i++) {
+      try {
+        results.push(generator(args));
+      } catch (e) {
+        results.push("Error: " + e.message);
       }
     }
+    lastResults = results;
+    // Display all results
+    resultDiv.innerHTML = results.map((r) => `<div>${r}</div>`).join("");
+    if (results.length === 0) {
+      downloadButton.style.display = "none";
+      resultHeading.style.display = "none";
+      resultSection.style.display = "none";
+    } else {
+      downloadButton.style.display = "block";
+      downloadButton.disabled = false;
+      resultHeading.style.display = "block";
+      resultSection.style.display = "block";
+    }
+  }
 
-    generateButton.addEventListener("click", generateData);
-  });
+  generateButton.addEventListener("click", generateData);
 
   downloadButton.addEventListener("click", () => {
     if (!lastResults.length) return;
