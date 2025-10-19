@@ -159,7 +159,7 @@ jobs:
           retention-days: 7
 
   # Deploy to GitHub Pages
-  deploy:
+  deploy-gh-pages:
     needs:
       - e2e
     runs-on: ubuntu-latest
@@ -185,3 +185,23 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3
         with:
           folder: ${{ env.BUILD_ARTIFACT_FOLDER }}
+
+  # Deploy to Cloudflare Pages
+  deploy-cf-pages:
+    needs:
+      - e2e
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: deploy_cf_pages
+    env:
+      HOOK_ID: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_ID }}
+    steps:
+      - name: Trigger deployment to Cloudflare Pages
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -d "" "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${HOOK_ID}")
+          echo "HTTP response status: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Deployment trigger failed!"
+            exit 1
+          fi
