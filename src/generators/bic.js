@@ -2,6 +2,7 @@ export const BIC_SUPPORTED_COUNTRY_CODES = ["DE", "NO"];
 
 const ALL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const ALL_LETTERS_AND_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const ALL_LETTERS_AND_DIGITS_EXCEPT_O = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
 const ALL_LETTERS_AND_DIGITS_EXCPECT_X = "ABCDEFGHIJKLMNOPQRSTUVWYZ0123456789";
 const ALL_LETTERS_AND_DIGITS_EXCEPT_0_1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789";
 
@@ -68,7 +69,7 @@ function generateRandomBankCode() {
  */
 function generateRandomLocationCode() {
   const firstCharSet = ALL_LETTERS_AND_DIGITS_EXCEPT_0_1;
-  const secondCharSet = ALL_LETTERS_AND_DIGITS;
+  const secondCharSet = ALL_LETTERS_AND_DIGITS_EXCEPT_O;
 
   const first = firstCharSet[Math.floor(Math.random() * firstCharSet.length)];
   const second = secondCharSet[Math.floor(Math.random() * secondCharSet.length)];

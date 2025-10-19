@@ -74,6 +74,15 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     expect(ALL_LETTERS_AND_DIGITS).toContain(char8);
   });
 
+  it("should not produce the letter O at position 7 (0-indexed)", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+    // when
+    const bic = generateBIC(countryCode);
+
+    // then
+    const char8 = bic[7];
+    expect(char8).not.toEqual("O");
+  });
+
   it(
     "should produce letters and/or digits at positions 8 to 10 (0-indexed)",
     { repeats: RANDOM_FUNCTION_CALL_COUNT },
