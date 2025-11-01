@@ -13,6 +13,8 @@ export function generateIBAN(countryCode) {
   switch (countryCode) {
     case "DE":
       return generateGermanIBAN();
+    case "MT":
+      return generateMaltaIBAN();
     case "NO":
       return generateNorwegianIBAN();
     default:
@@ -49,7 +51,45 @@ function generateGermanIBAN() {
   const checkDigits = calculateIBANCheckDigits(countryCode, bban);
 
   // Assemble IBAN
-  return `${countryCode}${checkDigits}${bankCode}${accountNumber}`;
+  return `${countryCode}${checkDigits}${bban}`;
+}
+
+/**
+ * Generates a valid random Maltese IBAN (International Bank Account Number).
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'MT'
+ * - Contain valid check digits
+ * - Use 4 uppercase letters describing the first part of a BIC
+ * - Use a random 5-digit branch code
+ * - Use a random 18-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated Malta IBAN (e.g., 'MTkkLLLLdddddaaaaaaaaaaaaaaaaaa')
+ *
+ * @example
+ * const iban = generateMaltaIBAN();
+ * console.log(iban); // e.g., 'MT84MALT011000012345MTLONT001234'
+ */
+function generateMaltaIBAN() {
+  // Generate random 4 uppercase letters for BIC part
+  const bicPart = Array.from({ length: 4 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join("");
+
+  // Generate random 5-digit branch code
+  const branchCode = String(Math.floor(Math.random() * 1e5)).padStart(5, "0");
+
+  // Generate random 18-character alphanumeric account number
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const accountNumber = Array.from({ length: 18 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+
+  // Assemble BBAN
+  const bban = bicPart + branchCode + accountNumber;
+
+  // Calculate check digits
+  const countryCode = "MT";
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
 }
 
 /**
@@ -108,7 +148,7 @@ function calculateIBANCheckDigits(countryCode, bban) {
   // 2. Replace letters with numbers (A=10, ..., Z=35)
   // 3. Calculate 98 - (number mod 97)
   const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString());
-  const rearranged = bban + lettersToNumbers(countryCode) + "00";
+  const rearranged = lettersToNumbers(bban) + lettersToNumbers(countryCode) + "00";
   const mod97 = BigInt(rearranged) % 97n;
   return String(98n - mod97).padStart(2, "0");
 }

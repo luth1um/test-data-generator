@@ -6,6 +6,7 @@ export const TEST_ID_SELECT_BIC_COUNTRY = "select-country-bic";
 
 export const BIC_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
+  { code: "MT", name: "Malta (MT)" },
   { code: "NO", name: "Norway (NO)" },
 ];
 

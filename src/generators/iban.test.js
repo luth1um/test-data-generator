@@ -22,6 +22,7 @@ class IBANTestConfiguration {
 
 const COUNTRY_CONFIGS = [
   new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
+  new IBANTestConfiguration("Maltese", "MT", 31, /^[A-Z]{4}\d{5}[A-Z0-9]{18}$/),
   new IBANTestConfiguration("Norwegian", "NO", 15, /^\d+$/),
 ];
 

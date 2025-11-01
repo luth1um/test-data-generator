@@ -6,6 +6,7 @@ export const TEST_ID_SELECT_IBAN_COUNTRY = "select-country-iban";
 
 export const IBAN_COUNTRIES = [
   { code: "DE", name: "Germany (DE)" },
+  { code: "MT", name: "Malta (MT)" },
   { code: "NO", name: "Norway (NO)" },
 ];
 
