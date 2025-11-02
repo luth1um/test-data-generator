@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { BIC_SUPPORTED_COUNTRY_CODES, generateBIC } from "./bic.js";
+import { ALL_LETTERS_AND_ALL_DIGITS } from "../misc/randomUtils.js";
+import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 
-const RANDOM_FUNCTION_CALL_COUNT = 100;
-const ALL_LETTERS_AND_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const UNSUPPORTED_COUNTRY_CODES = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (countryCode) => {
-  it("should only generate string with length 8 or 11", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should only generate string with length 8 or 11", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const bic = generateBIC(countryCode);
 
@@ -17,8 +17,11 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
   });
 
   it("should sometimes generate string with length 8", () => {
+    // given
+    const numberOfBics = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
+
     // when
-    const bics = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT * 3 }, () => generateBIC(countryCode));
+    const bics = Array.from({ length: numberOfBics }, () => generateBIC(countryCode));
 
     // then
     const bicLengths = bics.map((bic) => bic.length);
@@ -27,7 +30,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
   it("should sometimes generate string with length 11", () => {
     // when
-    const bics = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT }, () => generateBIC(countryCode));
+    const bics = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode));
 
     // then
     const bicLengths = bics.map((bic) => bic.length);
@@ -36,7 +39,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
   it(
     "should only generate letters for the bank code (first 4 characters)",
-    { repeats: RANDOM_FUNCTION_CALL_COUNT },
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
       const bic = generateBIC(countryCode);
@@ -47,16 +50,20 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     }
   );
 
-  it("should have the country code at positions 4 and 5 (0-indexed)", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
-    // when
-    const bic = generateBIC(countryCode);
+  it(
+    "should have the country code at positions 4 and 5 (0-indexed)",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const bic = generateBIC(countryCode);
 
-    // then
-    const chars5And6 = bic.substring(4, 6);
-    expect(chars5And6).toBe(countryCode);
-  });
+      // then
+      const chars5And6 = bic.substring(4, 6);
+      expect(chars5And6).toBe(countryCode);
+    }
+  );
 
-  it("should not produce 0 or 1 at position 6 (0-indexed)", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should not produce 0 or 1 at position 6 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const bic = generateBIC(countryCode);
 
@@ -65,16 +72,16 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     expect(["0", "1"]).not.toContain(char7);
   });
 
-  it("should produce a letter or digit at position 7 (0-indexed)", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should produce a letter or digit at position 7 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const bic = generateBIC(countryCode);
 
     // then
     const char8 = bic[7];
-    expect(ALL_LETTERS_AND_DIGITS).toContain(char8);
+    expect(ALL_LETTERS_AND_ALL_DIGITS).toContain(char8);
   });
 
-  it("should not produce the letter O at position 7 (0-indexed)", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should not produce the letter O at position 7 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const bic = generateBIC(countryCode);
 
@@ -85,15 +92,15 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
   it(
     "should produce letters and/or digits at positions 8 to 10 (0-indexed)",
-    { repeats: RANDOM_FUNCTION_CALL_COUNT },
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when (repeat until BIC with 11 chars is produced, or stop if no such BIC is produced)
-      const bic = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT }, () => generateBIC(countryCode)).find(
+      const bic = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode)).find(
         (bic) => bic.length === 11
       );
 
       if (!bic) {
-        throw new Error(`Did not produce BIC with 11 characters after ${RANDOM_FUNCTION_CALL_COUNT} iterations.`);
+        throw new Error(`Did not produce BIC with 11 characters after ${RANDOM_FUNCTION_TEST_CALL_COUNT} iterations.`);
       }
 
       // then
@@ -104,19 +111,18 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
   it(
     "should only produce X at position 8 (0-indexed) if branch code is XXX",
-    { repeats: RANDOM_FUNCTION_CALL_COUNT },
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
+      //given
+      const numberOfBics = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
+
       // when
       // produce a few BICs such that at least some results have 'X' at pos 8
-      const bics = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT * 3 }, () => generateBIC(countryCode)).filter(
-        (bic) => bic[8] === "X"
-      );
+      const bics = Array.from({ length: numberOfBics }, () => generateBIC(countryCode)).filter((bic) => bic[8] === "X");
 
       // throw error if no BIC with 'X' at pos 8 is produced
       if (bics.length === 0) {
-        throw new Error(
-          `Did not produce BIC with 'X' at pos 8 (0-indexed)  after ${RANDOM_FUNCTION_CALL_COUNT} iterations.`
-        );
+        throw new Error(`Did not produce BIC with 'X' at pos 8 (0-indexed)  after ${numberOfBics} iterations.`);
       }
 
       // then
@@ -128,7 +134,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
   it("should produce different BICs with each call", () => {
     // when
-    const bics = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT }, () => generateBIC(countryCode));
+    const bics = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode));
 
     // then
     const uniqueBics = new Set(bics);

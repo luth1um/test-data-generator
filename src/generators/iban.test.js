@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateIBAN } from "./iban.js";
+import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 
-const RANDOM_FUNCTION_CALL_COUNT = 100;
 const UNSUPPORTED_COUNTRY_CODES = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
@@ -27,7 +27,7 @@ const COUNTRY_CONFIGS = [
 ];
 
 describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
-  it("should produce IBANs with correct length", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should produce IBANs with correct length", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const iban = generateIBAN(config.countryCode);
 
@@ -35,7 +35,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
     expect(iban.length).toBe(config.length);
   });
 
-  it(`should produce IBANs starting with '${config.countryCode}'`, { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it(`should produce IBANs starting with '${config.countryCode}'`, { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const iban = generateIBAN(config.countryCode);
 
@@ -44,7 +44,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
     expect(countryCode).toBe(config.countryCode);
   });
 
-  it("should match the country format", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should match the country format", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const iban = generateIBAN(config.countryCode);
 
@@ -53,7 +53,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
     expect(bban).toMatch(config.bbanFormatRegex);
   });
 
-  it("should produce IBANs having valid check digits", { repeats: RANDOM_FUNCTION_CALL_COUNT }, () => {
+  it("should produce IBANs having valid check digits", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
     const iban = generateIBAN(config.countryCode);
 
@@ -65,7 +65,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
 
   it("should produce different IBANs with each call", () => {
     // when
-    const ibans = Array.from({ length: RANDOM_FUNCTION_CALL_COUNT }, () => generateIBAN(config.countryCode));
+    const ibans = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateIBAN(config.countryCode));
 
     // then
     const uniqueIbans = new Set(ibans);

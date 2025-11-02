@@ -1,9 +1,17 @@
+import {
+  ALL_DIGITS,
+  ALL_DIGITS_EXCEPT_0,
+  ALL_LETTERS,
+  ALL_LETTERS_AND_ALL_DIGITS,
+  generateRandomStringOfChars,
+} from "../misc/randomUtils.js";
+
 /**
  * Generates a valid random IBAN for the specified country code.
  *
- * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
- * @returns {string} A valid, randomly generated IBAN for the given country.
- * @throws {Error} If the country code is not supported.
+ * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE')
+ * @returns {string} A valid, randomly generated IBAN for the given country
+ * @throws {Error} If the country code is not supported
  *
  * @example
  * const iban = generateIBAN('DE');
@@ -14,7 +22,7 @@ export function generateIBAN(countryCode) {
     case "DE":
       return generateGermanIBAN();
     case "MT":
-      return generateMaltaIBAN();
+      return generateMalteseIBAN();
     case "NO":
       return generateNorwegianIBAN();
     default:
@@ -23,7 +31,7 @@ export function generateIBAN(countryCode) {
 }
 
 /**
- * Generates a valid random German IBAN (International Bank Account Number).
+ * Generates a valid random German IBAN.
  *
  * The generated IBAN will:
  * - Start with the country code 'DE'
@@ -31,7 +39,7 @@ export function generateIBAN(countryCode) {
  * - Use a random 8-digit bank code (BLZ)
  * - Use a random 10-digit account number
  *
- * @returns {string} A valid, randomly generated German IBAN (e.g., 'DEkkbbbbbbbbcccccccccc')
+ * @returns {string} A valid, randomly generated German IBAN
  *
  * @example
  * const iban = generateGermanIBAN();
@@ -39,9 +47,10 @@ export function generateIBAN(countryCode) {
  */
 function generateGermanIBAN() {
   // Generate random 8-digit bank code (BLZ)
-  const bankCode = String(Math.floor(10000000 + Math.random() * 90000000));
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 8);
+
   // Generate random 10-digit account number, padded with leading zeros
-  const accountNumber = String(Math.floor(Math.random() * 1e10)).padStart(10, "0");
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
 
   // Assemble BBAN (bank code + account number)
   const bban = bankCode + accountNumber;
@@ -55,7 +64,7 @@ function generateGermanIBAN() {
 }
 
 /**
- * Generates a valid random Maltese IBAN (International Bank Account Number).
+ * Generates a valid random Maltese IBAN.
  *
  * The generated IBAN will:
  * - Start with the country code 'MT'
@@ -64,22 +73,21 @@ function generateGermanIBAN() {
  * - Use a random 5-digit branch code
  * - Use a random 18-character alphanumeric account number
  *
- * @returns {string} A valid, randomly generated Malta IBAN (e.g., 'MTkkLLLLdddddaaaaaaaaaaaaaaaaaa')
+ * @returns {string} A valid, randomly generated Maltese IBAN
  *
  * @example
- * const iban = generateMaltaIBAN();
+ * const iban = generateMalteseIBAN();
  * console.log(iban); // e.g., 'MT84MALT011000012345MTLONT001234'
  */
-function generateMaltaIBAN() {
+function generateMalteseIBAN() {
   // Generate random 4 uppercase letters for BIC part
-  const bicPart = Array.from({ length: 4 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join("");
+  const bicPart = generateRandomStringOfChars(ALL_LETTERS, 4);
 
   // Generate random 5-digit branch code
-  const branchCode = String(Math.floor(Math.random() * 1e5)).padStart(5, "0");
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 5);
 
   // Generate random 18-character alphanumeric account number
-  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const accountNumber = Array.from({ length: 18 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 18);
 
   // Assemble BBAN
   const bban = bicPart + branchCode + accountNumber;
@@ -93,7 +101,7 @@ function generateMaltaIBAN() {
 }
 
 /**
- * Generates a valid random Norwegian IBAN (International Bank Account Number).
+ * Generates a valid random Norwegian IBAN.
  *
  * The generated IBAN will:
  * - Start with the country code 'NO'
@@ -101,7 +109,7 @@ function generateMaltaIBAN() {
  * - Use a random 4-digit bank code
  * - Use a random 6-digit account number
  *
- * @returns {string} A valid, randomly generated Norwegian IBAN (e.g., 'NOkkbbbbccccccd')
+ * @returns {string} A valid, randomly generated Norwegian IBAN
  *
  * @example
  * const iban = generateNorwegianIBAN();
@@ -109,9 +117,10 @@ function generateMaltaIBAN() {
  */
 function generateNorwegianIBAN() {
   // Generate random 4-digit bank code (cannot start with 0)
-  const bankCode = String(Math.floor(1000 + Math.random() * 9000));
-  // Generate random 6-digit account number (can start with 0)
-  const accountNumber = String(Math.floor(Math.random() * 1e6)).padStart(6, "0");
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS_EXCEPT_0, 1) + generateRandomStringOfChars(ALL_DIGITS, 3);
+
+  // Generate random 6-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 6);
 
   // Calculate Modulus 11 check digit for the 10-digit BBAN
   let bban10 = bankCode + accountNumber;
@@ -139,9 +148,9 @@ function generateNorwegianIBAN() {
 /**
  * Calculates the IBAN check digits for a given country code and BBAN.
  *
- * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
- * @param {string} bban - The BBAN part of the IBAN (country-specific format).
- * @returns {string} The two check digits as a string.
+ * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE')
+ * @param {string} bban - The BBAN part of the IBAN (country-specific format)
+ * @returns {string} The two check digits as a string
  */
 function calculateIBANCheckDigits(countryCode, bban) {
   // 1. Move country code and '00' to the end

@@ -1,10 +1,13 @@
-export const BIC_SUPPORTED_COUNTRY_CODES = ["DE", "MT", "NO"];
+import {
+  ALL_LETTERS,
+  ALL_LETTERS_AND_ALL_DIGITS,
+  ALL_LETTERS_AND_ALL_DIGITS_EXCEPT_0_1,
+  ALL_LETTERS_EXCEPT_O_AND_ALL_DIGITS,
+  ALL_LETTERS_EXCEPT_X_AND_ALL_DIGITS,
+  generateRandomStringOfChars,
+} from "../misc/randomUtils.js";
 
-const ALL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const ALL_LETTERS_AND_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const ALL_LETTERS_AND_DIGITS_EXCEPT_O = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
-const ALL_LETTERS_AND_DIGITS_EXCPECT_X = "ABCDEFGHIJKLMNOPQRSTUVWYZ0123456789";
-const ALL_LETTERS_AND_DIGITS_EXCEPT_0_1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789";
+export const BIC_SUPPORTED_COUNTRY_CODES = ["DE", "MT", "NO"];
 
 /**
  * Generates a valid random BIC (Business Identifier Code) with 8 or 11 characters for the specified country code.
@@ -29,7 +32,7 @@ export function generateBIC(countryCode) {
  *
  * The generated BIC will:
  * - Use a random 4-character bank code
- * - Include the country code 'DE'
+ * - Include the country code, e.g. 'DE'
  * - Use a random 2-character location code
  * - Use a random 3-character branch code (or an empty string)
  *
@@ -53,11 +56,7 @@ function generateRandomBIC(countryCode) {
  * @returns {string} A 4-character bank code (e.g., 'DEUT')
  */
 function generateRandomBankCode() {
-  let bankCode = "";
-  for (let i = 0; i < 4; i++) {
-    bankCode += ALL_LETTERS[Math.floor(Math.random() * ALL_LETTERS.length)];
-  }
-  return bankCode;
+  return generateRandomStringOfChars(ALL_LETTERS, 4);
 }
 
 /**
@@ -68,12 +67,8 @@ function generateRandomBankCode() {
  * @returns {string} A 2-character location code (e.g., 'FF')
  */
 function generateRandomLocationCode() {
-  const firstCharSet = ALL_LETTERS_AND_DIGITS_EXCEPT_0_1;
-  const secondCharSet = ALL_LETTERS_AND_DIGITS_EXCEPT_O;
-
-  const first = firstCharSet[Math.floor(Math.random() * firstCharSet.length)];
-  const second = secondCharSet[Math.floor(Math.random() * secondCharSet.length)];
-
+  const first = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS_EXCEPT_0_1, 1);
+  const second = generateRandomStringOfChars(ALL_LETTERS_EXCEPT_O_AND_ALL_DIGITS, 1);
   return first + second;
 }
 
@@ -90,10 +85,8 @@ function generateRandomBranchCode() {
   }
 
   // Otherwise generate random 3-character code (cannot start with 'X')
-  let branchCode = "";
-  branchCode += ALL_LETTERS_AND_DIGITS_EXCPECT_X[Math.floor(Math.random() * ALL_LETTERS_AND_DIGITS_EXCPECT_X.length)];
-  for (let i = 0; i < 2; i++) {
-    branchCode += ALL_LETTERS_AND_DIGITS[Math.floor(Math.random() * ALL_LETTERS_AND_DIGITS.length)];
-  }
-  return branchCode;
+  return (
+    generateRandomStringOfChars(ALL_LETTERS_EXCEPT_X_AND_ALL_DIGITS, 1) +
+    generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 2)
+  );
 }
