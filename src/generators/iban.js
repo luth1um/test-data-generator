@@ -7,7 +7,16 @@ import {
 } from "../misc/randomUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
 
-export const IBAN_SUPPORTED_COUNTRIES = [COUNTRIES.GERMANY, COUNTRIES.MALTA, COUNTRIES.NORWAY];
+export const IBAN_SUPPORTED_COUNTRIES = [
+  COUNTRIES.BELGIUM,
+  COUNTRIES.FRANCE,
+  COUNTRIES.GERMANY,
+  COUNTRIES.MALTA,
+  COUNTRIES.NETHERLANDS,
+  COUNTRIES.NORWAY,
+  COUNTRIES.RUSSIA,
+  COUNTRIES.SWITZERLAND,
+];
 
 /**
  * Generates a valid random IBAN for the specified country code.
@@ -22,15 +31,136 @@ export const IBAN_SUPPORTED_COUNTRIES = [COUNTRIES.GERMANY, COUNTRIES.MALTA, COU
  */
 export function generateIBAN(countryCode) {
   switch (countryCode) {
+    case COUNTRIES.BELGIUM.isoCode:
+      return generateBelgianIBAN();
+    case COUNTRIES.FRANCE.isoCode:
+      return generateFrenchIBAN();
     case COUNTRIES.GERMANY.isoCode:
       return generateGermanIBAN();
     case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
+    case COUNTRIES.NETHERLANDS.isoCode:
+      return generateDutchIBAN();
     case COUNTRIES.NORWAY.isoCode:
       return generateNorwegianIBAN();
+    case COUNTRIES.RUSSIA.isoCode:
+      return generateRussianIBAN();
+    case COUNTRIES.SWITZERLAND.isoCode:
+      return generateSwissIBAN();
     default:
       throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
   }
+} /**
+ * Generates a valid random Belgian IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'BE'
+ * - Contain valid check digits
+ * - Use a random 3-digit bank code
+ * - Use a random 7-digit account number
+ * - Use 2 national check digits
+ *
+ * @returns {string} A valid, randomly generated Belgian IBAN
+ */
+function generateBelgianIBAN() {
+  // Generate random 3-digit bank code
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 3);
+
+  // Generate random 7-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 7);
+
+  // Calculate national check digits
+  const bbanWithoutCheckDigits = bankCode + accountNumber;
+  const nationalCheckDigits = Number(bbanWithoutCheckDigits) % 97;
+  let checkDigitString;
+  if (nationalCheckDigits >= 10) {
+    checkDigitString = String(nationalCheckDigits);
+  } else if (nationalCheckDigits === 0) {
+    checkDigitString = "97";
+  } else {
+    checkDigitString = "0" + nationalCheckDigits;
+  }
+
+  // Assemble BBAN
+  const bban = bbanWithoutCheckDigits + checkDigitString;
+
+  // Calculate check digits
+  const countryCode = COUNTRIES.BELGIUM.isoCode;
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
+}
+
+/**
+ * Generates a valid random Dutch IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'NL'
+ * - Contain valid check digits
+ * - Use a random 4-letter bank code
+ * - Use a random 10-digit account number
+ *
+ * @returns {string} A valid, randomly generated Swiss IBAN
+ */
+function generateDutchIBAN() {
+  // Generate random 4-letter bank code
+  const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
+
+  // Generate random 10-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
+
+  // Assemble BBAN
+  const bban = bankCode + accountNumber;
+
+  // Calculate check digits
+  const countryCode = COUNTRIES.NETHERLANDS.isoCode;
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
+}
+
+/**
+ * Generates a valid random French IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'FR'
+ * - Contain valid check digits
+ * - Use a random 5-digit bank code
+ * - Use a random 5-digit branch code
+ * - Use a random 11-character alphanumeric account number
+ * - Use a 2-digit RIB key (BBAN check)
+ *
+ * @returns {string} A valid, randomly generated French IBAN
+ */
+function generateFrenchIBAN() {
+  // Generate random 5-digit bank code
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 5);
+
+  // Generate random 5-digit branch code
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 5);
+
+  // Generate random 11-character alphanumeric account number
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 11);
+
+  // Calculate 2-digit RIB key
+  const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 64).toString().padStart(2, "0"));
+  const accountNumberTransformed = lettersToNumbers(accountNumber);
+  const bbanWithoutRibKeyNumber = BigInt(bankCode + branchCode + accountNumberTransformed);
+
+  const ribKeyNumber = 97n - (bbanWithoutRibKeyNumber % 97n);
+  const ribKey = String(ribKeyNumber).padStart(2, "0");
+
+  // Assemble BBAN
+  const bban = bankCode + branchCode + accountNumber + ribKey;
+
+  // Calculate check digits
+  const countryCode = COUNTRIES.FRANCE.isoCode;
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
 }
 
 /**
@@ -134,6 +264,68 @@ function generateNorwegianIBAN() {
   const ibanCheckDigits = calculateIBANCheckDigits(countryCode, bban);
 
   return `${countryCode}${ibanCheckDigits}${bban}`;
+}
+
+/**
+ * Generates a valid random Russian IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'RU'
+ * - Contain valid check digits
+ * - Use a random 9-digit bank identifier
+ * - Use a random 5-digit branch identifier
+ * - Use a random 15-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated Russian IBAN
+ */
+function generateRussianIBAN() {
+  // Generate random 9-digit bank identifier
+  const bankIdentifier = generateRandomStringOfChars(ALL_DIGITS, 9);
+
+  // Generate random 5-digit branch identifier
+  const branchIdentifier = generateRandomStringOfChars(ALL_DIGITS, 5);
+
+  // Generate random 15-character alphanumeric account number
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 15);
+
+  // Assemble BBAN
+  const bban = bankIdentifier + branchIdentifier + accountNumber;
+
+  // Calculate check digits
+  const countryCode = COUNTRIES.RUSSIA.isoCode;
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
+}
+
+/**
+ * Generates a valid random Swiss IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'CH'
+ * - Contain valid check digits
+ * - Use a random 5-digit bank clearing number
+ * - Use a random 12-digit account number
+ *
+ * @returns {string} A valid, randomly generated Swiss IBAN
+ */
+function generateSwissIBAN() {
+  // Generate random 5-digit bank clearing number
+  const bankClearingNumber = generateRandomStringOfChars(ALL_DIGITS, 5);
+
+  // Generate random 12-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 12);
+
+  // Assemble BBAN
+  const bban = bankClearingNumber + accountNumber;
+
+  // Calculate check digits
+  const countryCode = COUNTRIES.SWITZERLAND.isoCode;
+  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
+
+  // Assemble IBAN
+  return `${countryCode}${checkDigits}${bban}`;
 }
 
 /**

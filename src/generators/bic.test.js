@@ -4,7 +4,7 @@ import { ALL_LETTERS_AND_ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 import { COUNTRIES } from "../misc/countries.js";
 
-const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.FRANCE.isoCode, COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
+const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (countryCode) => {
