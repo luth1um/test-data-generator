@@ -81,15 +81,8 @@ function generateBelgianIBAN() {
     checkDigitString = "0" + nationalCheckDigits;
   }
 
-  // Assemble BBAN
   const bban = bbanWithoutCheckDigits + checkDigitString;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.BELGIUM.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.BELGIUM.isoCode, bban);
 }
 
 /**
@@ -110,15 +103,8 @@ function generateDutchIBAN() {
   // Generate random 10-digit account number
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
 
-  // Assemble BBAN
   const bban = bankCode + accountNumber;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.NETHERLANDS.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.NETHERLANDS.isoCode, bban);
 }
 
 /**
@@ -152,15 +138,8 @@ function generateFrenchIBAN() {
   const ribKeyNumber = 97n - (bbanWithoutRibKeyNumber % 97n);
   const ribKey = String(ribKeyNumber).padStart(2, "0");
 
-  // Assemble BBAN
   const bban = bankCode + branchCode + accountNumber + ribKey;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.FRANCE.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.FRANCE.isoCode, bban);
 }
 
 /**
@@ -181,15 +160,8 @@ function generateGermanIBAN() {
   // Generate random 10-digit account number, padded with leading zeros
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
 
-  // Assemble BBAN (bank code + account number)
   const bban = bankCode + accountNumber;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.GERMANY.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.GERMANY.isoCode, bban);
 }
 
 /**
@@ -214,15 +186,8 @@ function generateMalteseIBAN() {
   // Generate random 18-character alphanumeric account number
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 18);
 
-  // Assemble BBAN
   const bban = bicPart + branchCode + accountNumber;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.MALTA.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.MALTA.isoCode, bban);
 }
 
 /**
@@ -259,11 +224,7 @@ function generateNorwegianIBAN() {
   }
 
   const bban = bban10 + nationalCheckDigit;
-
-  const countryCode = COUNTRIES.NORWAY.isoCode;
-  const ibanCheckDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  return `${countryCode}${ibanCheckDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.NORWAY.isoCode, bban);
 }
 
 /**
@@ -288,15 +249,8 @@ function generateRussianIBAN() {
   // Generate random 15-character alphanumeric account number
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 15);
 
-  // Assemble BBAN
   const bban = bankIdentifier + branchIdentifier + accountNumber;
-
-  // Calculate check digits
-  const countryCode = COUNTRIES.RUSSIA.isoCode;
-  const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
-  return `${countryCode}${checkDigits}${bban}`;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.RUSSIA.isoCode, bban);
 }
 
 /**
@@ -317,14 +271,19 @@ function generateSwissIBAN() {
   // Generate random 12-digit account number
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 12);
 
-  // Assemble BBAN
   const bban = bankClearingNumber + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.SWITZERLAND.isoCode, bban);
+}
 
-  // Calculate check digits
-  const countryCode = COUNTRIES.SWITZERLAND.isoCode;
+/**
+ * Calculates the IBAN check digits and assembles the IBAN.
+ *
+ * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE')
+ * @param {string} bban - The BBAN part of the IBAN (country-specific format)
+ * @returns {string} The complete IBAN including check digits
+ */
+function calculateIbanCheckDigitsAndAssembleIban(countryCode, bban) {
   const checkDigits = calculateIBANCheckDigits(countryCode, bban);
-
-  // Assemble IBAN
   return `${countryCode}${checkDigits}${bban}`;
 }
 
