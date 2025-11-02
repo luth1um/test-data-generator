@@ -255,7 +255,15 @@ export function setupUI(app) {
     }
   }
 
-  generateButton.addEventListener("click", generateData);
+  // Handle mousedown for mouse interaction
+  generateButton.addEventListener("mousedown", generateData);
+  // Handle keyboard interaction (Enter and Space) when button is focused
+  generateButton.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault(); // Prevent default scrolling on Space
+      generateData();
+    }
+  });
 
   downloadButton.addEventListener("click", () => {
     if (!lastResults.length) return;
