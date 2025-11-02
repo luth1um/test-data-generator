@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest";
 import { BIC_SUPPORTED_COUNTRY_CODES, generateBIC } from "./bic.js";
 import { ALL_LETTERS_AND_ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { COUNTRIES } from "../misc/countries.js";
 
-const UNSUPPORTED_COUNTRY_CODES = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
+const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.FRANCE.isoCode, COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (countryCode) => {

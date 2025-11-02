@@ -6,8 +6,10 @@ import {
   ALL_LETTERS_EXCEPT_X_AND_ALL_DIGITS,
   generateRandomStringOfChars,
 } from "../misc/randomUtils.js";
+import { COUNTRIES } from "../misc/countries.js";
 
-export const BIC_SUPPORTED_COUNTRY_CODES = ["DE", "MT", "NO"];
+export const BIC_SUPPORTED_COUNTRIES = [COUNTRIES.GERMANY, COUNTRIES.MALTA, COUNTRIES.NORWAY];
+export const BIC_SUPPORTED_COUNTRY_CODES = BIC_SUPPORTED_COUNTRIES.map((country) => country.isoCode);
 
 /**
  * Generates a valid random BIC (Business Identifier Code) with 8 or 11 characters for the specified country code.

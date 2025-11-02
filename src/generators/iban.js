@@ -5,6 +5,9 @@ import {
   ALL_LETTERS_AND_ALL_DIGITS,
   generateRandomStringOfChars,
 } from "../misc/randomUtils.js";
+import { COUNTRIES } from "../misc/countries.js";
+
+export const IBAN_SUPPORTED_COUNTRIES = [COUNTRIES.GERMANY, COUNTRIES.MALTA, COUNTRIES.NORWAY];
 
 /**
  * Generates a valid random IBAN for the specified country code.
@@ -19,11 +22,11 @@ import {
  */
 export function generateIBAN(countryCode) {
   switch (countryCode) {
-    case "DE":
+    case COUNTRIES.GERMANY.isoCode:
       return generateGermanIBAN();
-    case "MT":
+    case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
-    case "NO":
+    case COUNTRIES.NORWAY.isoCode:
       return generateNorwegianIBAN();
     default:
       throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
@@ -52,7 +55,7 @@ function generateGermanIBAN() {
   const bban = bankCode + accountNumber;
 
   // Calculate check digits
-  const countryCode = "DE";
+  const countryCode = COUNTRIES.GERMANY.isoCode;
   const checkDigits = calculateIBANCheckDigits(countryCode, bban);
 
   // Assemble IBAN
@@ -85,7 +88,7 @@ function generateMalteseIBAN() {
   const bban = bicPart + branchCode + accountNumber;
 
   // Calculate check digits
-  const countryCode = "MT";
+  const countryCode = COUNTRIES.MALTA.isoCode;
   const checkDigits = calculateIBANCheckDigits(countryCode, bban);
 
   // Assemble IBAN
@@ -127,7 +130,7 @@ function generateNorwegianIBAN() {
 
   const bban = bban10 + nationalCheckDigit;
 
-  const countryCode = "NO";
+  const countryCode = COUNTRIES.NORWAY.isoCode;
   const ibanCheckDigits = calculateIBANCheckDigits(countryCode, bban);
 
   return `${countryCode}${ibanCheckDigits}${bban}`;

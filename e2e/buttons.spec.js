@@ -11,9 +11,9 @@ import {
 } from "../src/uiLogic.js";
 import { clickButton } from "./helpers/buttonHelpers.js";
 import { generateIbanForCountry } from "./helpers/ibanHelpers.js";
-import { IBAN_COUNTRIES } from "../src/ibanUi.js";
 import fs from "fs/promises";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 
 test.describe("The buttons for increasing and decreased the amount of results", () => {
   test("should increase and decrease the number of results correctly", async ({ page }, testInfo) => {
@@ -61,7 +61,7 @@ test.describe("The buttons for increasing and decreased the amount of results", 
 test.describe("When pressing the download button", () => {
   test("the generator results should be downloaded", async ({ page }) => {
     // given
-    const generatedIban = await generateIbanForCountry(page, IBAN_COUNTRIES[0].code);
+    const generatedIban = await generateIbanForCountry(page, IBAN_SUPPORTED_COUNTRIES[0].isoCode);
 
     // when
     const [download] = await Promise.all([

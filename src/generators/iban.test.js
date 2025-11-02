@@ -1,52 +1,62 @@
 import { describe, expect, it } from "vitest";
-import { generateIBAN } from "./iban.js";
+import { generateIBAN, IBAN_SUPPORTED_COUNTRIES } from "./iban.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { COUNTRIES } from "../misc/countries.js";
 
-const UNSUPPORTED_COUNTRY_CODES = ["US", "GB", "FR", "IT", "ES", "NL", "BE", "AT", "CH"];
+const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.FRANCE.isoCode, COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 class IBANTestConfiguration {
   /**
-   * @param {string} country - Country
-   * @param {string} countryCode - Two-letter country code
+   * @param {Country} country - Country
    * @param {number} length - Expected IBAN length
    * @param {RegExp} bban - Regex pattern for the BBAN part
    */
-  constructor(country, countryCode, length, bban) {
+  constructor(country, length, bban) {
     this.country = country;
-    this.countryCode = countryCode;
     this.length = length;
     this.bbanFormatRegex = bban;
   }
 }
 
 const COUNTRY_CONFIGS = [
-  new IBANTestConfiguration("German", "DE", 22, /^\d+$/),
-  new IBANTestConfiguration("Maltese", "MT", 31, /^[A-Z]{4}\d{5}[A-Z0-9]{18}$/),
-  new IBANTestConfiguration("Norwegian", "NO", 15, /^\d+$/),
+  new IBANTestConfiguration(COUNTRIES.GERMANY, 22, /^\d+$/),
+  new IBANTestConfiguration(COUNTRIES.MALTA, 31, /^[A-Z]{4}\d{5}[A-Z0-9]{18}$/),
+  new IBANTestConfiguration(COUNTRIES.NORWAY, 15, /^\d+$/),
 ];
 
-describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
+describe("The list of IBAN countries", () => {
+  it("should have the same length as the list of IBAN test configurations (pre-condition for tests)", () => {
+    // when / then
+    expect(COUNTRY_CONFIGS.length).toBe(IBAN_SUPPORTED_COUNTRIES.length);
+  });
+});
+
+describe.each(COUNTRY_CONFIGS)("The generator for IBANs of $country.name", (config) => {
   it("should produce IBANs with correct length", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const iban = generateIBAN(config.countryCode);
+    const iban = generateIBAN(config.country.isoCode);
 
     // then
     expect(iban.length).toBe(config.length);
   });
 
-  it(`should produce IBANs starting with '${config.countryCode}'`, { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
-    // when
-    const iban = generateIBAN(config.countryCode);
+  it(
+    `should produce IBANs starting with '${config.country.isoCode}'`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const iban = generateIBAN(config.country.isoCode);
 
-    // then
-    const countryCode = iban.substring(0, 2);
-    expect(countryCode).toBe(config.countryCode);
-  });
+      // then
+      const countryCode = iban.substring(0, 2);
+      expect(countryCode).toBe(config.country.isoCode);
+    }
+  );
 
   it("should match the country format", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const iban = generateIBAN(config.countryCode);
+    const iban = generateIBAN(config.country.isoCode);
 
     // then
     const bban = iban.substring(4);
@@ -55,7 +65,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
 
   it("should produce IBANs having valid check digits", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const iban = generateIBAN(config.countryCode);
+    const iban = generateIBAN(config.country.isoCode);
 
     // then
     const checkDigits = iban.substring(2, 4);
@@ -65,7 +75,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
 
   it("should produce different IBANs with each call", () => {
     // when
-    const ibans = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateIBAN(config.countryCode));
+    const ibans = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateIBAN(config.country.isoCode));
 
     // then
     const uniqueIbans = new Set(ibans);
@@ -76,7 +86,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
 describe("The generator for Norwegian IBANs", () => {
   it("should produce IBANs with the correct national check digit", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const iban = generateIBAN("NO");
+    const iban = generateIBAN(COUNTRIES.NORWAY.isoCode);
     const nationalCheckDigit = iban[iban.length - 1];
     const bbanWithoutCheckDigit = iban.substring(4, 14);
 
@@ -94,7 +104,7 @@ describe("The generator for Norwegian IBANs", () => {
 
   it("should not produce digit 0 at position 4 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const iban = generateIBAN("NO");
+    const iban = generateIBAN(COUNTRIES.NORWAY.isoCode);
 
     // then
     const char5 = iban[4];

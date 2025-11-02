@@ -1,14 +1,10 @@
 /* global document */
 
 import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+import { IBAN_SUPPORTED_COUNTRIES } from "./generators/iban.js";
+import { COUNTRIES } from "./misc/countries.js";
 
 export const TEST_ID_SELECT_IBAN_COUNTRY = "select-country-iban";
-
-export const IBAN_COUNTRIES = [
-  { code: "DE", name: "Germany (DE)" },
-  { code: "MT", name: "Malta (MT)" },
-  { code: "NO", name: "Norway (NO)" },
-];
 
 export const IBAN_OPTION_VALUE = "iban";
 
@@ -45,13 +41,13 @@ export function createCountryControls() {
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select-iban";
   countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_IBAN_COUNTRY);
-  IBAN_COUNTRIES.forEach(({ code, name }) => {
+  IBAN_SUPPORTED_COUNTRIES.forEach((country) => {
     const option = document.createElement("option");
-    option.value = code;
-    option.textContent = name;
+    option.value = country.isoCode;
+    option.textContent = country.displayName();
     countrySelect.appendChild(option);
   });
-  countrySelect.value = IBAN_COUNTRIES[0].code;
+  countrySelect.value = COUNTRIES.GERMANY.isoCode;
   countryLabel.appendChild(countrySelect);
   return { countryLabel, countrySelect };
 }
