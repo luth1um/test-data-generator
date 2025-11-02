@@ -40,10 +40,6 @@ export function generateIBAN(countryCode) {
  * - Use a random 10-digit account number
  *
  * @returns {string} A valid, randomly generated German IBAN
- *
- * @example
- * const iban = generateGermanIBAN();
- * console.log(iban); // e.g., 'DE44123456781234567890'
  */
 function generateGermanIBAN() {
   // Generate random 8-digit bank code (BLZ)
@@ -74,10 +70,6 @@ function generateGermanIBAN() {
  * - Use a random 18-character alphanumeric account number
  *
  * @returns {string} A valid, randomly generated Maltese IBAN
- *
- * @example
- * const iban = generateMalteseIBAN();
- * console.log(iban); // e.g., 'MT84MALT011000012345MTLONT001234'
  */
 function generateMalteseIBAN() {
   // Generate random 4 uppercase letters for BIC part
@@ -110,10 +102,6 @@ function generateMalteseIBAN() {
  * - Use a random 6-digit account number
  *
  * @returns {string} A valid, randomly generated Norwegian IBAN
- *
- * @example
- * const iban = generateNorwegianIBAN();
- * console.log(iban); // e.g., 'NO9386011117947'
  */
 function generateNorwegianIBAN() {
   // Generate random 4-digit bank code (cannot start with 0)

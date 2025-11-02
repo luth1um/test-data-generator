@@ -73,6 +73,35 @@ describe.each(COUNTRY_CONFIGS)("The generator for $country IBANs", (config) => {
   });
 });
 
+describe("The generator for Norwegian IBANs", () => {
+  it("should produce IBANs with the correct national check digit", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
+    // when
+    const iban = generateIBAN("NO");
+    const nationalCheckDigit = iban[iban.length - 1];
+    const bbanWithoutCheckDigit = iban.substring(4, 14);
+
+    // then
+    const weights = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
+    let sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(bbanWithoutCheckDigit[i], 10) * weights[i];
+    }
+    const checkDigit = 11 - (sum % 11);
+    const calculatedCheckDigit = checkDigit === 11 ? String(0) : String(checkDigit);
+
+    expect(nationalCheckDigit).toEqual(calculatedCheckDigit);
+  });
+
+  it("should not produce digit 0 at position 4 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
+    // when
+    const iban = generateIBAN("NO");
+
+    // then
+    const char5 = iban[4];
+    expect(char5).not.toBe("0");
+  });
+});
+
 describe("The error handling of the IBAN generator", () => {
   it.each(UNSUPPORTED_COUNTRY_CODES)("should throw an error for unsupported country code $0", (countryCode) => {
     // when / then

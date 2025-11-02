@@ -38,10 +38,6 @@ export function generateBIC(countryCode) {
  *
  * @param {string} countryCode - The two-letter ISO country code (e.g., 'DE').
  * @returns {string} A valid, randomly generated German BIC (e.g., 'DEUTDEFF500')
- *
- * @example
- * const bic = generateGermanBIC();
- * console.log(bic); // e.g., 'DEUTDEFF500'
  */
 function generateRandomBIC(countryCode) {
   const bankCode = generateRandomBankCode();
