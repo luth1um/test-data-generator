@@ -3,7 +3,6 @@ import { generateIBAN, IBAN_SUPPORTED_COUNTRIES } from "./iban.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 import { COUNTRIES } from "../misc/countries.js";
 
-const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 class IBANTestConfiguration {
@@ -162,10 +161,13 @@ describe("The generator for Norwegian IBANs", () => {
 });
 
 describe("The error handling of the IBAN generator", () => {
-  it.each(UNSUPPORTED_COUNTRY_CODES)("should throw an error for unsupported country code $0", (countryCode) => {
+  it("should throw an error for unsupported country codes", () => {
+    // given
+    const unsupportedCountry = "XY";
+
     // when / then
-    expect(() => generateIBAN(countryCode)).toThrow(
-      `IBAN generation for country code '${countryCode}' is not supported.`
+    expect(() => generateIBAN(unsupportedCountry)).toThrow(
+      `IBAN generation for country code '${unsupportedCountry}' is not supported.`
     );
   });
 

@@ -2,9 +2,7 @@ import { describe, expect, it } from "vitest";
 import { BIC_SUPPORTED_COUNTRY_CODES, generateBIC } from "./bic.js";
 import { ALL_LETTERS_AND_ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
-import { COUNTRIES } from "../misc/countries.js";
 
-const UNSUPPORTED_COUNTRY_CODES = [COUNTRIES.ITALY.isoCode, COUNTRIES.UK.isoCode];
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 
 describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (countryCode) => {
@@ -144,10 +142,13 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 });
 
 describe("The error handling of the BIC generator", () => {
-  it.each(UNSUPPORTED_COUNTRY_CODES)("should throw an error for unsupported country code $0", (countryCode) => {
+  it("should throw an error for unsupported country codes", () => {
+    // given
+    const unsupportedCountry = "XY";
+
     // when / then
-    expect(() => generateBIC(countryCode)).toThrow(
-      `BIC generation for country code '${countryCode}' is not supported.`
+    expect(() => generateBIC(unsupportedCountry)).toThrow(
+      `BIC generation for country code '${unsupportedCountry}' is not supported.`
     );
   });
 
