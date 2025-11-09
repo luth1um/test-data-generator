@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Linting
-        run: pnpm eslint . --max-warnings 0
+        run: pnpm oxlint --deny-warnings
 
       - name: Check formatting
         run: pnpm prettier --check .
