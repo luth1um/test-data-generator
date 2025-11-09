@@ -267,7 +267,6 @@ function generateRussianIBAN() {
 function generateSwissIBAN() {
   // Generate random 5-digit bank clearing number
   const bankClearingNumber = generateRandomStringOfChars(ALL_DIGITS, 5);
-  let unused = "bla";
 
   // Generate random 12-digit account number
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 12);
