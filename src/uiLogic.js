@@ -256,7 +256,12 @@ export function setupUI(app) {
   }
 
   // Handle mousedown for mouse interaction
-  generateButton.addEventListener("mousedown", generateData);
+  generateButton.addEventListener("mousedown", (event) => {
+    // 0 = left mouse button
+    if (event.button === 0) {
+      generateData();
+    }
+  });
   // Handle keyboard interaction (Enter and Space) when button is focused
   generateButton.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
