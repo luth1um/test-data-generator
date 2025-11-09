@@ -11,9 +11,6 @@ on:
     - cron: "0 8 * * 6" # every Saturday at 8:00 UTC
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 env:
   HUSKY: 0
   PNPM_VERSION: "10"
@@ -163,6 +160,8 @@ jobs:
     needs:
       - e2e
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.ref == 'refs/heads/main'
     concurrency:
       group: deploy_gh_pages

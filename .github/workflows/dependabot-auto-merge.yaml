@@ -1,16 +1,14 @@
 name: Dependabot auto-merge
 on: pull_request
 
-permissions:
-  pull-requests: write
-  contents: write
-
-env:
-  GH_TOKEN: ${{ github.token }}
-
 jobs:
   dependabot:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
     if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'luth1um/test-data-generator'
     steps:
       - name: Enable auto-merge for Dependabot PRs
