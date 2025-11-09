@@ -269,6 +269,14 @@ export function setupUI(app) {
     }
   }
 
+  // Handle Enter key on amount input to generate results
+  amountInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      generateData();
+    }
+  });
+
   // Handle mousedown for mouse interaction
   generateButton.addEventListener("mousedown", (event) => {
     // 0 = left mouse button
