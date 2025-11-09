@@ -142,13 +142,13 @@ export function setupUI(app) {
   const resultDiv = document.createElement("div");
   resultDiv.id = RESULT_DIV_ID;
   resultDiv.setAttribute(DATA_TEST_ID, TEST_ID_DIV_RESULT);
-  resultDiv.style.marginTop = "2em";
+  resultDiv.style.marginTop = "0.5em";
 
   let lastResults = [];
 
   // Result section
   const resultSection = document.createElement("div");
-  resultSection.style.marginTop = "2em";
+  resultSection.style.marginTop = "1em";
 
   const resultHeading = document.createElement("h2");
   resultHeading.textContent = "Results";

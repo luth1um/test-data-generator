@@ -145,7 +145,7 @@ button:disabled {
 }
 
 h2 {
-  margin-top: 2.5em;
+  margin-top: 0.5em;
   margin-bottom: 0.5em;
   color: #1976d2;
   font-size: 1.3em;
@@ -157,7 +157,7 @@ h2 {
 }
 
 #result {
-  margin-top: 1em;
+  margin-top: 0.5em;
   font-family: "Fira Mono", "Consolas", monospace;
   background: #f5f7fa;
   border-radius: 6px;
