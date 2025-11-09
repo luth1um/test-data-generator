@@ -68,12 +68,26 @@ export function setupUI(app) {
   /**
    * Updates the visibility of country controls based on the selected generation type.
    * Shows country controls only when IBAN or BIC is selected.
-   *
-   * @example
-   * updateCountryDropdown(); // Updates visibility based on current selection
+   * Synchronizes the country value between IBAN and BIC dropdowns when switching.
    */
   function updateCountryDropdown() {
     const type = typeSelect.value;
+
+    // If switching to IBAN or BIC, sync the country value from the other dropdown
+    // This ensures the country selection is preserved when switching between IBAN and BIC
+    if (type === IBAN_OPTION_VALUE || type === BIC_OPTION_VALUE) {
+      // Determine source and target dropdowns
+      const sourceSelect = type === IBAN_OPTION_VALUE ? bicCountrySelect : ibanCountrySelect;
+      const targetSelect = type === IBAN_OPTION_VALUE ? ibanCountrySelect : bicCountrySelect;
+      const sourceCountryValue = sourceSelect.value;
+
+      // Sync if the source country exists in the target dropdown
+      // This preserves the country selection when switching between IBAN and BIC
+      if (targetSelect.querySelector(`option[value="${sourceCountryValue}"]`)) {
+        targetSelect.value = sourceCountryValue;
+      }
+    }
+
     showIbanCountryControls(type, ibanCountryLabel);
     showBicCountryControls(type, bicCountryLabel);
   }
