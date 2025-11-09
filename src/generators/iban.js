@@ -11,9 +11,11 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.BELGIUM,
   COUNTRIES.FRANCE,
   COUNTRIES.GERMANY,
+  COUNTRIES.ITALY,
   COUNTRIES.MALTA,
   COUNTRIES.NETHERLANDS,
   COUNTRIES.NORWAY,
+  COUNTRIES.ROMANIA,
   COUNTRIES.RUSSIA,
   COUNTRIES.SWITZERLAND,
 ];
@@ -37,12 +39,16 @@ export function generateIBAN(countryCode) {
       return generateFrenchIBAN();
     case COUNTRIES.GERMANY.isoCode:
       return generateGermanIBAN();
+    case COUNTRIES.ITALY.isoCode:
+      return generateItalianIBAN();
     case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
     case COUNTRIES.NETHERLANDS.isoCode:
       return generateDutchIBAN();
     case COUNTRIES.NORWAY.isoCode:
       return generateNorwegianIBAN();
+    case COUNTRIES.ROMANIA.isoCode:
+      return generateRomanianIBAN();
     case COUNTRIES.RUSSIA.isoCode:
       return generateRussianIBAN();
     case COUNTRIES.SWITZERLAND.isoCode:
@@ -157,11 +163,95 @@ function generateGermanIBAN() {
   // Generate random 8-digit bank code (BLZ)
   const bankCode = generateRandomStringOfChars(ALL_DIGITS, 8);
 
-  // Generate random 10-digit account number, padded with leading zeros
+  // Generate random 10-digit account number
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
 
   const bban = bankCode + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.GERMANY.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Italian IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'IT'
+ * - Contain valid check digits
+ * - Contain a national check character (CIN)
+ * - Use a 5-digit bank identifier (ABI)
+ * - Use a 5-digit branch identifier (CAB)
+ * - Use a random 12-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated Italian IBAN
+ */
+function generateItalianIBAN() {
+  // Generate random 5-digit bank identifier (ABI), 5-digit bank identifier (CAB), and 12-char alphanumeric account no.
+  const bankIdentifier = generateRandomStringOfChars(ALL_DIGITS, 5);
+  const branchIdentifier = generateRandomStringOfChars(ALL_DIGITS, 5);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 12);
+  const bbanWithoutNationalCheck = bankIdentifier + branchIdentifier + accountNumber;
+
+  // Odd-position conversion table for national check digit (official Italian CIN table)
+  const oddValues = {
+    0: 1,
+    1: 0,
+    2: 5,
+    3: 7,
+    4: 9,
+    5: 13,
+    6: 15,
+    7: 17,
+    8: 19,
+    9: 21,
+    A: 1,
+    B: 0,
+    C: 5,
+    D: 7,
+    E: 9,
+    F: 13,
+    G: 15,
+    H: 17,
+    I: 19,
+    J: 21,
+    K: 1,
+    L: 0,
+    M: 5,
+    N: 7,
+    O: 9,
+    P: 13,
+    Q: 15,
+    R: 17,
+    S: 19,
+    T: 21,
+    U: 1,
+    V: 0,
+    W: 5,
+    X: 7,
+    Y: 9,
+    Z: 13,
+  };
+
+  // Even-position values for national check digit: A=0, B=1, ..., Z=25; digits are numeric
+  const evenValue = (ch) => {
+    if (/[0-9]/.test(ch)) return parseInt(ch, 10);
+    return ch.charCodeAt(0) - "A".charCodeAt(0);
+  };
+
+  // Compute total sum for national check digit
+  let total = 0;
+  for (let i = 0; i < bbanWithoutNationalCheck.length; i++) {
+    const ch = bbanWithoutNationalCheck[i];
+    const position = i + 1; // positions start from 1
+    if (position % 2 === 1) {
+      total += oddValues[ch] ?? 0;
+    } else {
+      total += evenValue(ch);
+    }
+  }
+  const remainder = total % 26;
+  const cin = String.fromCharCode("A".charCodeAt(0) + remainder);
+
+  const bban = cin + bbanWithoutNationalCheck;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.ITALY.isoCode, bban);
 }
 
 /**
@@ -225,6 +315,28 @@ function generateNorwegianIBAN() {
 
   const bban = bban10 + nationalCheckDigit;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.NORWAY.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Romanian IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'RO'
+ * - Contain valid check digits
+ * - Use a random 4-letter bank identifier
+ * - Use a random 16-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated Romanian IBAN
+ */
+function generateRomanianIBAN() {
+  // Generate random 4-letter bank code
+  const bankIdentifier = generateRandomStringOfChars(ALL_LETTERS, 4);
+
+  // Generate random 16-character alphanumeric account number
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 16);
+
+  const bban = bankIdentifier + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.ROMANIA.isoCode, bban);
 }
 
 /**

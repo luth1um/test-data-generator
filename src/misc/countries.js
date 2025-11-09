@@ -21,9 +21,11 @@ export const COUNTRIES = {
   BELGIUM: new Country("Belgium", "BE"),
   FRANCE: new Country("France", "FR"),
   GERMANY: new Country("Germany", "DE"),
+  ITALY: new Country("Italy", "IT"),
   MALTA: new Country("Malta", "MT"),
   NETHERLANDS: new Country("Netherlands", "NL"),
   NORWAY: new Country("Norway", "NO"),
+  ROMANIA: new Country("Romania", "RO"),
   RUSSIA: new Country("Russia", "RU"),
   SWITZERLAND: new Country("Switzerland", "CH"),
 };
