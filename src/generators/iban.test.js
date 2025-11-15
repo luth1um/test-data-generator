@@ -122,7 +122,7 @@ describe("The generator for French IBANs", () => {
       const bbanWithoutCheckDigits = iban.substring(4, iban.length - 2);
 
       // then
-      const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 64).toString().padStart(2, "0"));
+      const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString().padStart(2, "0"));
       const bbanToNumberString = lettersToNumbers(bbanWithoutCheckDigits);
 
       const bbanNumber = BigInt(bbanToNumberString);

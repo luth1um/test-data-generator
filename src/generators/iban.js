@@ -169,11 +169,12 @@ function generateFrenchIBAN() {
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 11);
 
   // Calculate 2-digit RIB key
-  const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 64).toString().padStart(2, "0"));
+  const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString());
   const accountNumberTransformed = lettersToNumbers(accountNumber);
   const bbanWithoutRibKeyNumber = BigInt(bankCode + branchCode + accountNumberTransformed);
 
-  const ribKeyNumber = 97n - (bbanWithoutRibKeyNumber % 97n);
+  let ribKeyNumber = 97n - (bbanWithoutRibKeyNumber % 97n);
+  ribKeyNumber = ribKeyNumber !== 0n ? ribKeyNumber : 97n;
   const ribKey = String(ribKeyNumber).padStart(2, "0");
 
   const bban = bankCode + branchCode + accountNumber + ribKey;
