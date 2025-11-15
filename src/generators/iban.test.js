@@ -29,6 +29,7 @@ const COUNTRY_CONFIGS = [
   new IBANTestConfiguration(COUNTRIES.ROMANIA, 24, /^[A-Z0-9]{4}[A-Z0-9]{16}$/),
   new IBANTestConfiguration(COUNTRIES.RUSSIA, 33, /^\d{14}[A-Z0-9]{15}$/),
   new IBANTestConfiguration(COUNTRIES.SWITZERLAND, 21, /^\d+$/),
+  new IBANTestConfiguration(COUNTRIES.VATICAN_CITY, 22, /^\d+$/),
 ];
 
 describe("The list of IBAN countries", () => {

@@ -18,6 +18,7 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.ROMANIA,
   COUNTRIES.RUSSIA,
   COUNTRIES.SWITZERLAND,
+  COUNTRIES.VATICAN_CITY,
 ];
 
 /**
@@ -53,6 +54,8 @@ export function generateIBAN(countryCode) {
       return generateRussianIBAN();
     case COUNTRIES.SWITZERLAND.isoCode:
       return generateSwissIBAN();
+    case COUNTRIES.VATICAN_CITY.isoCode:
+      return generateVaticanIBAN();
     default:
       throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
   }
@@ -385,6 +388,28 @@ function generateSwissIBAN() {
 
   const bban = bankClearingNumber + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.SWITZERLAND.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Vatican IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'VA'
+ * - Contain valid check digits
+ * - Use a random 3-digit bank code
+ * - Use a random 15-digit account number
+ *
+ * @returns {string} A valid, randomly generated German IBAN
+ */
+function generateVaticanIBAN() {
+  // Generate random 3-digit bank code
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 3);
+
+  // Generate random 15-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 15);
+
+  const bban = bankCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.VATICAN_CITY.isoCode, bban);
 }
 
 /**

@@ -28,4 +28,5 @@ export const COUNTRIES = {
   ROMANIA: new Country("Romania", "RO"),
   RUSSIA: new Country("Russia", "RU"),
   SWITZERLAND: new Country("Switzerland", "CH"),
+  VATICAN_CITY: new Country("Vatican City", "VA"),
 };
