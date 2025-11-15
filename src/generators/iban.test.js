@@ -107,7 +107,7 @@ describe("The generator for Belgian IBANs", () => {
       digitString = String(digits).padStart(2, "0");
     }
 
-    expect(nationalCheckDigits).toEqual(digitString);
+    expect(nationalCheckDigits).toBe(digitString);
   });
 });
 
@@ -121,11 +121,40 @@ describe("The generator for French IBANs", () => {
       const ribKey = iban.substring(iban.length - 2);
       const bbanWithoutCheckDigits = iban.substring(4, iban.length - 2);
 
+      const ribMap = {
+        A: "1",
+        B: "2",
+        C: "3",
+        D: "4",
+        E: "5",
+        F: "6",
+        G: "7",
+        H: "8",
+        I: "9",
+        J: "1",
+        K: "2",
+        L: "3",
+        M: "4",
+        N: "5",
+        O: "6",
+        P: "7",
+        Q: "8",
+        R: "9",
+        S: "2",
+        T: "3",
+        U: "4",
+        V: "5",
+        W: "6",
+        X: "7",
+        Y: "8",
+        Z: "9",
+      };
+
       // then
-      const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString().padStart(2, "0"));
+      const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => ribMap[c]);
       const bbanToNumberString = lettersToNumbers(bbanWithoutCheckDigits);
 
-      const bbanNumber = BigInt(bbanToNumberString);
+      const bbanNumber = BigInt(bbanToNumberString + "00");
       const ribKeyNumber = BigInt(ribKey);
 
       const verificationResult = (bbanNumber + ribKeyNumber) % 97n;
@@ -146,12 +175,12 @@ describe("The generator for Norwegian IBANs", () => {
     const weights = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
     let sum = 0;
     for (let i = 0; i < 10; i++) {
-      sum += parseInt(bbanWithoutCheckDigit[i], 10) * weights[i];
+      sum += parseInt(bbanWithoutCheckDigit[9 - i], 10) * weights[i];
     }
     const checkDigit = 11 - (sum % 11);
     const calculatedCheckDigit = checkDigit === 11 ? String(0) : String(checkDigit);
 
-    expect(nationalCheckDigit).toEqual(calculatedCheckDigit);
+    expect(calculatedCheckDigit).toBe(nationalCheckDigit);
   });
 
   it("should not produce digit 0 at position 4 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {

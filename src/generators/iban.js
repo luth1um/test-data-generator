@@ -154,30 +154,61 @@ function generateDutchIBAN() {
  * - Use a random 5-digit bank code
  * - Use a random 5-digit branch code
  * - Use a random 11-character alphanumeric account number
- * - Use a 2-digit RIB key (BBAN check)
+ * - Use a 2-digit RIB key (BBAN check digits)
  *
  * @returns {string} A valid, randomly generated French IBAN
  */
 function generateFrenchIBAN() {
-  // Generate random 5-digit bank code
+  // Generate random 5-digit bank code, 5-digit branch code, and 11-character alphanumeric account number
   const bankCode = generateRandomStringOfChars(ALL_DIGITS, 5);
-
-  // Generate random 5-digit branch code
   const branchCode = generateRandomStringOfChars(ALL_DIGITS, 5);
-
-  // Generate random 11-character alphanumeric account number
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 11);
 
-  // Calculate 2-digit RIB key
-  const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => (c.charCodeAt(0) - 55).toString());
-  const accountNumberTransformed = lettersToNumbers(accountNumber);
-  const bbanWithoutRibKeyNumber = BigInt(bankCode + branchCode + accountNumberTransformed);
+  // Calculate 2-digit RIB key (french national check digits)
+  const bbanWithoutKey = bankCode + branchCode + accountNumber;
 
-  let ribKeyNumber = 97n - (bbanWithoutRibKeyNumber % 97n);
-  ribKeyNumber = ribKeyNumber !== 0n ? ribKeyNumber : 97n;
-  const ribKey = String(ribKeyNumber).padStart(2, "0");
+  // convert characters to numbers
+  const ribMap = {
+    A: "1",
+    B: "2",
+    C: "3",
+    D: "4",
+    E: "5",
+    F: "6",
+    G: "7",
+    H: "8",
+    I: "9",
+    J: "1",
+    K: "2",
+    L: "3",
+    M: "4",
+    N: "5",
+    O: "6",
+    P: "7",
+    Q: "8",
+    R: "9",
+    S: "2",
+    T: "3",
+    U: "4",
+    V: "5",
+    W: "6",
+    X: "7",
+    Y: "8",
+    Z: "9",
+  };
+  // Convert characters and leave numbers unchanged; append two zeros to multiply by 100
+  const converted = bbanWithoutKey.replace(/[A-Z]/g, (ch) => ribMap[ch]) + "00";
 
-  const bban = bankCode + branchCode + accountNumber + ribKey;
+  // Compute remainder for mod 97
+  let rem = 0n;
+  for (let i = 0; i < converted.length; i += 9) {
+    const chunk = converted.slice(i, i + 9);
+    rem = (rem * 10n ** BigInt(chunk.length) + BigInt(chunk)) % 97n;
+  }
+
+  const ribKey = String(Number(97n - rem)).padStart(2, "0");
+
+  const bban = bbanWithoutKey + ribKey;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.FRANCE.isoCode, bban);
 }
 
@@ -245,27 +276,29 @@ function generateItalianIBAN() {
     H: 17,
     I: 19,
     J: 21,
-    K: 1,
-    L: 0,
-    M: 5,
-    N: 7,
-    O: 9,
-    P: 13,
-    Q: 15,
-    R: 17,
-    S: 19,
-    T: 21,
-    U: 1,
-    V: 0,
-    W: 5,
-    X: 7,
-    Y: 9,
-    Z: 13,
+    K: 2,
+    L: 4,
+    M: 18,
+    N: 20,
+    O: 11,
+    P: 3,
+    Q: 6,
+    R: 8,
+    S: 12,
+    T: 14,
+    U: 16,
+    V: 10,
+    W: 22,
+    X: 25,
+    Y: 24,
+    Z: 23,
   };
 
   // Even-position values for national check digit: A=0, B=1, ..., Z=25; digits are numeric
   const evenValue = (ch) => {
-    if (/[0-9]/.test(ch)) return parseInt(ch, 10);
+    if (/[0-9]/.test(ch)) {
+      return parseInt(ch, 10);
+    }
     return ch.charCodeAt(0) - "A".charCodeAt(0);
   };
 
@@ -332,17 +365,18 @@ function generateNorwegianIBAN() {
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 6);
 
   // Calculate Modulus 11 check digit for the 10-digit BBAN
-  let bban10 = bankCode + accountNumber;
-  let weights = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
+  const bban10 = bankCode + accountNumber;
+  const weights = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
   let sum = 0;
   for (let i = 0; i < 10; i++) {
-    sum += parseInt(bban10[i], 10) * weights[i];
+    sum += parseInt(bban10[9 - i], 10) * weights[i];
   }
-  let remainder = sum % 11;
+  const remainder = sum % 11;
   let nationalCheckDigit = 11 - remainder;
-  if (nationalCheckDigit === 11) nationalCheckDigit = 0;
-  if (nationalCheckDigit === 10) {
-    // Invalid, regenerate
+  if (nationalCheckDigit === 11) {
+    nationalCheckDigit = 0;
+  } else if (nationalCheckDigit === 10) {
+    // Invalid -> regenerate
     return generateNorwegianIBAN();
   }
 
