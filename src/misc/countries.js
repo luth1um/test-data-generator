@@ -19,6 +19,7 @@ export class Country {
 
 export const COUNTRIES = {
   BELGIUM: new Country("Belgium", "BE"),
+  CYPRUS: new Country("Cyprus", "CY"),
   FRANCE: new Country("France", "FR"),
   GERMANY: new Country("Germany", "DE"),
   ITALY: new Country("Italy", "IT"),

@@ -9,6 +9,7 @@ import { COUNTRIES } from "../misc/countries.js";
 
 export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.BELGIUM,
+  COUNTRIES.CYPRUS,
   COUNTRIES.FRANCE,
   COUNTRIES.GERMANY,
   COUNTRIES.ITALY,
@@ -36,6 +37,8 @@ export function generateIBAN(countryCode) {
   switch (countryCode) {
     case COUNTRIES.BELGIUM.isoCode:
       return generateBelgianIBAN();
+    case COUNTRIES.CYPRUS.isoCode:
+      return generateCypriotIBAN();
     case COUNTRIES.FRANCE.isoCode:
       return generateFrenchIBAN();
     case COUNTRIES.GERMANY.isoCode:
@@ -92,6 +95,32 @@ function generateBelgianIBAN() {
 
   const bban = bbanWithoutCheckDigits + checkDigitString;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.BELGIUM.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Cypriot IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'CY'
+ * - Contain valid check digits
+ * - Use a random 3-digit bank code
+ * - Use a random 5-digit branch code
+ * - Use a random 16-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated Swiss IBAN
+ */
+function generateCypriotIBAN() {
+  // Generate random 3-digit bank code
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+
+  // Generate random 5-digit bank code
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+
+  // Generate random 16-digit account number
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 16);
+
+  const bban = bankCode + branchCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.CYPRUS.isoCode, bban);
 }
 
 /**
