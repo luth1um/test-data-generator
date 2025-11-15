@@ -32,11 +32,11 @@
     "@playwright/test": "1.56.1",
     "husky": "9.1.7",
     "lint-staged": "16.2.6",
-    "oxlint": "1.26.0",
+    "oxlint": "1.28.0",
     "prettier": "3.6.2",
     "rimraf": "6.1.0",
     "vite": "7.2.2",
-    "vitest": "4.0.8"
+    "vitest": "4.0.9"
   },
   "lint-staged": {
     "*.{css,html,js,json,md,prettierrc,yaml,yml}": "prettier --write"
