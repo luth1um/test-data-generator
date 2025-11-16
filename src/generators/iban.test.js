@@ -19,6 +19,7 @@ class IBANTestConfiguration {
 }
 
 const COUNTRY_CONFIGS = [
+  new IBANTestConfiguration(COUNTRIES.AUSTRIA, 20, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.BELGIUM, 16, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.CYPRUS, 28, /^\d{8}[A-Z0-9]{16}$/),
   new IBANTestConfiguration(COUNTRIES.FRANCE, 27, /^\d{10}[A-Z0-9]{11}\d{2}$/),
@@ -29,6 +30,7 @@ const COUNTRY_CONFIGS = [
   new IBANTestConfiguration(COUNTRIES.NORWAY, 15, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.ROMANIA, 24, /^[A-Z0-9]{4}[A-Z0-9]{16}$/),
   new IBANTestConfiguration(COUNTRIES.RUSSIA, 33, /^\d{14}[A-Z0-9]{15}$/),
+  new IBANTestConfiguration(COUNTRIES.SPAIN, 24, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.SWITZERLAND, 21, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.VATICAN_CITY, 22, /^\d+$/),
 ];
@@ -206,6 +208,64 @@ describe("The generator for Norwegian IBANs", () => {
     const char5 = iban[4];
     expect(char5).not.toBe("0");
   });
+});
+
+describe("The generator for Spanish IBANs", () => {
+  it(
+    "should generate the correct check digit DC1 for bank code and branch code",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // given
+      const weights = [4, 8, 5, 10, 9, 7, 3, 6];
+
+      // when
+      const iban = generateIBAN(COUNTRIES.SPAIN.isoCode);
+
+      // then
+      const bankAndBranchCode = iban.substring(4, 12);
+      const dc1 = Number(iban[12]);
+
+      let weightedSum = 0;
+      for (let i = 0; i < bankAndBranchCode.length; i++) {
+        weightedSum += Number(bankAndBranchCode[i]) * weights[i];
+      }
+      if (weightedSum % 11 === 1) {
+        // 10 (11 - 1) becomes 1 in the calculation algorithm => must be undone for the check (i.e., +9)
+        weightedSum += 9;
+      }
+
+      const remainder = (weightedSum + dc1) % 11;
+      expect(remainder).toBe(0);
+    }
+  );
+
+  it(
+    "should generate the correct check digit DC2 for the account number",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // given
+      const weights = [1, 2, 4, 8, 5, 10, 9, 7, 3, 6];
+
+      // when
+      const iban = generateIBAN(COUNTRIES.SPAIN.isoCode);
+
+      // then
+      const accountNumber = iban.substring(14);
+      const dc2 = Number(iban[13]);
+
+      let weightedSum = 0;
+      for (let i = 0; i < accountNumber.length; i++) {
+        weightedSum += Number(accountNumber[i]) * weights[i];
+      }
+      if (weightedSum % 11 === 1) {
+        // 10 (11 - 1) becomes 1 in the calculation algorithm => must be undone for the check (i.e., +9)
+        weightedSum += 9;
+      }
+
+      const remainder = (weightedSum + dc2) % 11;
+      expect(remainder).toBe(0);
+    }
+  );
 });
 
 describe("The error handling of the IBAN generator", () => {

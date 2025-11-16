@@ -8,6 +8,7 @@ import {
 import { COUNTRIES } from "../misc/countries.js";
 
 export const IBAN_SUPPORTED_COUNTRIES = [
+  COUNTRIES.AUSTRIA,
   COUNTRIES.BELGIUM,
   COUNTRIES.CYPRUS,
   COUNTRIES.FRANCE,
@@ -18,6 +19,7 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.NORWAY,
   COUNTRIES.ROMANIA,
   COUNTRIES.RUSSIA,
+  COUNTRIES.SPAIN,
   COUNTRIES.SWITZERLAND,
   COUNTRIES.VATICAN_CITY,
 ];
@@ -35,6 +37,8 @@ export const IBAN_SUPPORTED_COUNTRIES = [
  */
 export function generateIBAN(countryCode) {
   switch (countryCode) {
+    case COUNTRIES.AUSTRIA.isoCode:
+      return generateAustrianIBAN();
     case COUNTRIES.BELGIUM.isoCode:
       return generateBelgianIBAN();
     case COUNTRIES.CYPRUS.isoCode:
@@ -55,6 +59,8 @@ export function generateIBAN(countryCode) {
       return generateRomanianIBAN();
     case COUNTRIES.RUSSIA.isoCode:
       return generateRussianIBAN();
+    case COUNTRIES.SPAIN.isoCode:
+      return generateSpanishIBAN();
     case COUNTRIES.SWITZERLAND.isoCode:
       return generateSwissIBAN();
     case COUNTRIES.VATICAN_CITY.isoCode:
@@ -62,7 +68,29 @@ export function generateIBAN(countryCode) {
     default:
       throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
   }
-} /**
+}
+
+/**
+ * Generates a valid random Austrian IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'AT'
+ * - Contain valid check digits
+ * - Use a random 5-digit bank code
+ * - Use a random 11-digit account number
+ *
+ * @returns {string} A valid, randomly generated Austrian IBAN
+ */
+function generateAustrianIBAN() {
+  // Generate random 5-digit bank code and 11-digit account number
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 5);
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 11);
+
+  const bban = bankCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.AUSTRIA.isoCode, bban);
+}
+
+/**
  * Generates a valid random Belgian IBAN.
  *
  * The generated IBAN will:
@@ -441,6 +469,48 @@ function generateRussianIBAN() {
 
   const bban = bankIdentifier + branchIdentifier + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.RUSSIA.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Spanish IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'ES'
+ * - Contain valid check digits
+ * - Use a random 4-digit bank code
+ * - Use a random 4-digit branch code
+ * - Use the correct national check digit DC1 for bank code and branch code
+ * - Use the correct national check digit DC2 for the account number
+ * - Use a random 10-digit account number
+ *
+ * @returns {string} A valid, randomly generated Spanish IBAN
+ */
+function generateSpanishIBAN() {
+  // Generate random bank code, branch code, and account number
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const bankAndBranchCode = bankCode + branchCode;
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
+
+  // calculate the check digits for bank code + branch code and for the account number (both use the same weights)
+  const checkDigitWeights = [1, 2, 4, 8, 5, 10, 9, 7, 3, 6];
+
+  let weightedSumDc1 = 0;
+  for (let i = 0; i < bankAndBranchCode.length; i++) {
+    weightedSumDc1 += Number(bankAndBranchCode[i]) * checkDigitWeights[i + 2]; // 8 digits but 10 weights
+  }
+  let dc1 = (11 - (weightedSumDc1 % 11)) % 11;
+  dc1 = dc1 !== 10 ? dc1 : 1;
+
+  let weightedSumDc2 = 0;
+  for (let i = 0; i < accountNumber.length; i++) {
+    weightedSumDc2 += Number(accountNumber[i]) * checkDigitWeights[i];
+  }
+  let dc2 = (11 - (weightedSumDc2 % 11)) % 11;
+  dc2 = dc2 !== 10 ? dc2 : 1;
+
+  const bban = bankAndBranchCode + dc1 + dc2 + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.SPAIN.isoCode, bban);
 }
 
 /**
