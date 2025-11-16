@@ -132,15 +132,26 @@ function generateCypriotIBAN() {
  * - Use a random 4-letter bank code
  * - Use a random 10-digit account number
  *
- * @returns {string} A valid, randomly generated Swiss IBAN
+ * @returns {string} A valid, randomly generated Dutch IBAN
  */
 function generateDutchIBAN() {
   // Generate random 4-letter bank code
   const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
 
-  // Generate random 10-digit account number
-  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
+  // Generate random 10-digit account number (last digit is a check digit and needs to be calculated)
+  const withoutCheck = generateRandomStringOfChars(ALL_DIGITS, 9);
+  let weightedSum = 0;
+  for (let i = 0; i < withoutCheck.length; i++) {
+    weightedSum += (10 - i) * Number(withoutCheck[i]);
+  }
 
+  const checkDigit = (11 - (weightedSum % 11)) % 11;
+  if (checkDigit === 10) {
+    // invalid check digit
+    return generateDutchIBAN();
+  }
+
+  const accountNumber = withoutCheck + checkDigit;
   const bban = bankCode + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.NETHERLANDS.isoCode, bban);
 }
@@ -463,7 +474,7 @@ function generateSwissIBAN() {
  * - Use a random 3-digit bank code
  * - Use a random 15-digit account number
  *
- * @returns {string} A valid, randomly generated German IBAN
+ * @returns {string} A valid, randomly generated Vatican IBAN
  */
 function generateVaticanIBAN() {
   // Generate random 3-digit bank code

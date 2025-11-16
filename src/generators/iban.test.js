@@ -111,6 +111,21 @@ describe("The generator for Belgian IBANs", () => {
   });
 });
 
+describe("The generator for Dutch IBANs", () => {
+  it("should produce IBANs with the correct national check digit", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
+    // when
+    const iban = generateIBAN(COUNTRIES.NETHERLANDS.isoCode);
+    const accountNumber = iban.substring(8);
+
+    // then
+    let weightedSum = 0;
+    for (let i = 0; i < accountNumber.length; i++) {
+      weightedSum += (10 - i) * Number(accountNumber[i]);
+    }
+    expect(weightedSum % 11).toBe(0);
+  });
+});
+
 describe("The generator for French IBANs", () => {
   it(
     "should produce IBANs with the correct RIB key (national check digits)",
