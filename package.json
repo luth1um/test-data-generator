@@ -34,7 +34,7 @@
     "lint-staged": "16.2.6",
     "oxlint": "1.28.0",
     "prettier": "3.6.2",
-    "rimraf": "6.1.0",
+    "rimraf": "6.1.2",
     "vite": "7.2.2",
     "vitest": "4.0.9"
   },
