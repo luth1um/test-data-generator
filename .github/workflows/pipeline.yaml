@@ -13,7 +13,6 @@ on:
 
 env:
   HUSKY: 0
-  PNPM_VERSION: "10"
   NODE_VERSION: "24"
   BUILD_ARTIFACT_NAME: "test-data-generator-build-output"
   BUILD_ARTIFACT_FOLDER: "dist/test-data-generator"
@@ -26,25 +25,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 #v4.2.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Set up Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 #v6.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Linting
-        run: pnpm oxlint --deny-warnings
+        run: npx oxlint --deny-warnings
 
       - name: Check formatting
-        run: pnpm prettier --check .
+        run: npx prettier --check .
 
   # Build the project
   build:
@@ -53,25 +47,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 #v4.2.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Set up Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 #v6.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Clean-up of the output directory for build
-        run: pnpm clean
+        run: npm run clean
 
       - name: Build the project
-        run: pnpm build
+        run: npm run build
 
       - name: Upload build artifact
         if: github.ref == 'refs/heads/main' # build artifact is only needed for deployment
@@ -89,22 +78,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 #v4.2.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Set up Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 #v6.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Run unit tests
-        run: pnpm test
+        run: npm run test
 
   # Run end-to-end tests with Playwright
   e2e:
@@ -118,28 +102,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 #v4.2.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Set up Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 #v6.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Clean-up of the test results
-        run: pnpm clean
+        run: npm run clean
 
       - name: Install browsers and dependencies for Playwright
-        run: pnpm playwright install --with-deps
+        run: npx playwright install --with-deps
 
       - name: Run E2E tests
-        run: pnpm e2e
+        run: npm run e2e
 
       - name: Upload Playwright results
         if: failure()
