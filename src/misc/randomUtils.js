@@ -17,7 +17,7 @@ export const ALL_LETTERS_AND_ALL_DIGITS_EXCEPT_0_1 = ALL_LETTERS + ALL_DIGITS_EX
  * @returns {string} a random string
  *
  * @example
- * const randomString = generateRandomStringOfChars(3, 'ABCDEFGHIJKL');
+ * const randomString = generateRandomStringOfChars('ABCDEFGHIJKL', 3);
  * console.log(randomString); // e.g., 'KFJ'
  */
 export function generateRandomStringOfChars(validChars, length) {

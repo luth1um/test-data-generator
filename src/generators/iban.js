@@ -13,6 +13,7 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.CYPRUS,
   COUNTRIES.FRANCE,
   COUNTRIES.GERMANY,
+  COUNTRIES.GREECE,
   COUNTRIES.ITALY,
   COUNTRIES.MALTA,
   COUNTRIES.NETHERLANDS,
@@ -47,6 +48,8 @@ export function generateIBAN(countryCode) {
       return generateFrenchIBAN();
     case COUNTRIES.GERMANY.isoCode:
       return generateGermanIBAN();
+    case COUNTRIES.GREECE.isoCode:
+      return generateGreekIBAN();
     case COUNTRIES.ITALY.isoCode:
       return generateItalianIBAN();
     case COUNTRIES.MALTA.isoCode:
@@ -271,6 +274,27 @@ function generateGermanIBAN() {
 
   const bban = bankCode + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.GERMANY.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Greek IBAN.
+ *
+ * The generated IBAN will:
+ * - Start with the country code 'GR'
+ * - Contain valid check digits
+ * - Use a random 3-digit bank code
+ * - Use a random 4-digit branch code
+ * - Use a random 16-character alphanumeric account number
+ *
+ * @returns {string} A valid, randomly generated German IBAN
+ */
+function generateGreekIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 3);
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 16);
+
+  const bban = bankCode + branchCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.GREECE.isoCode, bban);
 }
 
 /**
