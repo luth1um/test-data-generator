@@ -17,6 +17,9 @@ export class Country {
   }
 }
 
+/**
+ * @type {{ [key: string]: Country }}
+ */
 export const COUNTRIES = {
   AUSTRIA: new Country("Austria", "AT"),
   BELGIUM: new Country("Belgium", "BE"),
