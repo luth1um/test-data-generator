@@ -39,6 +39,12 @@ h1 {
     box-shadow 0.2s;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+}
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
