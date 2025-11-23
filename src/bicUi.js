@@ -40,6 +40,7 @@ export function createBicCountryControls() {
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select-bic";
+  countryLabel.htmlFor = "country-select-bic";
   countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_BIC_COUNTRY);
   BIC_SUPPORTED_COUNTRIES.forEach((country) => {
     const option = document.createElement("option");

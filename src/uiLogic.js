@@ -50,6 +50,7 @@ export function setupUI(header, mainLandmark) {
   typeLabel.textContent = "Generate: ";
   const typeSelect = document.createElement("select");
   typeSelect.id = "type-select";
+  typeLabel.htmlFor = "type-select";
   typeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_TYPE);
   // Add IBAN, BIC, and UUID options using extracted modules
   typeSelect.appendChild(createBicOption());

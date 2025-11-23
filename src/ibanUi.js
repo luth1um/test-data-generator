@@ -40,6 +40,7 @@ export function createCountryControls() {
   countryLabel.textContent = " Country: ";
   const countrySelect = document.createElement("select");
   countrySelect.id = "country-select-iban";
+  countryLabel.htmlFor = "country-select-iban";
   countrySelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_IBAN_COUNTRY);
   IBAN_SUPPORTED_COUNTRIES.forEach((country) => {
     const option = document.createElement("option");
