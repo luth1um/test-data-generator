@@ -6,5 +6,13 @@ import { initTheme } from "./theme.js";
 const app = document.getElementById("app");
 app.innerHTML = "";
 
-setupUI(app);
-initTheme(app);
+const header = document.createElement("header");
+header.setAttribute("role", "banner");
+app.appendChild(header);
+
+const mainLandmark = document.createElement("main");
+mainLandmark.setAttribute("role", "main");
+app.appendChild(mainLandmark);
+
+setupUI(header, mainLandmark);
+initTheme(mainLandmark);

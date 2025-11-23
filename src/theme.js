@@ -9,9 +9,9 @@ export const THEME_OPTION_VALUE_DARK = "dark";
 /**
  * Initializes the theme selector and logic.
  * Appends the theme dropdown to the provided container.
- * @param {HTMLElement} app - The main app container to append the theme selector to.
+ * @param {HTMLElement} mainLandmark - The app main landmark container to append the theme selector to.
  */
-export function initTheme(app) {
+export function initTheme(mainLandmark) {
   // Theme selector row
   const themeRow = document.createElement("div");
   themeRow.className = "theme-row";
@@ -32,7 +32,7 @@ export function initTheme(app) {
   themeRow.appendChild(themeLabel);
   themeRow.appendChild(themeSelect);
 
-  app.appendChild(themeRow);
+  mainLandmark.appendChild(themeRow);
 
   /**
    * Applies the specified theme to the document body.

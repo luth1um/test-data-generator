@@ -29,6 +29,7 @@
     "uuid": "13.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
     "@playwright/test": "1.56.1",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",

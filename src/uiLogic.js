@@ -36,17 +36,14 @@ export const TEST_ID_BUTTON_DOWNLOAD = "button-download";
  * Creates all UI elements including type selection, country controls, amount input,
  * generate button, download button, and result display area.
  *
- * @param {HTMLElement} app - The main app container element to append UI components to.
- *
- * @example
- * const app = document.getElementById('app');
- * setupUI(app);
+ * @param {HTMLElement} header - the header landmark of the page
+ * @param {HTMLElement} mainLandmark - the main landmark of the page
  */
-export function setupUI(app) {
+export function setupUI(header, mainLandmark) {
   // Add heading
   const heading = document.createElement("h1");
   heading.textContent = "Test-Data Generator";
-  app.appendChild(heading);
+  header.appendChild(heading);
 
   // Dropdown for selecting what to generate
   const typeLabel = document.createElement("label");
@@ -196,8 +193,8 @@ export function setupUI(app) {
   formRow.appendChild(generateButton);
 
   // Move all UI elements after heading
-  app.appendChild(formRow);
-  app.appendChild(resultSection);
+  mainLandmark.appendChild(formRow);
+  mainLandmark.appendChild(resultSection);
 
   // Map of generator functions by type
   const generators = {
