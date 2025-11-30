@@ -10,6 +10,7 @@ import { COUNTRIES } from "../misc/countries.js";
 export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.AUSTRIA,
   COUNTRIES.BELGIUM,
+  COUNTRIES.BULGARIA,
   COUNTRIES.CYPRUS,
   COUNTRIES.FRANCE,
   COUNTRIES.GERMANY,
@@ -42,6 +43,8 @@ export function generateIBAN(countryCode) {
       return generateAustrianIBAN();
     case COUNTRIES.BELGIUM.isoCode:
       return generateBelgianIBAN();
+    case COUNTRIES.BULGARIA.isoCode:
+      return generateBulgarianIBAN();
     case COUNTRIES.CYPRUS.isoCode:
       return generateCypriotIBAN();
     case COUNTRIES.FRANCE.isoCode:
@@ -126,6 +129,21 @@ function generateBelgianIBAN() {
 
   const bban = bbanWithoutCheckDigits + checkDigitString;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.BELGIUM.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Bulgarian IBAN.
+ *
+ * @returns {string} A valid, randomly generated Bulgarian IBAN
+ */
+function generateBulgarianIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const accountType = generateRandomStringOfChars(ALL_DIGITS, 2);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 8);
+
+  const bban = bankCode + branchCode + accountType + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.BULGARIA.isoCode, bban);
 }
 
 /**

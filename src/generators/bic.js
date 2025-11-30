@@ -8,9 +8,13 @@ import {
 } from "../misc/randomUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
 
+/**
+ * @type {import('../misc/countries').Country[]}
+ */
 export const BIC_SUPPORTED_COUNTRIES = [
   COUNTRIES.AUSTRIA,
   COUNTRIES.BELGIUM,
+  COUNTRIES.BULGARIA,
   COUNTRIES.CYPRUS,
   COUNTRIES.FRANCE,
   COUNTRIES.GERMANY,
