@@ -29,6 +29,7 @@ export const COUNTRIES = {
   GERMANY: new Country("Germany", "DE"),
   GREECE: new Country("Greece", "GR"),
   ITALY: new Country("Italy", "IT"),
+  IRELAND: new Country("Ireland", "IE"),
   MALTA: new Country("Malta", "MT"),
   NETHERLANDS: new Country("Netherlands", "NL"),
   NORWAY: new Country("Norway", "NO"),

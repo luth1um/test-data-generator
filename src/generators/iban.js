@@ -16,6 +16,7 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.GERMANY,
   COUNTRIES.GREECE,
   COUNTRIES.ITALY,
+  COUNTRIES.IRELAND,
   COUNTRIES.MALTA,
   COUNTRIES.NETHERLANDS,
   COUNTRIES.NORWAY,
@@ -55,6 +56,8 @@ export function generateIBAN(countryCode) {
       return generateGreekIBAN();
     case COUNTRIES.ITALY.isoCode:
       return generateItalianIBAN();
+    case COUNTRIES.IRELAND.isoCode:
+      return generateIrishIBAN();
     case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
     case COUNTRIES.NETHERLANDS.isoCode:
@@ -399,6 +402,20 @@ function generateItalianIBAN() {
 
   const bban = cin + bbanWithoutNationalCheck;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.ITALY.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Irish IBAN.
+ *
+ * @returns {string} A valid, randomly generated Irish IBAN
+ */
+function generateIrishIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
+  const sortCode = generateRandomStringOfChars(ALL_DIGITS, 6);
+  const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 8);
+
+  const bban = bankCode + sortCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.IRELAND.isoCode, bban);
 }
 
 /**
