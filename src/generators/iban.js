@@ -16,8 +16,8 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.GERMANY,
   COUNTRIES.GREECE,
   COUNTRIES.ICELAND,
-  COUNTRIES.ITALY,
   COUNTRIES.IRELAND,
+  COUNTRIES.ITALY,
   COUNTRIES.MALTA,
   COUNTRIES.NETHERLANDS,
   COUNTRIES.NORWAY,
@@ -57,10 +57,10 @@ export function generateIBAN(countryCode) {
       return generateGreekIBAN();
     case COUNTRIES.ICELAND.isoCode:
       return generateIcelandicIBAN();
-    case COUNTRIES.ITALY.isoCode:
-      return generateItalianIBAN();
     case COUNTRIES.IRELAND.isoCode:
       return generateIrishIBAN();
+    case COUNTRIES.ITALY.isoCode:
+      return generateItalianIBAN();
     case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
     case COUNTRIES.NETHERLANDS.isoCode:
