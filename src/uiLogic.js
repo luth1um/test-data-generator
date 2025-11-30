@@ -15,7 +15,7 @@ import {
   BIC_OPTION_VALUE,
 } from "./bicUi.js";
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
-import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+import { DATA_TEST_ID, KEYBOARD_KEYS } from "./misc/testgenConstants.js";
 import { generateIBAN } from "./generators/iban.js";
 import { generateBIC } from "./generators/bic.js";
 import { generateUUID } from "./generators/uuid.js";
@@ -107,11 +107,13 @@ export function setupUI(header, mainLandmark) {
   // Create minus and plus buttons
   const minusButton = document.createElement("button");
   minusButton.type = "button";
+  minusButton.id = "minus-button";
   minusButton.textContent = "-";
   minusButton.style.marginLeft = "0.5em";
   minusButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_MINUS);
   const plusButton = document.createElement("button");
   plusButton.type = "button";
+  plusButton.id = "plus-button";
   plusButton.textContent = "+";
   plusButton.style.marginLeft = "0.25em";
   plusButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_PLUS);
@@ -140,6 +142,7 @@ export function setupUI(header, mainLandmark) {
 
   // Generate button
   const generateButton = document.createElement("button");
+  generateButton.id = "generate-button";
   generateButton.setAttribute(DATA_TEST_ID, TEST_ID_BUTTON_GENERATE);
   generateButton.textContent = "Generate";
 
@@ -269,7 +272,7 @@ export function setupUI(header, mainLandmark) {
 
   // Handle Enter key on amount input to generate results
   amountInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
+    if (event.key === KEYBOARD_KEYS.ENTER) {
       event.preventDefault();
       generateData();
     }
@@ -284,7 +287,7 @@ export function setupUI(header, mainLandmark) {
   });
   // Handle keyboard interaction (Enter and Space) when button is focused
   generateButton.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
+    if (event.key === KEYBOARD_KEYS.ENTER || event.key === KEYBOARD_KEYS.SPACE) {
       event.preventDefault(); // Prevent default scrolling on Space
       generateData();
     }

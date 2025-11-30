@@ -1,6 +1,7 @@
 /* global process */
 import { defineConfig, devices } from "@playwright/test";
 
+export const PROJECT_NAME_DESKTOP_SAFARI = "webkit";
 export const PROJECT_NAME_MOBILE_CHROME = "Mobile Chrome";
 export const PROJECT_NAME_MOBILE_SAFARI = "Mobile Safari";
 export const TEST_BASE_URL = "http://localhost:5173/test-data-generator/";
@@ -50,7 +51,7 @@ export default defineConfig({
     },
 
     {
-      name: "webkit",
+      name: PROJECT_NAME_DESKTOP_SAFARI,
       use: { ...devices["Desktop Safari"] },
     },
 
