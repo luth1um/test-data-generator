@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from "uuid";
  * @returns {string} A randomly generated UUID v4.
  *
  * @example
- * const id = generateUUID();
+ * const id = generateUUIDv4();
  * console.log(id); // e.g., '3b12f1df-5232-4804-897e-917bf3996e8c'
  */
-export function generateUUID() {
+export function generateUUIDv4() {
   return uuidv4();
 }

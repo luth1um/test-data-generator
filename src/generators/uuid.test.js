@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { generateUUID } from "./uuid.js";
+import { generateUUIDv4 } from "./uuid.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 
 const UUID_V4_LENGTH = 36;
 
-describe("generateUUID", () => {
+describe("generateUUIDv4", () => {
   it("should only return strings", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
     // when
-    const uuid = generateUUID();
+    const uuid = generateUUIDv4();
 
     // then
     expect(typeof uuid).toBe("string");
@@ -18,7 +18,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       expect(uuid).toHaveLength(UUID_V4_LENGTH);
@@ -30,7 +30,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -43,7 +43,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -56,7 +56,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -69,7 +69,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -82,7 +82,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -95,7 +95,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       const blocks = uuid.split("-");
@@ -108,7 +108,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       expect(uuid[14]).toBe("4");
@@ -120,7 +120,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       expect(uuid[19]).toMatch(/[89ab]/);
@@ -132,7 +132,7 @@ describe("generateUUID", () => {
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
-      const uuid = generateUUID();
+      const uuid = generateUUIDv4();
 
       // then
       expect(uuid).toMatch(/^[0-9a-f-]+$/);
@@ -141,7 +141,7 @@ describe("generateUUID", () => {
 
   it("should generate unique UUIDs across many calls", () => {
     // when
-    const uuids = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, generateUUID);
+    const uuids = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, generateUUIDv4);
 
     // then
     const uniqueUuids = new Set(uuids);

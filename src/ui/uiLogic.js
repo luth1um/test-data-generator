@@ -25,7 +25,7 @@ import {
 import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
 import { generateIBAN } from "../generators/iban.js";
 import { generateBIC } from "../generators/bic.js";
-import { generateUUID } from "../generators/uuid.js";
+import { generateUUIDv4 } from "../generators/uuid.js";
 import { generateCUIDv2 } from "../generators/cuid.js";
 
 export const RESULT_DIV_ID = "result";
@@ -220,7 +220,7 @@ export function setupUI(header, mainLandmark) {
     bic: (args) => generateBIC(args.country),
     [CUID_V2_OPTION_VALUE]: (args) => generateCUIDv2(args.length),
     iban: (args) => generateIBAN(args.country),
-    uuidv4: () => generateUUID(),
+    uuidv4: () => generateUUIDv4(),
     // Add more generators here as needed
   };
 
