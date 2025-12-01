@@ -27,7 +27,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     expect(bicLengths).toContain(8);
   });
 
-  it("should sometimes generate string with length 11", () => {
+  it("should sometimes generate a string with length 11", () => {
     // when
     const bics = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode));
 
@@ -89,10 +89,24 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     expect(char8).not.toEqual("O");
   });
 
+  it("should produce different BICs with each call", () => {
+    // when
+    const bics = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode));
+
+    // then
+    const uniqueBics = new Set(bics);
+    expect(uniqueBics.size).toBe(bics.length);
+  });
+});
+
+describe("The generator for BICs", () => {
   it(
     "should produce letters and/or digits at positions 8 to 10 (0-indexed)",
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
+      // given
+      const countryCode = BIC_SUPPORTED_COUNTRY_CODES[0]; // specific country does not matter
+
       // when (repeat until BIC with 11 chars is produced, or stop if no such BIC is produced)
       const bic = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode)).find(
         (bic) => bic.length === 11
@@ -113,6 +127,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       //given
+      const countryCode = BIC_SUPPORTED_COUNTRY_CODES[0]; // specific country does not matter
       const numberOfBics = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
 
       // when
@@ -130,15 +145,6 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
       });
     }
   );
-
-  it("should produce different BICs with each call", () => {
-    // when
-    const bics = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode));
-
-    // then
-    const uniqueBics = new Set(bics);
-    expect(uniqueBics.size).toBe(bics.length);
-  });
 });
 
 describe("The error handling of the BIC generator", () => {
