@@ -26,6 +26,7 @@
   "author": "luth1um",
   "license": "MIT",
   "dependencies": {
+    "@paralleldrive/cuid2": "3.0.4",
     "uuid": "13.0.0"
   },
   "devDependencies": {

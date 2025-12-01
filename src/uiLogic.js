@@ -15,10 +15,18 @@ import {
   BIC_OPTION_VALUE,
 } from "./bicUi.js";
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
+import {
+  createCuidOption,
+  createCuidLengthControls,
+  showCuidLengthControls,
+  getCuidArgs,
+  CUID_V2_OPTION_VALUE,
+} from "./cuidUi.js";
 import { DATA_TEST_ID, KEYBOARD_KEYS } from "./misc/testgenConstants.js";
 import { generateIBAN } from "./generators/iban.js";
 import { generateBIC } from "./generators/bic.js";
 import { generateUUID } from "./generators/uuid.js";
+import { generateCUIDv2 } from "./generators/cuid.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";
@@ -52,8 +60,9 @@ export function setupUI(header, mainLandmark) {
   typeSelect.id = "type-select";
   typeLabel.htmlFor = "type-select";
   typeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_TYPE);
-  // Add IBAN, BIC, and UUID options using extracted modules
+  // Add IBAN, BIC, UUID, and CUID v2 options using extracted modules
   typeSelect.appendChild(createBicOption());
+  typeSelect.appendChild(createCuidOption());
   typeSelect.appendChild(createIbanOption());
   typeSelect.appendChild(createUuidOption());
   typeSelect.value = IBAN_OPTION_VALUE; // Preselect IBAN
@@ -62,10 +71,13 @@ export function setupUI(header, mainLandmark) {
   // Country controls (for IBAN and BIC)
   const { countryLabel: ibanCountryLabel, countrySelect: ibanCountrySelect } = createCountryControls();
   const { countryLabel: bicCountryLabel, countrySelect: bicCountrySelect } = createBicCountryControls();
+  // Length controls (for CUID v2)
+  const { lengthLabel: cuidLengthLabel, lengthInput: cuidLengthInput } = createCuidLengthControls();
 
   /**
-   * Updates the visibility of country controls based on the selected generation type.
+   * Updates the visibility of country/length controls based on the selected generation type.
    * Shows country controls only when IBAN or BIC is selected.
+   * Shows the CUID length controls only when CUID v2 is selected.
    * Synchronizes the country value between IBAN and BIC dropdowns when switching.
    */
   function updateCountryDropdown() {
@@ -88,6 +100,7 @@ export function setupUI(header, mainLandmark) {
 
     showIbanCountryControls(type, ibanCountryLabel);
     showBicCountryControls(type, bicCountryLabel);
+    showCuidLengthControls(type, cuidLengthLabel);
   }
 
   typeSelect.addEventListener("change", updateCountryDropdown);
@@ -179,6 +192,7 @@ export function setupUI(header, mainLandmark) {
   // Remove marginLeft styles from labels and button
   ibanCountryLabel.style.marginLeft = "";
   bicCountryLabel.style.marginLeft = "";
+  cuidLengthLabel.style.marginLeft = "";
   amountLabel.style.marginLeft = "";
   generateButton.style.marginLeft = "";
 
@@ -193,6 +207,7 @@ export function setupUI(header, mainLandmark) {
   formRow.appendChild(typeLabel);
   formRow.appendChild(bicCountryLabel);
   formRow.appendChild(ibanCountryLabel);
+  formRow.appendChild(cuidLengthLabel);
   formRow.appendChild(amountGroup);
   formRow.appendChild(generateButton);
 
@@ -202,8 +217,9 @@ export function setupUI(header, mainLandmark) {
 
   // Map of generator functions by type
   const generators = {
-    iban: (args) => generateIBAN(args.country),
     bic: (args) => generateBIC(args.country),
+    [CUID_V2_OPTION_VALUE]: (args) => generateCUIDv2(args.length),
+    iban: (args) => generateIBAN(args.country),
     uuidv4: () => generateUUID(),
     // Add more generators here as needed
   };
@@ -219,11 +235,14 @@ export function setupUI(header, mainLandmark) {
    */
   function getSelectedArgs() {
     const type = typeSelect.value;
-    if (type === IBAN_OPTION_VALUE) {
-      return getIbanArgs(ibanCountrySelect);
-    }
     if (type === BIC_OPTION_VALUE) {
       return getBicArgs(bicCountrySelect);
+    }
+    if (type === CUID_V2_OPTION_VALUE) {
+      return getCuidArgs(cuidLengthInput);
+    }
+    if (type === IBAN_OPTION_VALUE) {
+      return getIbanArgs(ibanCountrySelect);
     }
     if (type === UUIDV4_OPTION_VALUE) {
       return getUuidArgs();
