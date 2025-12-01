@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { TEST_BASE_URL } from "../playwright.config.js";
 import AxeBuilder from "@axe-core/playwright";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
-import { TEST_ID_SELECT_THEME } from "../src/theme.js";
+import { TEST_ID_SELECT_THEME } from "../src/ui/theme.js";
 import { generateIbanForCountry } from "./helpers/ibanHelpers.js";
 import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 import { skipDesktopSafari, skipMobileBrowsers } from "./helpers/miscHelpers.js";

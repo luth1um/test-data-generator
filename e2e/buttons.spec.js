@@ -8,7 +8,7 @@ import {
   TEST_ID_BUTTON_MINUS,
   TEST_ID_BUTTON_PLUS,
   TEST_ID_DIV_RESULT,
-} from "../src/uiLogic.js";
+} from "../src/ui/uiLogic.js";
 import { clickButton } from "./helpers/buttonHelpers.js";
 import { generateIbanForCountry } from "./helpers/ibanHelpers.js";
 import fs from "fs/promises";

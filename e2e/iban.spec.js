@@ -1,14 +1,14 @@
 import { test, expect } from "@playwright/test";
 import { generateIbanForCountry, getIbanSupportedCountries } from "./helpers/ibanHelpers.js";
 import { TEST_BASE_URL } from "../playwright.config.js";
-import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ibanUi.js";
+import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ui/ibanUi.js";
 import {
   RESULT_DIV_ID,
   TEST_ID_BUTTON_GENERATE,
   TEST_ID_DIV_RESULT,
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
-} from "../src/uiLogic.js";
+} from "../src/ui/uiLogic.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 

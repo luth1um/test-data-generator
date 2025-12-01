@@ -6,8 +6,8 @@ import {
   TEST_ID_DIV_RESULT,
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
-} from "../src/uiLogic.js";
-import { UUIDV4_OPTION_VALUE } from "../src/uuidUi.js";
+} from "../src/ui/uiLogic.js";
+import { UUIDV4_OPTION_VALUE } from "../src/ui/uuidUi.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 
 const UUID_V4_LENGTH = 36;

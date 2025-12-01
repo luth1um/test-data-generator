@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { TEST_BASE_URL } from "../playwright.config.js";
-import { TEST_ID_SELECT_THEME } from "../src/theme.js";
-import { TEST_ID_BUTTON_GENERATE, TEST_ID_SELECT_TYPE } from "../src/uiLogic.js";
-import { UUIDV4_OPTION_VALUE } from "../src/uuidUi.js";
+import { TEST_ID_SELECT_THEME } from "../src/ui/theme.js";
+import { TEST_ID_BUTTON_GENERATE, TEST_ID_SELECT_TYPE } from "../src/ui/uiLogic.js";
+import { UUIDV4_OPTION_VALUE } from "../src/ui/uuidUi.js";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
 
 test.describe("The visuals of the page", () => {

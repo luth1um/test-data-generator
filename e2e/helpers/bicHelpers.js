@@ -1,6 +1,6 @@
 import { TEST_BASE_URL } from "../../playwright.config.js";
-import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/uiLogic.js";
-import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/bicUi.js";
+import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/ui/uiLogic.js";
+import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/ui/bicUi.js";
 
 /**
  * Helper function to generate a BIC for a specific country using the UI

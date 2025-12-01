@@ -1,6 +1,6 @@
 import { TEST_BASE_URL } from "../../playwright.config.js";
-import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ibanUi.js";
-import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/uiLogic.js";
+import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ui/ibanUi.js";
+import { TEST_ID_BUTTON_GENERATE, TEST_ID_DIV_RESULT, TEST_ID_SELECT_TYPE } from "../../src/ui/uiLogic.js";
 
 /**
  * Helper function to generate an IBAN for a specific country using the UI

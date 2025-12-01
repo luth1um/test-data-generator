@@ -1,6 +1,6 @@
 /* global document, window */
 
-import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 
 export const TEST_ID_SELECT_THEME = "select-theme";
 export const THEME_OPTION_VALUE_LIGHT = "light";

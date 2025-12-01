@@ -8,8 +8,8 @@ import {
   TEST_ID_DIV_RESULT,
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
-} from "../src/uiLogic.js";
-import { CUID_V2_OPTION_VALUE, TEST_ID_CUID_V2_LENGTH_INPUT } from "../src/cuidUi.js";
+} from "../src/ui/uiLogic.js";
+import { CUID_V2_OPTION_VALUE, TEST_ID_CUID_V2_LENGTH_INPUT } from "../src/ui/cuidUi.js";
 
 test.describe("The CUID v2 generator", () => {
   test("should generate a valid CUID", async ({ page }, testInfo) => {

@@ -1,7 +1,7 @@
 /* global document */
 
-import { CUID_V2_MIN_LENGTH, CUID_V2_MAX_LENGTH, CUID_V2_DEFAULT_LENGTH } from "./generators/cuid.js";
-import { DATA_TEST_ID } from "./misc/testgenConstants.js";
+import { CUID_V2_MIN_LENGTH, CUID_V2_MAX_LENGTH, CUID_V2_DEFAULT_LENGTH } from "../generators/cuid.js";
+import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 
 export const CUID_V2_OPTION_VALUE = "cuidv2";
 export const TEST_ID_CUID_V2_LENGTH_INPUT = "cuid-v2-length-input";

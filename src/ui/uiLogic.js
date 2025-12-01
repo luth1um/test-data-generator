@@ -22,11 +22,11 @@ import {
   getCuidArgs,
   CUID_V2_OPTION_VALUE,
 } from "./cuidUi.js";
-import { DATA_TEST_ID, KEYBOARD_KEYS } from "./misc/testgenConstants.js";
-import { generateIBAN } from "./generators/iban.js";
-import { generateBIC } from "./generators/bic.js";
-import { generateUUID } from "./generators/uuid.js";
-import { generateCUIDv2 } from "./generators/cuid.js";
+import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
+import { generateIBAN } from "../generators/iban.js";
+import { generateBIC } from "../generators/bic.js";
+import { generateUUID } from "../generators/uuid.js";
+import { generateCUIDv2 } from "../generators/cuid.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";

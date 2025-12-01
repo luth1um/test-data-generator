@@ -1,4 +1,4 @@
-import { THEME_OPTION_VALUE_DARK, THEME_OPTION_VALUE_LIGHT } from "../../src/theme.js";
+import { THEME_OPTION_VALUE_DARK, THEME_OPTION_VALUE_LIGHT } from "../../src/ui/theme.js";
 
 class GeneratorTheme {
   /**
