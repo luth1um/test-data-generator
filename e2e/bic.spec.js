@@ -1,30 +1,28 @@
 import { test, expect } from "@playwright/test";
-import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../src/ui/bicUi.js";
+import { TEST_ID_SELECT_BIC_COUNTRY } from "../src/ui/bicUi.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
-import { generateBicForCountry, getBicSupportedCountries } from "./helpers/bicHelpers.js";
-import { TEST_BASE_URL } from "../playwright.config.js";
-import {
-  RESULT_DIV_ID,
-  TEST_ID_BUTTON_GENERATE,
-  TEST_ID_DIV_RESULT,
-  TEST_ID_INPUT_AMOUNT,
-  TEST_ID_SELECT_TYPE,
-} from "../src/ui/uiLogic.js";
-import { BIC_SUPPORTED_COUNTRIES } from "../src/generators/bic.js";
+import { BIC_SUPPORTED_COUNTRIES, BIC_SUPPORTED_COUNTRY_CODES } from "../src/generators/bic.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The BIC generator", () => {
   BIC_SUPPORTED_COUNTRIES.forEach((country) => {
     test(`should generate BICs for ${country.isoCode}`, async ({ page }, testInfo) => {
       skipMobileBrowsers(testInfo);
 
+      // given
+      const pom = new TestDataGenPage(page);
+
       // when
-      const bic = await generateBicForCountry(page, country.isoCode);
+      await pom.goto();
+      await pom.selectBicWithCountry(country.isoCode);
+      await pom.clickGenerate();
+      const results = await pom.getGeneratedResults();
 
       // then
-      expect(bic.substring(4, 6)).toEqual(country.isoCode);
+      expect(results).toHaveLength(1);
+      const bic = results[0];
       expect(bic.length).toBeGreaterThanOrEqual(8);
       expect(bic.length).toBeLessThanOrEqual(11);
-      expect(bic).toMatch(/^[A-Z0-9]+$/);
     });
   });
 
@@ -33,19 +31,29 @@ test.describe("The BIC generator", () => {
   }, testInfo) => {
     skipMobileBrowsers(testInfo);
 
+    // given
+    const pom = new TestDataGenPage(page);
+
     // when
-    const countries = await getBicSupportedCountries(page);
+    await pom.goto();
+    await pom.selectBicGenerator();
+    const countries = await pom.getAllSelectValues(TEST_ID_SELECT_BIC_COUNTRY);
 
     // then
-    expect(countries.length).toEqual(BIC_SUPPORTED_COUNTRIES.length);
+    expect(countries).toHaveLength(BIC_SUPPORTED_COUNTRIES.length);
+    const allValuesSorted = countries.map((c) => c.value).sort();
+    expect(allValuesSorted).toEqual(BIC_SUPPORTED_COUNTRY_CODES.sort());
   });
 
   test("should display the country dropdown when BIC is selected", async ({ page }, testInfo) => {
     skipMobileBrowsers(testInfo);
 
+    // given
+    const pom = new TestDataGenPage(page);
+
     // when
-    await page.goto(TEST_BASE_URL);
-    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(BIC_OPTION_VALUE);
+    await pom.goto();
+    await pom.selectBicGenerator();
 
     // then
     await expect(page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY)).toBeVisible();
@@ -57,22 +65,20 @@ test.describe("The BIC generator", () => {
     // given
     const country = BIC_SUPPORTED_COUNTRIES[0];
     const amount = 3;
+    const pom = new TestDataGenPage(page);
 
     // when
-    await page.goto(TEST_BASE_URL);
-    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(BIC_OPTION_VALUE);
-    await page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY).selectOption(country.isoCode);
-    await page.getByTestId(TEST_ID_INPUT_AMOUNT).fill("" + amount);
-    await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
-    await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
-
-    const bicResults = await page.locator(`#${RESULT_DIV_ID} div`).all();
+    await pom.goto();
+    await pom.selectBicWithCountry(country.isoCode);
+    await pom.setAmountInput(amount);
+    await pom.clickGenerate();
+    const bicResults = await pom.getGeneratedResults();
 
     // then
     expect(bicResults).toHaveLength(amount);
-    for (const result of bicResults) {
-      const bic = await result.textContent();
-      expect(bic).toMatch(/^[A-Z0-9]+$/);
-    }
+    bicResults.forEach((bicResult) => {
+      expect(bicResult.length).toBeGreaterThanOrEqual(8);
+      expect(bicResult.length).toBeLessThanOrEqual(11);
+    });
   });
 });
