@@ -4,6 +4,7 @@ import { TEST_ID_SELECT_THEME } from "../src/ui/theme.js";
 import { TEST_ID_BUTTON_GENERATE, TEST_ID_SELECT_TYPE } from "../src/ui/uiLogic.js";
 import { UUIDV4_OPTION_VALUE } from "../src/ui/uuidUi.js";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
+import { GENERATOR_TYPES } from "./helpers/generatorTypes.js";
 
 test.describe("The visuals of the page", () => {
   GENERATOR_THEMES.forEach((theme) => {
@@ -28,6 +29,23 @@ test.describe("The visuals of the page", () => {
       // then
       await expect(page).toHaveScreenshot(createSnapshotName("page-with-results", theme, testInfo), {
         maxDiffPixelRatio: 0.03,
+      });
+    });
+
+    GENERATOR_TYPES.forEach((type) => {
+      test(`should be as expected when selecting ${type.name} (${theme.name})`, async ({ page }, testInfo) => {
+        //given
+        const screenshotBaseName = "selected-" + type.name.toLowerCase().replaceAll(" ", "-");
+
+        // when
+        await page.goto(TEST_BASE_URL);
+        await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(type.optionValue);
+        await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
+
+        // then
+        await expect(page).toHaveScreenshot(createSnapshotName(screenshotBaseName, theme, testInfo), {
+          maxDiffPixelRatio: 0.0,
+        });
       });
     });
   });
