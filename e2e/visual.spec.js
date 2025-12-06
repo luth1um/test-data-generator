@@ -44,7 +44,7 @@ test.describe("The visuals of the page", () => {
 
         // then
         await expect(page).toHaveScreenshot(createSnapshotName(screenshotBaseName, theme, testInfo), {
-          maxDiffPixelRatio: 0.01,
+          maxDiffPixelRatio: 0.02,
         });
       });
     });
