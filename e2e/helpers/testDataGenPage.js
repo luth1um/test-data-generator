@@ -7,6 +7,7 @@ import {
   TEST_ID_SELECT_TYPE,
 } from "../../src/ui/uiLogic.js";
 import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/ui/bicUi.js";
+import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ui/ibanUi.js";
 
 export class TestDataGenPage {
   #page;
@@ -44,6 +45,22 @@ export class TestDataGenPage {
   async selectBicWithCountry(countryCode) {
     await this.selectBicGenerator();
     await this.#page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY).selectOption(countryCode);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async selectIbanGenerator() {
+    await this.selectGeneratorType(IBAN_OPTION_VALUE);
+  }
+
+  /**
+   * @param {string} countryCode
+   * @returns {Promise<void>}
+   */
+  async selectIbanWithCountry(countryCode) {
+    await this.selectIbanGenerator();
+    await this.#page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(countryCode);
   }
 
   /**

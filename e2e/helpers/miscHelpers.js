@@ -6,19 +6,7 @@ import {
 } from "../../playwright.config.js";
 
 /**
- * Skips test execution on mobile browsers (Mobile Chrome and Mobile Safari)
- * to avoid redundant testing since the same functionality is already tested
- * on their desktop counterparts.
- *
- * @param {import('@playwright/test').TestInfo} testInfo - The test information object
- *   containing details about the current test run, including the browser/project name
- *
- * @example
- * // Usage in a test file:
- * test('some test', async ({ page }, testInfo) => {
- *   skipMobileBrowsers(testInfo);
- *   // ... rest of test code
- * });
+ * @param {import('@playwright/test').TestInfo} testInfo
  */
 export function skipMobileBrowsers(testInfo) {
   const browser = testInfo.project.name;
@@ -37,5 +25,5 @@ export function skipMobileBrowsers(testInfo) {
  */
 export function skipDesktopSafari(testInfo) {
   const browser = testInfo.project.name;
-  test.skip(browser === PROJECT_NAME_DESKTOP_SAFARI, `Skipping test for ${PROJECT_NAME_MOBILE_CHROME}`);
+  test.skip(browser === PROJECT_NAME_DESKTOP_SAFARI, `Skipping test for ${PROJECT_NAME_DESKTOP_SAFARI}`);
 }

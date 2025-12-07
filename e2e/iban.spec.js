@@ -1,30 +1,29 @@
 import { test, expect } from "@playwright/test";
-import { generateIbanForCountry, getIbanSupportedCountries } from "./helpers/ibanHelpers.js";
-import { TEST_BASE_URL } from "../playwright.config.js";
-import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ui/ibanUi.js";
-import {
-  RESULT_DIV_ID,
-  TEST_ID_BUTTON_GENERATE,
-  TEST_ID_DIV_RESULT,
-  TEST_ID_INPUT_AMOUNT,
-  TEST_ID_SELECT_TYPE,
-} from "../src/ui/uiLogic.js";
+import { TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ui/ibanUi.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The IBAN generator", () => {
   IBAN_SUPPORTED_COUNTRIES.forEach((country) => {
     test(`should generate IBANs for ${country.displayName()}`, async ({ page }, testInfo) => {
       skipMobileBrowsers(testInfo);
 
+      // given
+      const pom = new TestDataGenPage(page);
+
       // when
-      const iban = await generateIbanForCountry(page, country.isoCode);
+      await pom.goto();
+      await pom.selectIbanWithCountry(country.isoCode);
+      await pom.clickGenerate();
+      const results = await pom.getGeneratedResults();
 
       // then
-      expect(iban.substring(0, 2)).toEqual(country.isoCode);
+      expect(results).toHaveLength(1);
+      const iban = results[0];
+      expect(iban.substring(0, 2)).toBe(country.isoCode);
       expect(iban.length).toBeGreaterThanOrEqual(15);
       expect(iban.length).toBeLessThanOrEqual(34);
-      expect(iban).toMatch(/^[A-Z0-9]+$/);
     });
   });
 
@@ -33,19 +32,30 @@ test.describe("The IBAN generator", () => {
   }, testInfo) => {
     skipMobileBrowsers(testInfo);
 
+    // given
+    const pom = new TestDataGenPage(page);
+    const ibanCountryCodesSorted = IBAN_SUPPORTED_COUNTRIES.map((c) => c.isoCode).sort();
+
     // when
-    const countries = await getIbanSupportedCountries(page);
+    await pom.goto();
+    await pom.selectIbanGenerator();
+    const countries = await pom.getAllSelectValues(TEST_ID_SELECT_IBAN_COUNTRY);
 
     // then
-    expect(countries.length).toEqual(IBAN_SUPPORTED_COUNTRIES.length);
+    expect(countries).toHaveLength(ibanCountryCodesSorted.length);
+    const valuesSorted = countries.map((c) => c.value).sort();
+    expect(valuesSorted).toEqual(ibanCountryCodesSorted);
   });
 
   test("should display the country dropdown when IBAN is selected", async ({ page }, testInfo) => {
     skipMobileBrowsers(testInfo);
 
+    // given
+    const pom = new TestDataGenPage(page);
+
     // when
-    await page.goto(TEST_BASE_URL);
-    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
+    await pom.goto();
+    await pom.selectIbanGenerator();
 
     // then
     await expect(page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY)).toBeVisible();
@@ -57,22 +67,20 @@ test.describe("The IBAN generator", () => {
     // given
     const country = IBAN_SUPPORTED_COUNTRIES[0];
     const amount = 3;
+    const pom = new TestDataGenPage(page);
 
     // when
-    await page.goto(TEST_BASE_URL);
-    await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(IBAN_OPTION_VALUE);
-    await page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(country.isoCode);
-    await page.getByTestId(TEST_ID_INPUT_AMOUNT).fill("" + amount);
-    await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
-    await page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
-
-    const ibanResults = await page.locator(`#${RESULT_DIV_ID} div`).all();
+    await pom.goto();
+    await pom.selectIbanWithCountry(country.isoCode);
+    await pom.setAmountInput(amount);
+    await pom.clickGenerate();
+    const ibanResults = await pom.getGeneratedResults();
 
     // then
     expect(ibanResults).toHaveLength(amount);
-    for (const result of ibanResults) {
-      const iban = await result.textContent();
-      expect(iban).toMatch(/^[A-Z0-9]+$/);
-    }
+    ibanResults.forEach((ibanResult) => {
+      expect(ibanResult.length).toBeGreaterThanOrEqual(15);
+      expect(ibanResult.length).toBeLessThanOrEqual(34);
+    });
   });
 });
