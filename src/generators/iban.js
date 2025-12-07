@@ -18,6 +18,7 @@ export const IBAN_SUPPORTED_COUNTRIES = [
   COUNTRIES.ICELAND,
   COUNTRIES.IRELAND,
   COUNTRIES.ITALY,
+  COUNTRIES.LATVIA,
   COUNTRIES.MALTA,
   COUNTRIES.NETHERLANDS,
   COUNTRIES.NORWAY,
@@ -61,6 +62,8 @@ export function generateIBAN(countryCode) {
       return generateIrishIBAN();
     case COUNTRIES.ITALY.isoCode:
       return generateItalianIBAN();
+    case COUNTRIES.LATVIA.isoCode:
+      return generateLatvianIBAN();
     case COUNTRIES.MALTA.isoCode:
       return generateMalteseIBAN();
     case COUNTRIES.NETHERLANDS.isoCode:
@@ -434,6 +437,19 @@ function generateIrishIBAN() {
 
   const bban = bankCode + sortCode + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.IRELAND.isoCode, bban);
+}
+
+/**
+ * Generates a valid random Latvian IBAN.
+ *
+ * @returns {string} A valid, randomly generated Austrian IBAN
+ */
+function generateLatvianIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 13);
+
+  const bban = bankCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.LATVIA.isoCode, bban);
 }
 
 /**
