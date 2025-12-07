@@ -1,17 +1,17 @@
 import { expect, test } from "@playwright/test";
-import { TEST_BASE_URL } from "../playwright.config.js";
-import { TEST_ID_SELECT_THEME } from "../src/ui/theme.js";
-import { TEST_ID_BUTTON_GENERATE, TEST_ID_SELECT_TYPE } from "../src/ui/uiLogic.js";
-import { UUIDV4_OPTION_VALUE } from "../src/ui/uuidUi.js";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
 import { GENERATOR_TYPES } from "./helpers/generatorTypes.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The visuals of the page", () => {
   GENERATOR_THEMES.forEach((theme) => {
     test(`should be as expected when initially opening the page (${theme.name})`, async ({ page }, testInfo) => {
+      // given
+      const pom = new TestDataGenPage(page);
+
       // when
-      await page.goto(TEST_BASE_URL);
-      await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
+      await pom.goto();
+      await pom.selectTheme(theme.optionValue);
 
       // then
       await expect(page).toHaveScreenshot(createSnapshotName("initial-page", theme, testInfo), {
@@ -20,11 +20,14 @@ test.describe("The visuals of the page", () => {
     });
 
     test(`should show the generated results when the button is pressed (${theme.name})`, async ({ page }, testInfo) => {
+      // given
+      const pom = new TestDataGenPage(page);
+
       // when
-      await page.goto(TEST_BASE_URL);
-      await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
-      await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(UUIDV4_OPTION_VALUE);
-      await page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
+      await pom.goto();
+      await pom.selectTheme(theme.optionValue);
+      await pom.selectUuid4Generator();
+      await pom.clickGenerate();
 
       // then
       await expect(page).toHaveScreenshot(createSnapshotName("page-with-results", theme, testInfo), {
@@ -36,11 +39,12 @@ test.describe("The visuals of the page", () => {
       test(`should be as expected when selecting ${type.name} (${theme.name})`, async ({ page }, testInfo) => {
         //given
         const screenshotBaseName = "selected-" + type.name.toLowerCase().replaceAll(" ", "-");
+        const pom = new TestDataGenPage(page);
 
         // when
-        await page.goto(TEST_BASE_URL);
-        await page.getByTestId(TEST_ID_SELECT_TYPE).selectOption(type.optionValue);
-        await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
+        await pom.goto();
+        await pom.selectGeneratorType(type.optionValue);
+        await pom.selectTheme(theme.optionValue);
 
         // then
         await expect(page).toHaveScreenshot(createSnapshotName(screenshotBaseName, theme, testInfo), {

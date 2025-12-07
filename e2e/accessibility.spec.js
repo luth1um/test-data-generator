@@ -1,12 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { TEST_BASE_URL } from "../playwright.config.js";
 import AxeBuilder from "@axe-core/playwright";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
-import { TEST_ID_SELECT_THEME } from "../src/ui/theme.js";
-import { generateIbanForCountry } from "./helpers/ibanHelpers.js";
-import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 import { skipDesktopSafari, skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { KEYBOARD_KEYS } from "../src/misc/testgenConstants.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
+import { COUNTRIES } from "../src/misc/countries.js";
 
 test.describe("The test-data generator", () => {
   GENERATOR_THEMES.filter((t) => t.name.startsWith("Light")).forEach((theme) => {
@@ -14,10 +12,12 @@ test.describe("The test-data generator", () => {
       page,
     }) => {
       // given
-      await page.goto(TEST_BASE_URL);
-      await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
+      const pom = new TestDataGenPage(page);
 
       // when
+      await pom.goto();
+      await pom.selectTheme(theme.optionValue);
+
       const a11yResults = await new AxeBuilder({ page }).analyze();
 
       // then
@@ -28,10 +28,15 @@ test.describe("The test-data generator", () => {
       page,
     }) => {
       // given
-      await generateIbanForCountry(page, IBAN_SUPPORTED_COUNTRIES[0].isoCode);
-      await page.getByTestId(TEST_ID_SELECT_THEME).selectOption(theme.optionValue);
+      const pom = new TestDataGenPage(page);
+      const countryIsoCode = COUNTRIES.GERMANY.isoCode;
 
       // when
+      await pom.goto();
+      await pom.selectTheme(theme.optionValue);
+      await pom.selectIbanWithCountry(countryIsoCode);
+      await pom.clickGenerate();
+
       const a11yResults = await new AxeBuilder({ page }).analyze();
 
       // then
@@ -55,9 +60,11 @@ test.describe("The test-data generator", () => {
       "button#generate-button",
       "select#theme-select",
     ];
-    await page.goto(TEST_BASE_URL);
+    const pom = new TestDataGenPage(page);
 
     // when
+    await pom.goto();
+
     const actualElementSelectors = [];
     for (let i = 0; i < expectedElementOrder.length; i++) {
       await page.keyboard.press(KEYBOARD_KEYS.TAB);

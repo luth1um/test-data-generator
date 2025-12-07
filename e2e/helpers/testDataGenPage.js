@@ -1,13 +1,19 @@
 import { TEST_BASE_URL } from "../../playwright.config.js";
 import {
   RESULT_DIV_ID,
+  TEST_ID_BUTTON_DOWNLOAD,
   TEST_ID_BUTTON_GENERATE,
+  TEST_ID_BUTTON_MINUS,
+  TEST_ID_BUTTON_PLUS,
   TEST_ID_DIV_RESULT,
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
 } from "../../src/ui/uiLogic.js";
 import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/ui/bicUi.js";
 import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ui/ibanUi.js";
+import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
+import { CUID_V2_OPTION_VALUE, TEST_ID_CUID_V2_LENGTH_INPUT } from "../../src/ui/cuidUi.js";
+import { UUIDV4_OPTION_VALUE } from "../../src/ui/uuidUi.js";
 
 export class TestDataGenPage {
   #page;
@@ -50,6 +56,22 @@ export class TestDataGenPage {
   /**
    * @returns {Promise<void>}
    */
+  async selectCuid2Generator() {
+    await this.selectGeneratorType(CUID_V2_OPTION_VALUE);
+  }
+
+  /**
+   * @param {number} length
+   * @returns {Promise<void>}
+   */
+  async selectCuid2WithLength(length) {
+    await this.selectGeneratorType(CUID_V2_OPTION_VALUE);
+    await this.#page.getByTestId(TEST_ID_CUID_V2_LENGTH_INPUT).fill("" + length);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
   async selectIbanGenerator() {
     await this.selectGeneratorType(IBAN_OPTION_VALUE);
   }
@@ -61,6 +83,13 @@ export class TestDataGenPage {
   async selectIbanWithCountry(countryCode) {
     await this.selectIbanGenerator();
     await this.#page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(countryCode);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async selectUuid4Generator() {
+    await this.selectGeneratorType(UUIDV4_OPTION_VALUE);
   }
 
   /**
@@ -89,10 +118,46 @@ export class TestDataGenPage {
   }
 
   /**
+   *
+   * @param {string} testId
+   * @param {number} times
+   * @returns {Promise<void>}
+   */
+  async clickButton(testId, times = 1) {
+    const button = await this.#page.getByTestId(testId);
+    for (let i = 0; i < times; i++) {
+      await button.click();
+    }
+  }
+
+  /**
+   * @param {number} times
+   * @returns {Promise<void>}
+   */
+  async clickAmountMinus(times = 1) {
+    await this.clickButton(TEST_ID_BUTTON_MINUS, times);
+  }
+
+  /**
+   * @param {number} times
+   * @returns {Promise<void>}
+   */
+  async clickAmountPlus(times = 1) {
+    await this.clickButton(TEST_ID_BUTTON_PLUS, times);
+  }
+
+  /**
    * @returns {Promise<void>}
    */
   async clickGenerate() {
-    await this.#page.getByTestId(TEST_ID_BUTTON_GENERATE).click();
+    await this.clickButton(TEST_ID_BUTTON_GENERATE);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async clickDownload() {
+    await this.clickButton(TEST_ID_BUTTON_DOWNLOAD);
   }
 
   /**
@@ -109,5 +174,13 @@ export class TestDataGenPage {
     }
 
     return results;
+  }
+
+  /**
+   * @param {string} optionValue
+   * @returns {Promise<void>}
+   */
+  async selectTheme(optionValue) {
+    await this.#page.getByTestId(TEST_ID_SELECT_THEME).selectOption(optionValue);
   }
 }
