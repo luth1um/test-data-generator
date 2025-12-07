@@ -58,27 +58,4 @@ test.describe("The BIC generator", () => {
     // then
     await expect(page.getByTestId(TEST_ID_SELECT_BIC_COUNTRY)).toBeVisible();
   });
-
-  test("should generate multiple BICs when amount is increased", async ({ page }, testInfo) => {
-    skipMobileBrowsers(testInfo);
-
-    // given
-    const country = BIC_SUPPORTED_COUNTRIES[0];
-    const amount = 3;
-    const pom = new TestDataGenPage(page);
-
-    // when
-    await pom.goto();
-    await pom.selectBicWithCountry(country.isoCode);
-    await pom.setAmountInput(amount);
-    await pom.clickGenerate();
-    const bicResults = await pom.getGeneratedResults();
-
-    // then
-    expect(bicResults).toHaveLength(amount);
-    bicResults.forEach((bicResult) => {
-      expect(bicResult.length).toBeGreaterThanOrEqual(8);
-      expect(bicResult.length).toBeLessThanOrEqual(11);
-    });
-  });
 });

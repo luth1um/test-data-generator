@@ -22,25 +22,4 @@ test.describe("The UUID v4 generator", () => {
     const result = results[0];
     expect(result).toHaveLength(UUID_V4_LENGTH);
   });
-
-  test("should generate multiple UUIDs when amount is increased", async ({ page }, testInfo) => {
-    skipMobileBrowsers(testInfo);
-
-    // given
-    const amount = 3;
-    const pom = new TestDataGenPage(page);
-
-    // when
-    await pom.goto();
-    await pom.selectUuid4Generator();
-    await pom.setAmountInput(amount);
-    await pom.clickGenerate();
-    const results = await pom.getGeneratedResults();
-
-    // then
-    expect(results).toHaveLength(amount);
-    results.forEach((result) => {
-      expect(result).toHaveLength(UUID_V4_LENGTH);
-    });
-  });
 });

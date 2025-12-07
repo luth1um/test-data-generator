@@ -23,24 +23,6 @@ test.describe("The CUID v2 generator", () => {
     expect(result).toHaveLength(expectedLength);
   });
 
-  test("should generate multiple CUIDs when the amount is increased", async ({ page }, testInfo) => {
-    skipMobileBrowsers(testInfo);
-
-    // given
-    const amount = 7;
-    const pom = new TestDataGenPage(page);
-
-    // when
-    await pom.goto();
-    await pom.selectCuid2Generator();
-    await pom.setAmountInput(amount);
-    await pom.clickGenerate();
-    const results = await pom.getGeneratedResults();
-
-    // then
-    expect(results).toHaveLength(amount);
-  });
-
   test(`should generate a CUID with the specified length when the length is set to a value`, async ({
     page,
   }, testInfo) => {

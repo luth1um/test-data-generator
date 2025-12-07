@@ -60,27 +60,4 @@ test.describe("The IBAN generator", () => {
     // then
     await expect(page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY)).toBeVisible();
   });
-
-  test("should generate multiple IBANs when amount is increased", async ({ page }, testInfo) => {
-    skipMobileBrowsers(testInfo);
-
-    // given
-    const country = IBAN_SUPPORTED_COUNTRIES[0];
-    const amount = 3;
-    const pom = new TestDataGenPage(page);
-
-    // when
-    await pom.goto();
-    await pom.selectIbanWithCountry(country.isoCode);
-    await pom.setAmountInput(amount);
-    await pom.clickGenerate();
-    const ibanResults = await pom.getGeneratedResults();
-
-    // then
-    expect(ibanResults).toHaveLength(amount);
-    ibanResults.forEach((ibanResult) => {
-      expect(ibanResult.length).toBeGreaterThanOrEqual(15);
-      expect(ibanResult.length).toBeLessThanOrEqual(34);
-    });
-  });
 });

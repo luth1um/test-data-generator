@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 import { DOWNLOAD_FILENAME } from "../src/ui/uiLogic.js";
 import fs from "fs/promises";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
-import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The buttons for increasing and decreased the amount of results", () => {
@@ -50,11 +49,10 @@ test.describe("When pressing the download button", () => {
     // given
     const pom = new TestDataGenPage(page);
     await pom.goto();
-    await pom.selectIbanWithCountry(IBAN_SUPPORTED_COUNTRIES[0].isoCode);
     await pom.clickGenerate();
     const results = await pom.getGeneratedResults();
     expect(results).toHaveLength(1);
-    const generatedIban = results[0];
+    const result = results[0];
 
     // when
     const [download] = await Promise.all([page.waitForEvent("download"), pom.clickDownload()]);
@@ -63,6 +61,6 @@ test.describe("When pressing the download button", () => {
     expect(download.suggestedFilename()).toBe(DOWNLOAD_FILENAME);
     const path = await download.path();
     const content = await fs.readFile(path, "utf-8");
-    expect(content).toBe(generatedIban);
+    expect(content).toBe(result);
   });
 });
