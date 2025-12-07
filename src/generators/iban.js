@@ -5,7 +5,7 @@ import {
   ALL_LETTERS_AND_ALL_DIGITS,
   generateRandomStringOfChars,
 } from "../misc/randomUtils.js";
-import { COUNTRIES } from "../misc/countries.js";
+import { COUNTRIES, ISO_CODE_COUNTRY_MAP } from "../misc/countries.js";
 
 /**
  * @type {Map<import('../misc/countries.js').Country, function(): string>}
@@ -31,11 +31,6 @@ const COUNTRY_FUNCTIONS_MAP = new Map([
   [COUNTRIES.SWITZERLAND, generateSwissIBAN],
   [COUNTRIES.VATICAN_CITY, generateVaticanIBAN],
 ]);
-
-/**
- * @type {Map<string, import('../misc/countries.js').Country>}
- */
-const ISO_CODE_COUNTRY_MAP = new Map(Array.from(COUNTRY_FUNCTIONS_MAP.keys()).map((c) => [c.isoCode, c]));
 
 /**
  * @type {import('../misc/countries.js').Country[]}
@@ -68,7 +63,6 @@ export function generateIBAN(countryCode) {
  * @returns {string}
  */
 function generateAustrianIBAN() {
-  // Generate random 5-digit bank code and 11-digit account number
   const bankCode = generateRandomStringOfChars(ALL_DIGITS, 5);
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 11);
 

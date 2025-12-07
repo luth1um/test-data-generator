@@ -41,3 +41,8 @@ export const COUNTRIES = {
   SWITZERLAND: new Country("Switzerland", "CH"),
   VATICAN_CITY: new Country("Vatican City", "VA"),
 };
+
+/**
+ * @type {Map<string, Country>}
+ */
+export const ISO_CODE_COUNTRY_MAP = new Map(Object.values(COUNTRIES).map((country) => [country.isoCode, country]));
