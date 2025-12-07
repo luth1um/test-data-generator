@@ -22,6 +22,7 @@ const COUNTRY_FUNCTIONS_MAP = new Map([
   [COUNTRIES.IRELAND, generateIrishIBAN],
   [COUNTRIES.ITALY, generateItalianIBAN],
   [COUNTRIES.LATVIA, generateLatvianIBAN],
+  [COUNTRIES.LUXEMBOURG, generateLuxembourgishIBAN],
   [COUNTRIES.MALTA, generateMalteseIBAN],
   [COUNTRIES.NETHERLANDS, generateDutchIBAN],
   [COUNTRIES.NORWAY, generateNorwegianIBAN],
@@ -330,6 +331,17 @@ function generateLatvianIBAN() {
 
   const bban = bankCode + accountNumber;
   return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.LATVIA.isoCode, bban);
+}
+
+/**
+ * @returns {string}
+ */
+function generateLuxembourgishIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 3);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 13);
+
+  const bban = bankCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.LUXEMBOURG.isoCode, bban);
 }
 
 /**
