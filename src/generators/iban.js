@@ -11,29 +11,29 @@ import { COUNTRIES, ISO_CODE_COUNTRY_MAP } from "../misc/countries.js";
  * @type {Map<import('../misc/countries.js').Country, function(): string>}
  */
 const COUNTRY_FUNCTIONS_MAP = new Map([
-  [COUNTRIES.ANDORRA, generateAndorranIBAN],
-  [COUNTRIES.AUSTRIA, generateAustrianIBAN],
-  [COUNTRIES.BELGIUM, generateBelgianIBAN],
-  [COUNTRIES.BULGARIA, generateBulgarianIBAN],
-  [COUNTRIES.CROATIA, generateCroatianIBAN],
-  [COUNTRIES.CYPRUS, generateCypriotIBAN],
-  [COUNTRIES.FRANCE, generateFrenchIBAN],
-  [COUNTRIES.GERMANY, generateGermanIBAN],
-  [COUNTRIES.GREECE, generateGreekIBAN],
-  [COUNTRIES.ICELAND, generateIcelandicIBAN],
-  [COUNTRIES.IRELAND, generateIrishIBAN],
-  [COUNTRIES.ITALY, generateItalianIBAN],
-  [COUNTRIES.LATVIA, generateLatvianIBAN],
-  [COUNTRIES.LITHUANIA, generateLithuanianIBAN],
-  [COUNTRIES.LUXEMBOURG, generateLuxembourgishIBAN],
-  [COUNTRIES.MALTA, generateMalteseIBAN],
-  [COUNTRIES.NETHERLANDS, generateDutchIBAN],
-  [COUNTRIES.NORWAY, generateNorwegianIBAN],
-  [COUNTRIES.ROMANIA, generateRomanianIBAN],
-  [COUNTRIES.RUSSIA, generateRussianIBAN],
-  [COUNTRIES.SPAIN, generateSpanishIBAN],
-  [COUNTRIES.SWITZERLAND, generateSwissIBAN],
-  [COUNTRIES.VATICAN_CITY, generateVaticanIBAN],
+  [COUNTRIES.ANDORRA, andorranIBAN],
+  [COUNTRIES.AUSTRIA, austrianIBAN],
+  [COUNTRIES.BELGIUM, belgianIBAN],
+  [COUNTRIES.BULGARIA, bulgarianIBAN],
+  [COUNTRIES.CROATIA, croatianIBAN],
+  [COUNTRIES.CYPRUS, cypriotIBAN],
+  [COUNTRIES.FRANCE, frenchIBAN],
+  [COUNTRIES.GERMANY, germanIBAN],
+  [COUNTRIES.GREECE, greekIBAN],
+  [COUNTRIES.ICELAND, icelandicIBAN],
+  [COUNTRIES.IRELAND, irishIBAN],
+  [COUNTRIES.ITALY, italianIBAN],
+  [COUNTRIES.LATVIA, latvianIBAN],
+  [COUNTRIES.LITHUANIA, lithuanianIBAN],
+  [COUNTRIES.LUXEMBOURG, luxembourgishIBAN],
+  [COUNTRIES.MALTA, malteseIBAN],
+  [COUNTRIES.NETHERLANDS, dutchIBAN],
+  [COUNTRIES.NORWAY, norwegianIBAN],
+  [COUNTRIES.ROMANIA, romanianIBAN],
+  [COUNTRIES.RUSSIA, russianIBAN],
+  [COUNTRIES.SPAIN, spanishIBAN],
+  [COUNTRIES.SWITZERLAND, swissIBAN],
+  [COUNTRIES.VATICAN_CITY, vaticanIBAN],
 ]);
 
 /**
@@ -66,7 +66,7 @@ export function generateIBAN(countryCode) {
 /**
  * @returns {string}
  */
-function generateAndorranIBAN() {
+function andorranIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_DIGITS, length: 8 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 12 },
@@ -77,7 +77,7 @@ function generateAndorranIBAN() {
 /**
  * @returns {string}
  */
-function generateAustrianIBAN() {
+function austrianIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 16 }];
   return generateSimpleIban(COUNTRIES.AUSTRIA.isoCode, bbanPattern);
 }
@@ -85,7 +85,7 @@ function generateAustrianIBAN() {
 /**
  * @returns {string}
  */
-function generateBelgianIBAN() {
+function belgianIBAN() {
   const bbanWithoutCheckDigits = generateRandomStringOfChars(ALL_DIGITS, 10);
 
   // Calculate national check digits
@@ -106,7 +106,7 @@ function generateBelgianIBAN() {
 /**
  * @returns {string}
  */
-function generateBulgarianIBAN() {
+function bulgarianIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_LETTERS, length: 4 },
     { allowedChars: ALL_DIGITS, length: 6 },
@@ -118,7 +118,7 @@ function generateBulgarianIBAN() {
 /**
  * @returns {string}
  */
-function generateCroatianIBAN() {
+function croatianIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 17 }];
   return generateSimpleIban(COUNTRIES.CROATIA.isoCode, bbanPattern);
 }
@@ -126,7 +126,7 @@ function generateCroatianIBAN() {
 /**
  * @returns {string}
  */
-function generateCypriotIBAN() {
+function cypriotIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_DIGITS, length: 8 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 16 },
@@ -137,7 +137,7 @@ function generateCypriotIBAN() {
 /**
  * @returns {string}
  */
-function generateDutchIBAN() {
+function dutchIBAN() {
   const bankCode = generateRandomStringOfChars(ALL_LETTERS, 4);
 
   // Generate random 10-digit account number (last digit is a check digit and needs to be calculated)
@@ -150,7 +150,7 @@ function generateDutchIBAN() {
   const checkDigit = (11 - (weightedSum % 11)) % 11;
   if (checkDigit === 10) {
     // invalid check digit
-    return generateDutchIBAN();
+    return dutchIBAN();
   }
 
   const accountNumber = withoutCheck + checkDigit;
@@ -161,7 +161,7 @@ function generateDutchIBAN() {
 /**
  * @returns {string}
  */
-function generateFrenchIBAN() {
+function frenchIBAN() {
   const bankCode = generateRandomStringOfChars(ALL_DIGITS, 5);
   const branchCode = generateRandomStringOfChars(ALL_DIGITS, 5);
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 11);
@@ -217,7 +217,7 @@ function generateFrenchIBAN() {
 /**
  * @returns {string}
  */
-function generateGermanIBAN() {
+function germanIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 18 }];
   return generateSimpleIban(COUNTRIES.GERMANY.isoCode, bbanPattern);
 }
@@ -225,7 +225,7 @@ function generateGermanIBAN() {
 /**
  * @returns {string}
  */
-function generateGreekIBAN() {
+function greekIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_DIGITS, length: 7 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 16 },
@@ -236,7 +236,7 @@ function generateGreekIBAN() {
 /**
  * @returns {string}
  */
-function generateIcelandicIBAN() {
+function icelandicIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 22 }];
   return generateSimpleIban(COUNTRIES.ICELAND.isoCode, bbanPattern);
 }
@@ -244,7 +244,7 @@ function generateIcelandicIBAN() {
 /**
  * @returns {string} A valid, randomly generated Italian IBAN
  */
-function generateItalianIBAN() {
+function italianIBAN() {
   const bankNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
   const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 12);
   const bbanWithoutNationalCheck = bankNumber + accountNumber;
@@ -318,7 +318,7 @@ function generateItalianIBAN() {
 /**
  * @returns {string}
  */
-function generateIrishIBAN() {
+function irishIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_LETTERS, length: 4 },
     { allowedChars: ALL_DIGITS, length: 14 },
@@ -329,7 +329,7 @@ function generateIrishIBAN() {
 /**
  * @returns {string}
  */
-function generateLatvianIBAN() {
+function latvianIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_LETTERS, length: 4 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 13 },
@@ -340,7 +340,7 @@ function generateLatvianIBAN() {
 /**
  * @returns {string}
  */
-function generateLithuanianIBAN() {
+function lithuanianIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 16 }];
   return generateSimpleIban(COUNTRIES.LITHUANIA.isoCode, bbanPattern);
 }
@@ -348,7 +348,7 @@ function generateLithuanianIBAN() {
 /**
  * @returns {string}
  */
-function generateLuxembourgishIBAN() {
+function luxembourgishIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_DIGITS, length: 3 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 13 },
@@ -359,7 +359,7 @@ function generateLuxembourgishIBAN() {
 /**
  * @returns {string}
  */
-function generateMalteseIBAN() {
+function malteseIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_LETTERS, length: 4 },
     { allowedChars: ALL_DIGITS, length: 5 },
@@ -371,7 +371,7 @@ function generateMalteseIBAN() {
 /**
  * @returns {string}
  */
-function generateNorwegianIBAN() {
+function norwegianIBAN() {
   const bban10 = generateRandomStringOfChars(ALL_DIGITS_EXCEPT_0, 1) + generateRandomStringOfChars(ALL_DIGITS, 9);
 
   // Calculate Modulus 11 check digit for the 10-digit BBAN
@@ -386,7 +386,7 @@ function generateNorwegianIBAN() {
     nationalCheckDigit = 0;
   } else if (nationalCheckDigit === 10) {
     // Invalid -> regenerate
-    return generateNorwegianIBAN();
+    return norwegianIBAN();
   }
 
   const bban = bban10 + nationalCheckDigit;
@@ -396,7 +396,7 @@ function generateNorwegianIBAN() {
 /**
  * @returns {string}
  */
-function generateRomanianIBAN() {
+function romanianIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_LETTERS, length: 4 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 16 },
@@ -407,7 +407,7 @@ function generateRomanianIBAN() {
 /**
  * @returns {string}
  */
-function generateRussianIBAN() {
+function russianIBAN() {
   const bbanPattern = [
     { allowedChars: ALL_DIGITS, length: 14 },
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 15 },
@@ -418,7 +418,7 @@ function generateRussianIBAN() {
 /**
  * @returns {string}
  */
-function generateSpanishIBAN() {
+function spanishIBAN() {
   const bankAndBranchCode = generateRandomStringOfChars(ALL_DIGITS, 8);
   const accountNumber = generateRandomStringOfChars(ALL_DIGITS, 10);
 
@@ -446,7 +446,7 @@ function generateSpanishIBAN() {
 /**
  * @returns {string}
  */
-function generateSwissIBAN() {
+function swissIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 17 }];
   return generateSimpleIban(COUNTRIES.SWITZERLAND.isoCode, bbanPattern);
 }
@@ -454,7 +454,7 @@ function generateSwissIBAN() {
 /**
  * @returns {string}
  */
-function generateVaticanIBAN() {
+function vaticanIBAN() {
   const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 18 }];
   return generateSimpleIban(COUNTRIES.VATICAN_CITY.isoCode, bbanPattern);
 }
