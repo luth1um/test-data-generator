@@ -25,6 +25,7 @@ export const COUNTRIES = {
   AUSTRIA: new Country("Austria", "AT"),
   BELGIUM: new Country("Belgium", "BE"),
   BULGARIA: new Country("Bulgaria", "BG"),
+  CROATIA: new Country("Croatia", "HR"),
   CYPRUS: new Country("Cyprus", "CY"),
   FRANCE: new Country("France", "FR"),
   GERMANY: new Country("Germany", "DE"),

@@ -15,6 +15,7 @@ const COUNTRY_FUNCTIONS_MAP = new Map([
   [COUNTRIES.AUSTRIA, generateAustrianIBAN],
   [COUNTRIES.BELGIUM, generateBelgianIBAN],
   [COUNTRIES.BULGARIA, generateBulgarianIBAN],
+  [COUNTRIES.CROATIA, generateCroatianIBAN],
   [COUNTRIES.CYPRUS, generateCypriotIBAN],
   [COUNTRIES.FRANCE, generateFrenchIBAN],
   [COUNTRIES.GERMANY, generateGermanIBAN],
@@ -111,6 +112,14 @@ function generateBulgarianIBAN() {
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 8 },
   ];
   return generateSimpleIban(COUNTRIES.BULGARIA.isoCode, bbanPattern);
+}
+
+/**
+ * @returns {string}
+ */
+function generateCroatianIBAN() {
+  const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 17 }];
+  return generateSimpleIban(COUNTRIES.CROATIA.isoCode, bbanPattern);
 }
 
 /**
