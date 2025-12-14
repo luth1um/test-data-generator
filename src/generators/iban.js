@@ -24,6 +24,7 @@ const COUNTRY_FUNCTIONS_MAP = new Map([
   [COUNTRIES.IRELAND, generateIrishIBAN],
   [COUNTRIES.ITALY, generateItalianIBAN],
   [COUNTRIES.LATVIA, generateLatvianIBAN],
+  [COUNTRIES.LITHUANIA, generateLithuanianIBAN],
   [COUNTRIES.LUXEMBOURG, generateLuxembourgishIBAN],
   [COUNTRIES.MALTA, generateMalteseIBAN],
   [COUNTRIES.NETHERLANDS, generateDutchIBAN],
@@ -334,6 +335,14 @@ function generateLatvianIBAN() {
     { allowedChars: ALL_LETTERS_AND_ALL_DIGITS, length: 13 },
   ];
   return generateSimpleIban(COUNTRIES.LATVIA.isoCode, bbanPattern);
+}
+
+/**
+ * @returns {string}
+ */
+function generateLithuanianIBAN() {
+  const bbanPattern = [{ allowedChars: ALL_DIGITS, length: 16 }];
+  return generateSimpleIban(COUNTRIES.LITHUANIA.isoCode, bbanPattern);
 }
 
 /**
