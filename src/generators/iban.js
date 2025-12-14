@@ -11,6 +11,7 @@ import { COUNTRIES, ISO_CODE_COUNTRY_MAP } from "../misc/countries.js";
  * @type {Map<import('../misc/countries.js').Country, function(): string>}
  */
 const COUNTRY_FUNCTIONS_MAP = new Map([
+  [COUNTRIES.ANDORRA, generateAndorranIBAN],
   [COUNTRIES.AUSTRIA, generateAustrianIBAN],
   [COUNTRIES.BELGIUM, generateBelgianIBAN],
   [COUNTRIES.BULGARIA, generateBulgarianIBAN],
@@ -58,6 +59,18 @@ export function generateIBAN(countryCode) {
     }
   }
   throw new Error(`IBAN generation for country code '${countryCode}' is not supported.`);
+}
+
+/**
+ * @returns {string}
+ */
+function generateAndorranIBAN() {
+  const bankCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const branchCode = generateRandomStringOfChars(ALL_DIGITS, 4);
+  const accountNumber = generateRandomStringOfChars(ALL_LETTERS_AND_ALL_DIGITS, 12);
+
+  const bban = bankCode + branchCode + accountNumber;
+  return calculateIbanCheckDigitsAndAssembleIban(COUNTRIES.ANDORRA.isoCode, bban);
 }
 
 /**

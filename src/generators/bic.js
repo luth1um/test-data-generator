@@ -12,6 +12,7 @@ import { COUNTRIES } from "../misc/countries.js";
  * @type {import('../misc/countries').Country[]}
  */
 export const BIC_SUPPORTED_COUNTRIES = [
+  COUNTRIES.ANDORRA,
   COUNTRIES.AUSTRIA,
   COUNTRIES.BELGIUM,
   COUNTRIES.BULGARIA,

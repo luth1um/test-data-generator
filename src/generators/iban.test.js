@@ -19,6 +19,7 @@ class IBANTestConfiguration {
 }
 
 const COUNTRY_CONFIGS = [
+  new IBANTestConfiguration(COUNTRIES.ANDORRA, 24, /^\d{8}[A-Z0-9]{12}$/),
   new IBANTestConfiguration(COUNTRIES.AUSTRIA, 20, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.BELGIUM, 16, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.BULGARIA, 22, /^[A-Z]{4}\d{6}[A-Z0-9]{8}$/),
