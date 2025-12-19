@@ -290,12 +290,16 @@ describe("The error handling of the IBAN generator", () => {
 
   it.each(INVALID_COUNTRY_CODES)("should throw an error for invalid country code format '%s'", (invalidCountryCode) => {
     // when / then
-    expect(() => generateIBAN(invalidCountryCode)).toThrow();
+    expect(() => generateIBAN(invalidCountryCode)).toThrow(
+      `IBAN generation for country code '${invalidCountryCode}' is not supported.`
+    );
   });
 
   it.each([null, undefined, 123, {}, []])("should throw an error for non-string input '$0'", (countryCode) => {
     // when / then
-    expect(() => generateIBAN(countryCode)).toThrow();
+    expect(() => generateIBAN(countryCode)).toThrow(
+      `IBAN generation for country code '${countryCode}' is not supported.`
+    );
   });
 });
 

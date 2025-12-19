@@ -160,11 +160,15 @@ describe("The error handling of the BIC generator", () => {
 
   it.each(INVALID_COUNTRY_CODES)("should throw an error for invalid country code format '%s'", (invalidCountryCode) => {
     // when / then
-    expect(() => generateBIC(invalidCountryCode)).toThrow();
+    expect(() => generateBIC(invalidCountryCode)).toThrow(
+      `BIC generation for country code '${invalidCountryCode}' is not supported.`
+    );
   });
 
   it.each([null, undefined, 123, {}, []])("should throw an error for non-string input '$0'", (countryCode) => {
     // when / then
-    expect(() => generateBIC(countryCode)).toThrow();
+    expect(() => generateBIC(countryCode)).toThrow(
+      `BIC generation for country code '${countryCode}' is not supported.`
+    );
   });
 });
