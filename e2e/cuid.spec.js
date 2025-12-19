@@ -1,6 +1,7 @@
-import { test, expect } from "@playwright/test";
-import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { expect, test } from "@playwright/test";
+
 import { CUID_V2_DEFAULT_LENGTH, CUID_V2_MAX_LENGTH, CUID_V2_MIN_LENGTH } from "../src/generators/cuid.js";
+import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The CUID v2 generator", () => {

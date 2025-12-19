@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { BIC_SUPPORTED_COUNTRY_CODES, generateBIC } from "./bic.js";
+
 import { ALL_LETTERS_AND_ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { BIC_SUPPORTED_COUNTRY_CODES, generateBIC } from "./bic.js";
 
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 

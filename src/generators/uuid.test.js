@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { generateUUIDv4 } from "./uuid.js";
+
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { generateUUIDv4 } from "./uuid.js";
 
 const UUID_V4_LENGTH = 36;
 

@@ -1,8 +1,8 @@
 /* global document */
 
-import { DATA_TEST_ID } from "../misc/testgenConstants.js";
-import { COUNTRIES } from "../misc/countries.js";
 import { BIC_SUPPORTED_COUNTRIES } from "../generators/bic.js";
+import { COUNTRIES } from "../misc/countries.js";
+import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 
 export const TEST_ID_SELECT_BIC_COUNTRY = "select-country-bic";
 

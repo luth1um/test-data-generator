@@ -1,10 +1,11 @@
-import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+
+import { COUNTRIES } from "../src/misc/countries.js";
+import { KEYBOARD_KEYS } from "../src/misc/testgenConstants.js";
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
 import { skipDesktopSafari, skipMobileBrowsers } from "./helpers/miscHelpers.js";
-import { KEYBOARD_KEYS } from "../src/misc/testgenConstants.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
-import { COUNTRIES } from "../src/misc/countries.js";
 
 test.describe("The test-data generator", () => {
   GENERATOR_THEMES.filter((t) => t.name.startsWith("Light")).forEach((theme) => {

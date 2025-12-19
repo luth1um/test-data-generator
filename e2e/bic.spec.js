@@ -1,7 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
+import { BIC_SUPPORTED_COUNTRIES, BIC_SUPPORTED_COUNTRY_CODES } from "../src/generators/bic.js";
 import { TEST_ID_SELECT_BIC_COUNTRY } from "../src/ui/bicUi.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
-import { BIC_SUPPORTED_COUNTRIES, BIC_SUPPORTED_COUNTRY_CODES } from "../src/generators/bic.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The BIC generator", () => {

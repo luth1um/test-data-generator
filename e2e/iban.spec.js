@@ -1,7 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
+import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 import { TEST_ID_SELECT_IBAN_COUNTRY } from "../src/ui/ibanUi.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
-import { IBAN_SUPPORTED_COUNTRIES } from "../src/generators/iban.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The IBAN generator", () => {

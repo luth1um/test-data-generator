@@ -1,7 +1,7 @@
 /* global document */
 
-import { setupUI } from "./ui/uiLogic.js";
 import { initTheme } from "./ui/theme.js";
+import { setupUI } from "./ui/uiLogic.js";
 
 const app = document.getElementById("app");
 app.innerHTML = "";

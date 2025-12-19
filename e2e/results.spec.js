@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 

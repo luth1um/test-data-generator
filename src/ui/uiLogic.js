@@ -1,32 +1,32 @@
 /* global document, Blob, URL, setTimeout */
 
+import { generateBIC } from "../generators/bic.js";
+import { generateCUIDv2 } from "../generators/cuid.js";
+import { generateIBAN } from "../generators/iban.js";
+import { generateUUIDv4 } from "../generators/uuid.js";
+import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
 import {
-  createIbanOption,
+  BIC_OPTION_VALUE,
+  createBicCountryControls,
+  createBicOption,
+  getBicArgs,
+  showBicCountryControls,
+} from "./bicUi.js";
+import {
+  createCuidLengthControls,
+  createCuidOption,
+  CUID_V2_OPTION_VALUE,
+  getCuidArgs,
+  showCuidLengthControls,
+} from "./cuidUi.js";
+import {
   createCountryControls,
-  showIbanCountryControls,
+  createIbanOption,
   getIbanArgs,
   IBAN_OPTION_VALUE,
+  showIbanCountryControls,
 } from "./ibanUi.js";
-import {
-  createBicOption,
-  createBicCountryControls,
-  showBicCountryControls,
-  getBicArgs,
-  BIC_OPTION_VALUE,
-} from "./bicUi.js";
 import { createUuidOption, getUuidArgs, UUIDV4_OPTION_VALUE } from "./uuidUi.js";
-import {
-  createCuidOption,
-  createCuidLengthControls,
-  showCuidLengthControls,
-  getCuidArgs,
-  CUID_V2_OPTION_VALUE,
-} from "./cuidUi.js";
-import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
-import { generateIBAN } from "../generators/iban.js";
-import { generateBIC } from "../generators/bic.js";
-import { generateUUIDv4 } from "../generators/uuid.js";
-import { generateCUIDv2 } from "../generators/cuid.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";

@@ -1,3 +1,4 @@
+import { COUNTRIES, ISO_CODE_COUNTRY_MAP } from "../misc/countries.js";
 import {
   ALL_DIGITS,
   ALL_DIGITS_EXCEPT_0,
@@ -5,7 +6,6 @@ import {
   ALL_LETTERS_AND_ALL_DIGITS,
   generateRandomStringOfChars,
 } from "../misc/randomUtils.js";
-import { COUNTRIES, ISO_CODE_COUNTRY_MAP } from "../misc/countries.js";
 
 /**
  * @type {Map<import('../misc/countries.js').Country, function(): string>}

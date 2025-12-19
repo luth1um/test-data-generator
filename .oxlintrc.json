@@ -1,4 +1,8 @@
 {
   "plugins": ["import", "jsdoc", "promise", "vitest"],
+  "jsPlugins": ["eslint-plugin-simple-import-sort"],
+  "rules": {
+    "simple-import-sort/imports": "error"
+  },
   "ignorePatterns": ["dist/**"]
 }

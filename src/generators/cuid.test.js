@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { CUID_V2_DEFAULT_LENGTH, CUID_V2_MAX_LENGTH, CUID_V2_MIN_LENGTH, generateCUIDv2 } from "./cuid.js";
+
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { CUID_V2_DEFAULT_LENGTH, CUID_V2_MAX_LENGTH, CUID_V2_MIN_LENGTH, generateCUIDv2 } from "./cuid.js";
 
 describe("generateCUIDv2", () => {
   it(

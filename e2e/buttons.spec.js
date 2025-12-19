@@ -1,6 +1,7 @@
-import { test, expect } from "@playwright/test";
-import { DOWNLOAD_FILENAME } from "../src/ui/uiLogic.js";
+import { expect, test } from "@playwright/test";
 import fs from "fs/promises";
+
+import { DOWNLOAD_FILENAME } from "../src/ui/uiLogic.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 

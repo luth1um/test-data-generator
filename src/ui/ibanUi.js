@@ -1,8 +1,8 @@
 /* global document */
 
-import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 import { IBAN_SUPPORTED_COUNTRIES } from "../generators/iban.js";
 import { COUNTRIES } from "../misc/countries.js";
+import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 
 export const TEST_ID_SELECT_IBAN_COUNTRY = "select-country-iban";
 
