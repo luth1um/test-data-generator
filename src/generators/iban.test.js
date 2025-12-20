@@ -33,13 +33,18 @@ const COUNTRY_CONFIGS = [
   new IBANTestConfiguration(COUNTRIES.IRELAND, 22, /^[A-Z]{4}\d{14}$/),
   new IBANTestConfiguration(COUNTRIES.ITALY, 27, /^[A-Z]\d{10}[A-Z0-9]{12}$/),
   new IBANTestConfiguration(COUNTRIES.LATVIA, 21, /^[A-Z]{4}[A-Z0-9]{13}$/),
+  new IBANTestConfiguration(COUNTRIES.LIECHTENSTEIN, 21, /^\d{5}[A-Z0-9]{12}$/),
   new IBANTestConfiguration(COUNTRIES.LITHUANIA, 20, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.LUXEMBOURG, 20, /^\d{3}[A-Z0-9]{13}$/),
   new IBANTestConfiguration(COUNTRIES.MALTA, 31, /^[A-Z]{4}\d{5}[A-Z0-9]{18}$/),
+  new IBANTestConfiguration(COUNTRIES.MOLDOVA, 24, /^[A-Z0-9]{20}$/),
+  new IBANTestConfiguration(COUNTRIES.MONACO, 27, /^\d{10}[A-Z0-9]{11}\d{2}$/),
   new IBANTestConfiguration(COUNTRIES.NETHERLANDS, 18, /^[A-Z0-9]{4}\d{10}$/),
   new IBANTestConfiguration(COUNTRIES.NORWAY, 15, /^\d+$/),
+  new IBANTestConfiguration(COUNTRIES.POLAND, 28, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.ROMANIA, 24, /^[A-Z0-9]{4}[A-Z0-9]{16}$/),
   new IBANTestConfiguration(COUNTRIES.RUSSIA, 33, /^\d{14}[A-Z0-9]{15}$/),
+  new IBANTestConfiguration(COUNTRIES.SAN_MARINO, 27, /^[A-Z]\d{10}[A-Z0-9]{12}$/),
   new IBANTestConfiguration(COUNTRIES.SPAIN, 24, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.SWITZERLAND, 21, /^\d+$/),
   new IBANTestConfiguration(COUNTRIES.VATICAN_CITY, 22, /^\d+$/),
@@ -138,57 +143,53 @@ describe("The generator for Dutch IBANs", () => {
   });
 });
 
-describe("The generator for French IBANs", () => {
-  it(
-    "should produce IBANs with the correct RIB key (national check digits)",
-    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
-    () => {
-      // when
-      const iban = generateIBAN(COUNTRIES.FRANCE.isoCode);
-      const ribKey = iban.substring(iban.length - 2);
-      const bbanWithoutCheckDigits = iban.substring(4, iban.length - 2);
+describe.each([COUNTRIES.FRANCE, COUNTRIES.MONACO])("The generator for IBANs of $name", (country) => {
+  it("should produce IBANs with the correct national check digit", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
+    // when
+    const iban = generateIBAN(country.isoCode);
+    const ribKey = iban.substring(iban.length - 2);
+    const bbanWithoutCheckDigits = iban.substring(4, iban.length - 2);
 
-      const ribMap = {
-        A: "1",
-        B: "2",
-        C: "3",
-        D: "4",
-        E: "5",
-        F: "6",
-        G: "7",
-        H: "8",
-        I: "9",
-        J: "1",
-        K: "2",
-        L: "3",
-        M: "4",
-        N: "5",
-        O: "6",
-        P: "7",
-        Q: "8",
-        R: "9",
-        S: "2",
-        T: "3",
-        U: "4",
-        V: "5",
-        W: "6",
-        X: "7",
-        Y: "8",
-        Z: "9",
-      };
+    const ribMap = {
+      A: "1",
+      B: "2",
+      C: "3",
+      D: "4",
+      E: "5",
+      F: "6",
+      G: "7",
+      H: "8",
+      I: "9",
+      J: "1",
+      K: "2",
+      L: "3",
+      M: "4",
+      N: "5",
+      O: "6",
+      P: "7",
+      Q: "8",
+      R: "9",
+      S: "2",
+      T: "3",
+      U: "4",
+      V: "5",
+      W: "6",
+      X: "7",
+      Y: "8",
+      Z: "9",
+    };
 
-      // then
-      const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => ribMap[c]);
-      const bbanToNumberString = lettersToNumbers(bbanWithoutCheckDigits);
+    // then
+    const lettersToNumbers = (s) => s.replace(/[A-Z]/g, (c) => ribMap[c]);
+    const bbanToNumberString = lettersToNumbers(bbanWithoutCheckDigits);
 
-      const bbanNumber = BigInt(bbanToNumberString + "00");
-      const ribKeyNumber = BigInt(ribKey);
+    const bbanNumber = BigInt(bbanToNumberString + "00");
+    const ribKeyNumber = BigInt(ribKey);
 
-      const verificationResult = (bbanNumber + ribKeyNumber) % 97n;
+    const verificationResult = (bbanNumber + ribKeyNumber) % 97n;
 
-      expect(verificationResult).toEqual(0n);
-    }
-  );
+    expect(verificationResult).toEqual(0n);
+  });
 });
 
 describe("The generator for Norwegian IBANs", () => {
@@ -217,6 +218,26 @@ describe("The generator for Norwegian IBANs", () => {
     // then
     const char5 = iban[4];
     expect(char5).not.toBe("0");
+  });
+});
+
+describe("The generator for Polish IBANs", () => {
+  it("should produce IBANs with the correct national check digit", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
+    // given
+    const weights = [3, 9, 7, 1, 3, 9, 7, 1];
+
+    // when
+    const iban = generateIBAN(COUNTRIES.POLAND.isoCode);
+    const bankAndBranch = iban.substring(4, 12);
+
+    let weightedSum = 0;
+    for (let i = 0; i < bankAndBranch.length; i++) {
+      weightedSum += Number(bankAndBranch[i]) * weights[i];
+    }
+    const modCheck = weightedSum % 10;
+
+    // then
+    expect(modCheck).toBe(0);
   });
 });
 
