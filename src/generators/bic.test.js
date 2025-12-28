@@ -46,7 +46,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
       // then
       const bankCode = bic.substring(0, 4);
       expect(bankCode).toMatch(/^[A-Z]{4}$/);
-    }
+    },
   );
 
   it(
@@ -59,7 +59,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
       // then
       const chars5And6 = bic.substring(4, 6);
       expect(chars5And6).toBe(countryCode);
-    }
+    },
   );
 
   it("should not produce 0 or 1 at position 6 (0-indexed)", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
@@ -109,7 +109,7 @@ describe("The generator for BICs", () => {
 
       // when (repeat until BIC with 11 chars is produced, or stop if no such BIC is produced)
       const bic = Array.from({ length: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => generateBIC(countryCode)).find(
-        (bic) => bic.length === 11
+        (bic) => bic.length === 11,
       );
 
       if (!bic) {
@@ -119,7 +119,7 @@ describe("The generator for BICs", () => {
       // then
       const branchCode = bic.substring(8, 11);
       expect(branchCode).toMatch(/^[A-Z0-9]{3}$/);
-    }
+    },
   );
 
   it(
@@ -143,7 +143,7 @@ describe("The generator for BICs", () => {
       bics.forEach((bic) => {
         expect(bic.substring(9, 11)).toBe("XX");
       });
-    }
+    },
   );
 });
 
@@ -154,21 +154,21 @@ describe("The error handling of the BIC generator", () => {
 
     // when / then
     expect(() => generateBIC(unsupportedCountry)).toThrow(
-      `BIC generation for country code '${unsupportedCountry}' is not supported.`
+      `BIC generation for country code '${unsupportedCountry}' is not supported.`,
     );
   });
 
   it.each(INVALID_COUNTRY_CODES)("should throw an error for invalid country code format '%s'", (invalidCountryCode) => {
     // when / then
     expect(() => generateBIC(invalidCountryCode)).toThrow(
-      `BIC generation for country code '${invalidCountryCode}' is not supported.`
+      `BIC generation for country code '${invalidCountryCode}' is not supported.`,
     );
   });
 
   it.each([null, undefined, 123, {}, []])("should throw an error for non-string input '$0'", (countryCode) => {
     // when / then
     expect(() => generateBIC(countryCode)).toThrow(
-      `BIC generation for country code '${countryCode}' is not supported.`
+      `BIC generation for country code '${countryCode}' is not supported.`,
     );
   });
 });

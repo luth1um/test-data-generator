@@ -22,7 +22,7 @@ describe("generateUUIDv4", () => {
 
       // then
       expect(uuid).toHaveLength(UUID_V4_LENGTH);
-    }
+    },
   );
 
   it(
@@ -35,7 +35,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks).toHaveLength(5);
-    }
+    },
   );
 
   it(
@@ -48,7 +48,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks[0]).toHaveLength(8);
-    }
+    },
   );
 
   it(
@@ -61,7 +61,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks[1]).toHaveLength(4);
-    }
+    },
   );
 
   it(
@@ -74,7 +74,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks[2]).toHaveLength(4);
-    }
+    },
   );
 
   it(
@@ -87,7 +87,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks[3]).toHaveLength(4);
-    }
+    },
   );
 
   it(
@@ -100,7 +100,7 @@ describe("generateUUIDv4", () => {
       // then
       const blocks = uuid.split("-");
       expect(blocks[4]).toHaveLength(12);
-    }
+    },
   );
 
   it(
@@ -112,7 +112,7 @@ describe("generateUUIDv4", () => {
 
       // then
       expect(uuid[14]).toBe("4");
-    }
+    },
   );
 
   it(
@@ -124,7 +124,7 @@ describe("generateUUIDv4", () => {
 
       // then
       expect(uuid[19]).toMatch(/[89ab]/);
-    }
+    },
   );
 
   it(
@@ -136,7 +136,7 @@ describe("generateUUIDv4", () => {
 
       // then
       expect(uuid).toMatch(/^[0-9a-f-]+$/);
-    }
+    },
   );
 
   it("should generate unique UUIDs across many calls", () => {

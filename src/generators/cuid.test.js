@@ -12,7 +12,7 @@ describe("generateCUIDv2", () => {
 
       // then
       expect(cuid.length).toBe(CUID_V2_DEFAULT_LENGTH);
-    }
+    },
   );
 
   it(
@@ -24,7 +24,7 @@ describe("generateCUIDv2", () => {
 
       // then
       expect(cuid).toMatch(/[a-z0-9]+$/);
-    }
+    },
   );
 
   it(
@@ -39,7 +39,7 @@ describe("generateCUIDv2", () => {
 
       // then
       expect(id).toHaveLength(length);
-    }
+    },
   );
 
   it(
@@ -54,7 +54,7 @@ describe("generateCUIDv2", () => {
 
       // then
       expect(id).toHaveLength(minLength);
-    }
+    },
   );
 
   it(
@@ -69,7 +69,7 @@ describe("generateCUIDv2", () => {
 
       // then
       expect(id).toHaveLength(maxLength);
-    }
+    },
   );
 
   it("should generate unique IDs when called many times", () => {
@@ -84,14 +84,14 @@ describe("generateCUIDv2", () => {
   it.each([1, 0, -1, Number.MIN_VALUE])("should throw an error when the length is too small (%s)", (length) => {
     // when / then
     expect(() => generateCUIDv2(length)).toThrowError(
-      `The length for generating a CUIDv2 must be between ${CUID_V2_MIN_LENGTH} and ${CUID_V2_MAX_LENGTH}`
+      `The length for generating a CUIDv2 must be between ${CUID_V2_MIN_LENGTH} and ${CUID_V2_MAX_LENGTH}`,
     );
   });
 
   it.each([33, Number.MAX_VALUE])("should throw an error when the length is too big (%s)", (length) => {
     // when / then
     expect(() => generateCUIDv2(length)).toThrowError(
-      `The length for generating a CUIDv2 must be between ${CUID_V2_MIN_LENGTH} and ${CUID_V2_MAX_LENGTH}`
+      `The length for generating a CUIDv2 must be between ${CUID_V2_MIN_LENGTH} and ${CUID_V2_MAX_LENGTH}`,
     );
   });
 });

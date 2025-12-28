@@ -75,7 +75,7 @@ describe.each(COUNTRY_CONFIGS)("The generator for IBANs of $country.name", (conf
       // then
       const countryCode = iban.substring(0, 2);
       expect(countryCode).toBe(config.country.isoCode);
-    }
+    },
   );
 
   it("should match the country format", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {
@@ -266,7 +266,7 @@ describe("The generator for Spanish IBANs", () => {
 
       const remainder = (weightedSum + dc1) % 11;
       expect(remainder).toBe(0);
-    }
+    },
   );
 
   it(
@@ -294,7 +294,7 @@ describe("The generator for Spanish IBANs", () => {
 
       const remainder = (weightedSum + dc2) % 11;
       expect(remainder).toBe(0);
-    }
+    },
   );
 });
 
@@ -305,21 +305,21 @@ describe("The error handling of the IBAN generator", () => {
 
     // when / then
     expect(() => generateIBAN(unsupportedCountry)).toThrow(
-      `IBAN generation for country code '${unsupportedCountry}' is not supported.`
+      `IBAN generation for country code '${unsupportedCountry}' is not supported.`,
     );
   });
 
   it.each(INVALID_COUNTRY_CODES)("should throw an error for invalid country code format '%s'", (invalidCountryCode) => {
     // when / then
     expect(() => generateIBAN(invalidCountryCode)).toThrow(
-      `IBAN generation for country code '${invalidCountryCode}' is not supported.`
+      `IBAN generation for country code '${invalidCountryCode}' is not supported.`,
     );
   });
 
   it.each([null, undefined, 123, {}, []])("should throw an error for non-string input '$0'", (countryCode) => {
     // when / then
     expect(() => generateIBAN(countryCode)).toThrow(
-      `IBAN generation for country code '${countryCode}' is not supported.`
+      `IBAN generation for country code '${countryCode}' is not supported.`,
     );
   });
 });
