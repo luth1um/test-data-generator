@@ -1,5 +1,4 @@
 import { init } from "@paralleldrive/cuid2";
-
 export const CUID_V2_MIN_LENGTH = 2;
 export const CUID_V2_MAX_LENGTH = 32;
 export const CUID_V2_DEFAULT_LENGTH = 24;

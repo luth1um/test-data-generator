@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
-
 import { ALL_LETTERS_AND_ALL_DIGITS, generateRandomStringOfChars } from "./randomUtils.js";
+import { describe, expect, it } from "vitest";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "./testgenConstants.js";
 
 describe("The generator for random strings of specific chars", () => {

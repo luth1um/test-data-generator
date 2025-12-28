@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
-
-import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
+import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
 
 const UUID_V4_LENGTH = 36;
 

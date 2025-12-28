@@ -1,4 +1,3 @@
-import { COUNTRIES } from "../misc/countries.js";
 import {
   ALL_LETTERS,
   ALL_LETTERS_AND_ALL_DIGITS,
@@ -7,6 +6,7 @@ import {
   ALL_LETTERS_EXCEPT_X_AND_ALL_DIGITS,
   generateRandomStringOfChars,
 } from "../misc/randomUtils.js";
+import { COUNTRIES } from "../misc/countries.js";
 
 /**
  * @type {import('../misc/countries').Country[]}

@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-
 import { GENERATOR_THEMES } from "./helpers/generatorThemes.js";
 import { GENERATOR_TYPES } from "./helpers/generatorTypes.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
