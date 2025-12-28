@@ -22,10 +22,18 @@ import {
   getIbanArgs,
   showIbanCountryControls,
 } from "./ibanUi.js";
+import {
+  TAX_ID_OPTION_VALUE,
+  createTaxIdOption,
+  createTypeControls,
+  getTaxIdArgs,
+  showTaxIdTypeControls,
+} from "./taxIdUi.js";
 import { UUIDV4_OPTION_VALUE, createUuidOption, getUuidArgs } from "./uuidUi.js";
 import { generateBIC } from "../generators/bic.js";
 import { generateCUIDv2 } from "../generators/cuid.js";
 import { generateIBAN } from "../generators/iban.js";
+import { generateTaxId } from "../generators/taxId.js";
 import { generateUUIDv4 } from "../generators/uuid.js";
 
 export const RESULT_DIV_ID = "result";
@@ -60,27 +68,30 @@ export function setupUI(header, mainLandmark) {
   typeSelect.id = "type-select";
   typeLabel.htmlFor = "type-select";
   typeSelect.setAttribute(DATA_TEST_ID, TEST_ID_SELECT_TYPE);
-  // Add IBAN, BIC, UUID, and CUID v2 options using extracted modules
+
+  // Add generator options
   typeSelect.appendChild(createBicOption());
   typeSelect.appendChild(createCuidOption());
   typeSelect.appendChild(createIbanOption());
+  typeSelect.appendChild(createTaxIdOption());
   typeSelect.appendChild(createUuidOption());
   typeSelect.value = IBAN_OPTION_VALUE; // Preselect IBAN
   typeLabel.appendChild(typeSelect);
 
-  // Country controls (for IBAN and BIC)
+  // add controls for generator-specific dropdowns
   const { countryLabel: ibanCountryLabel, countrySelect: ibanCountrySelect } = createCountryControls();
   const { countryLabel: bicCountryLabel, countrySelect: bicCountrySelect } = createBicCountryControls();
-  // Length controls (for CUID v2)
   const { lengthLabel: cuidLengthLabel, lengthInput: cuidLengthInput } = createCuidLengthControls();
+  const { typeLabel: taxIdTypeLabel, typeSelect: taxIdTypeSelect } = createTypeControls();
 
   /**
-   * Updates the visibility of country/length controls based on the selected generation type.
+   * Updates the visibility of country/length/type controls based on the selected generation type.
    * Shows country controls only when IBAN or BIC is selected.
    * Shows the CUID length controls only when CUID v2 is selected.
+   * Shows the Tax ID type controls only when Tax ID is selected.
    * Synchronizes the country value between IBAN and BIC dropdowns when switching.
    */
-  function updateCountryDropdown() {
+  function updateGeneratorSpecificDropdown() {
     const type = typeSelect.value;
 
     // If switching to IBAN or BIC, sync the country value from the other dropdown
@@ -101,10 +112,11 @@ export function setupUI(header, mainLandmark) {
     showIbanCountryControls(type, ibanCountryLabel);
     showBicCountryControls(type, bicCountryLabel);
     showCuidLengthControls(type, cuidLengthLabel);
+    showTaxIdTypeControls(type, taxIdTypeLabel);
   }
 
-  typeSelect.addEventListener("change", updateCountryDropdown);
-  updateCountryDropdown();
+  typeSelect.addEventListener("change", updateGeneratorSpecificDropdown);
+  updateGeneratorSpecificDropdown();
 
   // Number input for how many results to generate
   const amountLabel = document.createElement("label");
@@ -193,6 +205,7 @@ export function setupUI(header, mainLandmark) {
   ibanCountryLabel.style.marginLeft = "";
   bicCountryLabel.style.marginLeft = "";
   cuidLengthLabel.style.marginLeft = "";
+  taxIdTypeLabel.style.marginLeft = "";
   amountLabel.style.marginLeft = "";
   generateButton.style.marginLeft = "";
 
@@ -208,6 +221,7 @@ export function setupUI(header, mainLandmark) {
   formRow.appendChild(bicCountryLabel);
   formRow.appendChild(ibanCountryLabel);
   formRow.appendChild(cuidLengthLabel);
+  formRow.appendChild(taxIdTypeLabel);
   formRow.appendChild(amountGroup);
   formRow.appendChild(generateButton);
 
@@ -220,6 +234,7 @@ export function setupUI(header, mainLandmark) {
     bic: (args) => generateBIC(args.country),
     [CUID_V2_OPTION_VALUE]: (args) => generateCUIDv2(args.length),
     iban: (args) => generateIBAN(args.country),
+    [TAX_ID_OPTION_VALUE]: (args) => generateTaxId(args.type),
     uuidv4: () => generateUUIDv4(),
     // Add more generators here as needed
   };
@@ -231,7 +246,7 @@ export function setupUI(header, mainLandmark) {
    *
    * @example
    * const args = getSelectedArgs();
-   * // Returns: { country: 'DE' } for IBAN and BIC, or {} for UUID
+   * // Returns: { country: 'DE' } for IBAN and BIC, { type: 'tax-id-germany-steuer-id' } for Tax ID, or {} for UUID
    */
   function getSelectedArgs() {
     const type = typeSelect.value;
@@ -243,6 +258,9 @@ export function setupUI(header, mainLandmark) {
     }
     if (type === IBAN_OPTION_VALUE) {
       return getIbanArgs(ibanCountrySelect);
+    }
+    if (type === TAX_ID_OPTION_VALUE) {
+      return getTaxIdArgs(taxIdTypeSelect);
     }
     if (type === UUIDV4_OPTION_VALUE) {
       return getUuidArgs();

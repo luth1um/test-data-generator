@@ -11,6 +11,7 @@ import {
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
 } from "../../src/ui/uiLogic.js";
+import { TAX_ID_OPTION_VALUE, TEST_ID_SELECT_TAX_ID_TYPE } from "../../src/ui/taxIdUi.js";
 import { TEST_BASE_URL } from "../../playwright.config.js";
 import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
 import { UUIDV4_OPTION_VALUE } from "../../src/ui/uuidUi.js";
@@ -83,6 +84,22 @@ export class TestDataGenPage {
   async selectIbanWithCountry(countryCode) {
     await this.selectIbanGenerator();
     await this.#page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).selectOption(countryCode);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async selectTaxIdGenerator() {
+    await this.selectGeneratorType(TAX_ID_OPTION_VALUE);
+  }
+
+  /**
+   * @param {string} type
+   * @returns {Promise<void>}
+   */
+  async selectTaxIdWithType(type) {
+    await this.selectTaxIdGenerator();
+    await this.#page.getByTestId(TEST_ID_SELECT_TAX_ID_TYPE).selectOption(type);
   }
 
   /**
