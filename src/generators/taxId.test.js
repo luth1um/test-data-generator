@@ -2,6 +2,7 @@ import { TAX_ID_GERMANY_STEUER_ID, TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP, generate
 import { describe, expect, it } from "vitest";
 import { ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
 
 describe.each(TAX_ID_TYPES)("The tax-ID generator", (type) => {
@@ -123,17 +124,11 @@ describe("The tax-ID generator", () => {
       const steuerId = generateTaxId(TAX_ID_GERMANY_STEUER_ID);
 
       // then
-      let product = 10;
-      let sum = 0;
-      for (const digit of steuerId) {
-        sum = (Number(digit) + product) % 10;
-        if (sum === 0) {
-          sum = 10;
-        }
-        product = (sum * 2) % 11;
-      }
-      const result = (11 - sum) % 10;
-      expect(result).toBe(0);
+      const idWithoutCheck = steuerId.substring(0, steuerId.length - 1);
+      const checkDigit = steuerId[steuerId.length - 1];
+      const expectedCheckDigit = checkDigitIsoIec7064Mod1110(idWithoutCheck);
+
+      expect(checkDigit).toBe(expectedCheckDigit);
     },
   );
 

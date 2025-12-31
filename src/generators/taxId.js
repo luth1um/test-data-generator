@@ -1,5 +1,6 @@
 import { ALL_DIGITS, ALL_DIGITS_EXCEPT_0, generateRandomStringOfChars } from "../misc/randomUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
+import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
 
 export const TAX_ID_GERMANY_STEUER_ID = "tax-id-germany-steuer-id";
@@ -42,7 +43,7 @@ function germanySteuerId() {
     const allowedNextDigits = steuerIdAllowedNextDigits(steuerId);
     steuerId += generateRandomStringOfChars(allowedNextDigits, 1);
   }
-  const checkDigit = steuerIdCheckDigit(steuerId);
+  const checkDigit = checkDigitIsoIec7064Mod1110(steuerId);
   return steuerId + checkDigit;
 }
 
@@ -119,22 +120,4 @@ function steuerIdEndsWithSameDigitTwice(partialSteuerId) {
     return false;
   }
   return partialSteuerId[idLength - 1] === partialSteuerId[idLength - 2];
-}
-
-/**
- * @param {string} steuerId
- * @returns {string}
- */
-function steuerIdCheckDigit(steuerId) {
-  let product = 10;
-  for (const digit of steuerId) {
-    let sum = (Number(digit) + product) % 10;
-    if (sum === 0) {
-      sum = 10;
-    }
-    product = (sum * 2) % 11;
-  }
-  const checkDigit = 11 - product;
-
-  return checkDigit === 10 ? "0" : String(checkDigit);
 }
