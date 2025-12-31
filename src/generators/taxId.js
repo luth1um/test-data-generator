@@ -4,16 +4,23 @@ import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
 
 export const TAX_ID_GERMANY_STEUER_ID = "tax-id-germany-steuer-id";
+export const TAX_ID_GERMANY_UST_ID = "tax-id-germany-ust-id";
 
 /**
  * @type {Map<string, function(): string>}
  */
-const TYPE_FUNCTION_MAP = new Map([[TAX_ID_GERMANY_STEUER_ID, germanySteuerId]]);
+const TYPE_FUNCTION_MAP = new Map([
+  [TAX_ID_GERMANY_STEUER_ID, germanySteuerId],
+  [TAX_ID_GERMANY_UST_ID, germanyUstId],
+]);
 
 /**
  * @type {Map<string, string>}
  */
-export const TYPE_DISPLAY_NAME_MAP = new Map([[TAX_ID_GERMANY_STEUER_ID, `${COUNTRIES.GERMANY.name} (Steuer-IdNr.)`]]);
+export const TYPE_DISPLAY_NAME_MAP = new Map([
+  [TAX_ID_GERMANY_STEUER_ID, `${COUNTRIES.GERMANY.name} (Steuer-IdNr.)`],
+  [TAX_ID_GERMANY_UST_ID, `${COUNTRIES.GERMANY.name} (USt-IdNr.)`],
+]);
 
 /**
  * @type {string[]}
@@ -33,6 +40,10 @@ export function generateTaxId(type) {
   }
   throw new Error(`Invalid input ${type}. Must be one of ${TAX_ID_TYPES}`);
 }
+
+// ------------------------------
+// Steuer-IdNr. (Germany)
+// ------------------------------
 
 /**
  * @returns {string}
@@ -120,4 +131,17 @@ function steuerIdEndsWithSameDigitTwice(partialSteuerId) {
     return false;
   }
   return partialSteuerId[idLength - 1] === partialSteuerId[idLength - 2];
+}
+
+// ------------------------------
+// USt-IdNr. (Germany)
+// ------------------------------
+
+/**
+ * @returns {string}
+ */
+function germanyUstId() {
+  const id = generateRandomStringOfChars(ALL_DIGITS, 8);
+  const checkDigit = checkDigitIsoIec7064Mod1110(id);
+  return COUNTRIES.GERMANY.isoCode + id + checkDigit;
 }

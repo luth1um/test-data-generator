@@ -1,4 +1,10 @@
-import { TAX_ID_GERMANY_STEUER_ID, TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP, generateTaxId } from "./taxId.js";
+import {
+  TAX_ID_GERMANY_STEUER_ID,
+  TAX_ID_GERMANY_UST_ID,
+  TAX_ID_TYPES,
+  TYPE_DISPLAY_NAME_MAP,
+  generateTaxId,
+} from "./taxId.js";
 import { describe, expect, it } from "vitest";
 import { ALL_DIGITS } from "../misc/randomUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
@@ -7,7 +13,7 @@ import { digitCount } from "../misc/numberUtils.js";
 
 describe.each(TAX_ID_TYPES)("The tax-ID generator", (type) => {
   it(
-    `should generate a truthy result when the input is valid type ${type}`,
+    `should generate a truthy result when the input is valid type '${type}'`,
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
@@ -19,7 +25,7 @@ describe.each(TAX_ID_TYPES)("The tax-ID generator", (type) => {
   );
 
   it(
-    `should generate a string when the input is valid type ${type}`,
+    `should generate a string when the input is valid type '${type}'`,
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
@@ -141,6 +147,62 @@ describe("The tax-ID generator", () => {
 
       // then
       expect(id[0]).not.toBe("0");
+    },
+  );
+
+  it(
+    "should generate a string of length 11 when the German USt-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_UST_ID);
+
+      // then
+      expect(id).toHaveLength(11);
+    },
+  );
+
+  it(
+    "should generate a string starting with 'DE' when the German USt-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_UST_ID);
+
+      // then
+      const countryCode = id.substring(0, 2);
+      expect(countryCode).toBe("DE");
+    },
+  );
+
+  it(
+    "should generate a string only consisting of digits after 'DE' when the German USt-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_UST_ID);
+
+      // then
+      const randomPart = id.substring(2);
+      for (const digit of randomPart) {
+        expect(digit).toBeOneOf(Array.from(ALL_DIGITS));
+      }
+    },
+  );
+
+  it(
+    "should generate an ID with a valid check digit when the German USt-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_UST_ID);
+
+      // then
+      const randomPartWithoutCheck = id.substring(2, id.length - 1);
+      const checkDigit = id[id.length - 1];
+      const expectedCheckDigit = checkDigitIsoIec7064Mod1110(randomPartWithoutCheck);
+
+      expect(checkDigit).toBe(expectedCheckDigit);
     },
   );
 
