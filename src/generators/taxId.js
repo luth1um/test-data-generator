@@ -5,6 +5,7 @@ import { digitCount } from "../misc/numberUtils.js";
 
 export const TAX_ID_GERMANY_STEUER_ID = "tax-id-germany-steuer-id";
 export const TAX_ID_GERMANY_UST_ID = "tax-id-germany-ust-id";
+export const TAX_ID_GERMANY_W_ID = "tax-id-germany-w-id";
 
 /**
  * @type {Map<string, function(): string>}
@@ -12,6 +13,7 @@ export const TAX_ID_GERMANY_UST_ID = "tax-id-germany-ust-id";
 const TYPE_FUNCTION_MAP = new Map([
   [TAX_ID_GERMANY_STEUER_ID, germanySteuerId],
   [TAX_ID_GERMANY_UST_ID, germanyUstId],
+  [TAX_ID_GERMANY_W_ID, germanyWirtschaftsId],
 ]);
 
 /**
@@ -20,6 +22,7 @@ const TYPE_FUNCTION_MAP = new Map([
 export const TYPE_DISPLAY_NAME_MAP = new Map([
   [TAX_ID_GERMANY_STEUER_ID, `${COUNTRIES.GERMANY.name} (Steuer-IdNr.)`],
   [TAX_ID_GERMANY_UST_ID, `${COUNTRIES.GERMANY.name} (USt-IdNr.)`],
+  [TAX_ID_GERMANY_W_ID, `${COUNTRIES.GERMANY.name} (W-IdNr.)`],
 ]);
 
 /**
@@ -144,4 +147,17 @@ function germanyUstId() {
   const id = generateRandomStringOfChars(ALL_DIGITS, 8);
   const checkDigit = checkDigitIsoIec7064Mod1110(id);
   return COUNTRIES.GERMANY.isoCode + id + checkDigit;
+}
+
+// ------------------------------
+// W-IdNr. (Germany)
+// ------------------------------
+
+/**
+ * @returns {string}
+ */
+function germanyWirtschaftsId() {
+  const ustId = germanyUstId();
+  const unterscheidungsmerkmal = generateRandomStringOfChars(ALL_DIGITS, 5);
+  return ustId + "-" + unterscheidungsmerkmal;
 }

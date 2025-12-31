@@ -1,12 +1,14 @@
 import {
   TAX_ID_GERMANY_STEUER_ID,
   TAX_ID_GERMANY_UST_ID,
+  TAX_ID_GERMANY_W_ID,
   TAX_ID_TYPES,
   TYPE_DISPLAY_NAME_MAP,
   generateTaxId,
 } from "./taxId.js";
 import { describe, expect, it } from "vitest";
 import { ALL_DIGITS } from "../misc/randomUtils.js";
+import { COUNTRIES } from "../misc/countries.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
@@ -163,7 +165,7 @@ describe("The tax-ID generator", () => {
   );
 
   it(
-    "should generate a string starting with 'DE' when the German USt-IdNr. is selected",
+    `should generate a string starting with '${COUNTRIES.GERMANY.isoCode}' when the German USt-IdNr. is selected`,
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
@@ -171,12 +173,12 @@ describe("The tax-ID generator", () => {
 
       // then
       const countryCode = id.substring(0, 2);
-      expect(countryCode).toBe("DE");
+      expect(countryCode).toBe(COUNTRIES.GERMANY.isoCode);
     },
   );
 
   it(
-    "should generate a string only consisting of digits after 'DE' when the German USt-IdNr. is selected",
+    `should generate a string only consisting of digits after '${COUNTRIES.GERMANY.isoCode}' when the German USt-IdNr. is selected`,
     { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
     () => {
       // when
@@ -200,6 +202,103 @@ describe("The tax-ID generator", () => {
       // then
       const randomPartWithoutCheck = id.substring(2, id.length - 1);
       const checkDigit = id[id.length - 1];
+      const expectedCheckDigit = checkDigitIsoIec7064Mod1110(randomPartWithoutCheck);
+
+      expect(checkDigit).toBe(expectedCheckDigit);
+    },
+  );
+
+  it(
+    "should generate a string of length 17 when the German W-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      expect(id).toHaveLength(17);
+    },
+  );
+
+  it(
+    `should generate a string starting with '${COUNTRIES.GERMANY.isoCode}' when the German W-IdNr. is selected`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const countryCode = id.substring(0, 2);
+      expect(countryCode).toBe(COUNTRIES.GERMANY.isoCode);
+    },
+  );
+
+  it(
+    `should generate a string only consisting of digits for the first part after '${COUNTRIES.GERMANY.isoCode}' when the German W-IdNr. is selected`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const randomPart = id.substring(2, 11);
+      for (const digit of randomPart) {
+        expect(digit).toBeOneOf(Array.from(ALL_DIGITS));
+      }
+    },
+  );
+
+  it(
+    `should generate a string only consisting of digits for the Unterscheidungsmerkmal when the German W-IdNr. is selected`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const unterscheidungsmerkmal = id.substring(12);
+      for (const digit of unterscheidungsmerkmal) {
+        expect(digit).toBeOneOf(Array.from(ALL_DIGITS));
+      }
+    },
+  );
+
+  it(
+    `should generate an Unterscheidungsmerkmal of length 5 when the German W-IdNr. is selected`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const unterscheidungsmerkmal = id.substring(12);
+      expect(unterscheidungsmerkmal).toHaveLength(5);
+    },
+  );
+
+  it(
+    `should include a dash before the Unterscheidungsmerkmal when the German W-IdNr. is selected`,
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const separator = id[11];
+      expect(separator).toBe("-");
+    },
+  );
+
+  it(
+    "should generate an ID with a valid check digit when the German W-IdNr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_W_ID);
+
+      // then
+      const randomPartWithoutCheck = id.substring(2, 10);
+      const checkDigit = id[10];
       const expectedCheckDigit = checkDigitIsoIec7064Mod1110(randomPartWithoutCheck);
 
       expect(checkDigit).toBe(expectedCheckDigit);
