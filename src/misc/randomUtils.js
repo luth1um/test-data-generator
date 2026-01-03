@@ -21,5 +21,22 @@ export const ALL_LETTERS_AND_ALL_DIGITS_EXCEPT_0_1 = ALL_LETTERS + ALL_DIGITS_EX
  * console.log(randomString); // e.g., 'KFJ'
  */
 export function generateRandomStringOfChars(validChars, length) {
-  return Array.from({ length: length }, () => validChars[Math.floor(Math.random() * validChars.length)]).join("");
+  return Array.from({ length: length }, () => randomChar(validChars)).join("");
+}
+
+/**
+ * @template T
+ * @param {T[]} input
+ * @returns {T}
+ */
+export function randomElement(input) {
+  return input[Math.floor(Math.random() * input.length)];
+}
+
+/**
+ * @param {string} input
+ * @returns string
+ */
+export function randomChar(input) {
+  return randomElement(Array.from(input));
 }

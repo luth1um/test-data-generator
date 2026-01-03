@@ -1,6 +1,6 @@
 /* global document */
 
-import { TAX_ID_GERMANY_STEUER_ID, TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP } from "../generators/taxId.js";
+import { TAX_ID_GERMANY_ST_NR, TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP } from "../generators/taxId.js";
 import { DATA_TEST_ID } from "../misc/testgenConstants.js";
 
 export const TEST_ID_SELECT_TAX_ID_TYPE = "select-type-tax-id";
@@ -47,7 +47,7 @@ export function createTypeControls() {
     option.textContent = TYPE_DISPLAY_NAME_MAP.get(type);
     typeSelect.appendChild(option);
   });
-  typeSelect.value = TAX_ID_GERMANY_STEUER_ID;
+  typeSelect.value = TAX_ID_GERMANY_ST_NR;
   typeLabel.appendChild(typeSelect);
   return { typeLabel, typeSelect };
 }

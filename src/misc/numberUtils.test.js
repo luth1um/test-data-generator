@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { digitCount } from "./numberUtils.js";
+import { digitCount, digitSum, singleDigitSum } from "./numberUtils.js";
 
 describe("The function for counting digits", () => {
   it("should return the correct count when a number is used as input", () => {
@@ -116,5 +116,151 @@ describe("The function for counting digits", () => {
 
     // then
     expect(result).toEqual(expected);
+  });
+});
+
+describe("The function for calculating the digit sum", () => {
+  it("should return the input when the input has a single digit", () => {
+    // given
+    const input = 7;
+
+    // when
+    const result = digitSum(input);
+
+    // then
+    expect(result).toBe(input);
+  });
+
+  it("should return the correct sum when the input has multiple digits", () => {
+    // given
+    const input = 432;
+
+    // when
+    const result = digitSum(input);
+
+    // then
+    expect(result).toBe(9);
+  });
+
+  it("should return 0 when the input is 0", () => {
+    // given
+    const input = 0;
+
+    // when
+    const result = digitSum(input);
+
+    // then
+    expect(result).toBe(0);
+  });
+
+  it("should return the correct sum when the input is negative", () => {
+    // given
+    const input = -619;
+
+    // when
+    const result = digitSum(input);
+
+    // then
+    expect(result).toBe(16);
+  });
+
+  it("should return the correct sum when the input is Number.MAX_SAFE_INTEGER", () => {
+    // given
+    const input = Number.MAX_SAFE_INTEGER;
+
+    // when
+    const result = digitSum(input);
+
+    // then
+    expect(result).toBe(76);
+  });
+
+  it("should throw an error when the input does not have the type 'number'", () => {
+    // given
+    const digitSumFn = () => digitSum("a");
+
+    // when / then
+    expect(digitSumFn).toThrowError("digitSum expects a finite number input");
+  });
+
+  it("should throw an error when the input is not finite", () => {
+    // given
+    const digitSumFn = () => digitSum(Number.POSITIVE_INFINITY);
+
+    // when / then
+    expect(digitSumFn).toThrowError("digitSum expects a finite number input");
+  });
+});
+
+describe("The function for calculating the single-digit sum", () => {
+  it("should return the input when the input has a single digit", () => {
+    // given
+    const input = 4;
+
+    // when
+    const result = singleDigitSum(input);
+
+    // then
+    expect(result).toBe(input);
+  });
+
+  it("should return the correct sum when the input has a multiple-digit digit-sum", () => {
+    // given
+    const input = 119;
+
+    // when
+    const result = singleDigitSum(input);
+
+    // then
+    expect(result).toBe(2);
+  });
+
+  it("should return 0 when the input is 0", () => {
+    // given
+    const input = 0;
+
+    // when
+    const result = singleDigitSum(input);
+
+    // then
+    expect(result).toBe(0);
+  });
+
+  it("should return the correct sum when the input is negative", () => {
+    // given
+    const input = -401317;
+
+    // when
+    const result = singleDigitSum(input);
+
+    // then
+    expect(result).toBe(7);
+  });
+
+  it("should return the correct sum when the input is Number.MAX_SAFE_INTEGER", () => {
+    // given
+    const input = Number.MAX_SAFE_INTEGER;
+
+    // when
+    const result = singleDigitSum(input);
+
+    // then
+    expect(result).toBe(4);
+  });
+
+  it("should throw an error when the input does not have the type 'number'", () => {
+    // given
+    const singleDigitSumFn = () => singleDigitSum("a");
+
+    // when / then
+    expect(singleDigitSumFn).toThrowError("singleDigitSum expects a finite number input");
+  });
+
+  it("should throw an error when the input is not finite", () => {
+    // given
+    const singleDigitSumFn = () => singleDigitSum(Number.POSITIVE_INFINITY);
+
+    // when / then
+    expect(singleDigitSumFn).toThrowError("singleDigitSum expects a finite number input");
   });
 });

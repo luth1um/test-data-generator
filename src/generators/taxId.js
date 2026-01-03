@@ -1,8 +1,15 @@
-import { ALL_DIGITS, ALL_DIGITS_EXCEPT_0, generateRandomStringOfChars } from "../misc/randomUtils.js";
+import { ALL_DIGITS, ALL_DIGITS_EXCEPT_0, generateRandomStringOfChars, randomElement } from "../misc/randomUtils.js";
+import {
+  checkDigitGermanStNr11erVerfahren,
+  checkDigitGermanStNr11erVerfahrenBerlin,
+  checkDigitGermanStNr11erVerfahrenModifiedRp,
+  checkDigitGermanStNr2erVerfahren,
+  checkDigitIsoIec7064Mod1110,
+} from "../misc/checksumUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
-import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
 
+export const TAX_ID_GERMANY_ST_NR = "tax-id-germany-st-nr";
 export const TAX_ID_GERMANY_STEUER_ID = "tax-id-germany-steuer-id";
 export const TAX_ID_GERMANY_UST_ID = "tax-id-germany-ust-id";
 export const TAX_ID_GERMANY_W_ID = "tax-id-germany-w-id";
@@ -11,6 +18,7 @@ export const TAX_ID_GERMANY_W_ID = "tax-id-germany-w-id";
  * @type {Map<string, function(): string>}
  */
 const TYPE_FUNCTION_MAP = new Map([
+  [TAX_ID_GERMANY_ST_NR, germanyStNr],
   [TAX_ID_GERMANY_STEUER_ID, germanySteuerId],
   [TAX_ID_GERMANY_UST_ID, germanyUstId],
   [TAX_ID_GERMANY_W_ID, germanyWirtschaftsId],
@@ -20,6 +28,7 @@ const TYPE_FUNCTION_MAP = new Map([
  * @type {Map<string, string>}
  */
 export const TYPE_DISPLAY_NAME_MAP = new Map([
+  [TAX_ID_GERMANY_ST_NR, `${COUNTRIES.GERMANY.name} (St.-Nr.)`],
   [TAX_ID_GERMANY_STEUER_ID, `${COUNTRIES.GERMANY.name} (Steuer-IdNr.)`],
   [TAX_ID_GERMANY_UST_ID, `${COUNTRIES.GERMANY.name} (USt-IdNr.)`],
   [TAX_ID_GERMANY_W_ID, `${COUNTRIES.GERMANY.name} (W-IdNr.)`],
@@ -42,6 +51,62 @@ export function generateTaxId(type) {
     return taxIdFn();
   }
   throw new Error(`Invalid input ${type}. Must be one of ${TAX_ID_TYPES}`);
+}
+
+// ------------------------------
+// St.-Nr. (Germany)
+// ------------------------------
+
+class GermanStNrSpec {
+  /**
+   * @param {string} stateCode
+   * @param {function(string): string} chickDigitFn
+   */
+  constructor(stateCode, chickDigitFn) {
+    this.stateCode = stateCode;
+    this.chickDigitFn = chickDigitFn;
+  }
+}
+
+const ST_NR_11_STANDARD_WEIGHTS_ONE_DIGIT_STATE = (s) =>
+  checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2]);
+const ST_NR_11_STANDARD_WEIGHTS_TWO_DIGITS_STATE = (s) =>
+  checkDigitGermanStNr11erVerfahren(s, [0, 0, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2]);
+const GERMAN_ST_NR_SPECS = [
+  new GermanStNrSpec("3", ST_NR_11_STANDARD_WEIGHTS_ONE_DIGIT_STATE),
+  new GermanStNrSpec("4", ST_NR_11_STANDARD_WEIGHTS_ONE_DIGIT_STATE),
+  new GermanStNrSpec("5", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 3, 2, 1, 0, 7, 6, 5, 4, 3, 2, 1])),
+  new GermanStNrSpec("9", ST_NR_11_STANDARD_WEIGHTS_ONE_DIGIT_STATE),
+  new GermanStNrSpec("10", ST_NR_11_STANDARD_WEIGHTS_TWO_DIGITS_STATE),
+  new GermanStNrSpec("11", checkDigitGermanStNr11erVerfahrenBerlin),
+  new GermanStNrSpec("21", checkDigitGermanStNr2erVerfahren),
+  new GermanStNrSpec("22", ST_NR_11_STANDARD_WEIGHTS_TWO_DIGITS_STATE),
+  new GermanStNrSpec("23", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 0, 2, 9, 0, 8, 7, 6, 5, 4, 3, 2])),
+  new GermanStNrSpec("24", ST_NR_11_STANDARD_WEIGHTS_TWO_DIGITS_STATE),
+  new GermanStNrSpec("26", checkDigitGermanStNr2erVerfahren),
+  new GermanStNrSpec("27", checkDigitGermanStNr11erVerfahrenModifiedRp),
+  new GermanStNrSpec("28", checkDigitGermanStNr2erVerfahren),
+];
+
+/**
+ * @returns {string}
+ */
+function germanyStNr() {
+  const stateSpec = randomElement(GERMAN_ST_NR_SPECS);
+
+  const bufaNrLength = 4 - stateSpec.stateCode.length;
+  const bufaNr = generateRandomStringOfChars(ALL_DIGITS, bufaNrLength);
+  const districtAndIndividualNr = generateRandomStringOfChars(ALL_DIGITS, 7);
+
+  const stNrWithoutCheck = stateSpec.stateCode + bufaNr + "0" + districtAndIndividualNr;
+  const checkDigit = stateSpec.chickDigitFn(stNrWithoutCheck);
+
+  if (checkDigit.length > 1) {
+    // invalid ID -> create a new ID
+    return germanyStNr();
+  }
+
+  return stNrWithoutCheck + checkDigit;
 }
 
 // ------------------------------

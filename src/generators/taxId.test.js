@@ -1,16 +1,23 @@
 import {
   TAX_ID_GERMANY_STEUER_ID,
+  TAX_ID_GERMANY_ST_NR,
   TAX_ID_GERMANY_UST_ID,
   TAX_ID_GERMANY_W_ID,
   TAX_ID_TYPES,
   TYPE_DISPLAY_NAME_MAP,
   generateTaxId,
 } from "./taxId.js";
+import {
+  checkDigitGermanStNr11erVerfahren,
+  checkDigitGermanStNr11erVerfahrenBerlin,
+  checkDigitGermanStNr11erVerfahrenModifiedRp,
+  checkDigitGermanStNr2erVerfahren,
+  checkDigitIsoIec7064Mod1110,
+} from "../misc/checksumUtils.js";
 import { describe, expect, it } from "vitest";
 import { ALL_DIGITS } from "../misc/randomUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
-import { checkDigitIsoIec7064Mod1110 } from "../misc/checksumUtils.js";
 import { digitCount } from "../misc/numberUtils.js";
 
 describe.each(TAX_ID_TYPES)("The tax-ID generator", (type) => {
@@ -305,6 +312,60 @@ describe("The tax-ID generator", () => {
     },
   );
 
+  it(
+    "should generate a string of length 13 when the German St.-Nr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_ST_NR);
+
+      // then
+      expect(id).toHaveLength(13);
+    },
+  );
+
+  it(
+    "should generate a string only consisting of digits when the German St.-Nr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_ST_NR);
+
+      // then
+      for (const digit of id) {
+        expect(digit).toBeOneOf(Array.from(ALL_DIGITS));
+      }
+    },
+  );
+
+  it(
+    "should generate a string with '0' at position 4 (0-indexed) when the German St.-Nr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_ST_NR);
+
+      // then
+      expect(id[4]).toBe("0");
+    },
+  );
+
+  it(
+    "should start with a valid state code when the German St.-Nr. is selected",
+    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
+    () => {
+      // given
+      const validStateCodes = ["3", "4", "5", "9", "10", "11", "21", "22", "23", "24", "26", "27", "28"];
+
+      // when
+      const id = generateTaxId(TAX_ID_GERMANY_ST_NR);
+
+      // then
+      const generatedStateCode = id.startsWith("1") || id.startsWith("2") ? id.substring(0, 2) : id[0];
+      expect(generatedStateCode).toBeOneOf(validStateCodes);
+    },
+  );
+
   it("should have an ID-name pair for each tax ID type", () => {
     // given
     const allIdTypes = TAX_ID_TYPES;
@@ -313,6 +374,49 @@ describe("The tax-ID generator", () => {
     // then
     expect(allIdTypesWithDisplayName).toEqual(allIdTypes);
   });
+});
+
+describe("The tax-ID generator for the German St.-Nr.", () => {
+  it.each([
+    ["Baden-Württemberg", "28", checkDigitGermanStNr2erVerfahren],
+    ["Bavaria", "9", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Berlin", "11", checkDigitGermanStNr11erVerfahrenBerlin],
+    ["Brandenburg", "3", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Bremen", "24", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 0, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Hamburg", "22", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 0, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Hesse", "26", checkDigitGermanStNr2erVerfahren],
+    ["Lower Saxony", "23", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 0, 2, 9, 0, 8, 7, 6, 5, 4, 3, 2])],
+    ["Mecklenburg-Vorpommern", "4", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["North Rhine-Westphalia", "5", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 3, 2, 1, 0, 7, 6, 5, 4, 3, 2, 1])],
+    ["Rhineland-Palatinate", "27", checkDigitGermanStNr11erVerfahrenModifiedRp],
+    ["Saarland", "10", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Saxony", "3", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Saxony-Anhalt", "3", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+    ["Schleswig-Holstein", "21", checkDigitGermanStNr2erVerfahren],
+    ["Thuringia", "4", (s) => checkDigitGermanStNr11erVerfahren(s, [0, 5, 4, 3, 0, 2, 7, 6, 5, 4, 3, 2])],
+  ])(
+    "should generate a tax ID with the correct check digit when the ID is generated for %s",
+    (_, stateCode, checkDigitFn) => {
+      // given
+      const genFn = () => generateTaxId(TAX_ID_GERMANY_ST_NR);
+      const genAmount = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
+      const stateCodeFilter = (id) => id.startsWith(stateCode);
+
+      // when
+      const results = Array.from({ length: genAmount }, genFn);
+      const resultsForState = results.filter(stateCodeFilter);
+
+      // then
+      expect(resultsForState.length).toBeGreaterThanOrEqual(1);
+      for (const id of resultsForState) {
+        const idWithoutCheck = id.substring(0, id.length - 1);
+        const checkDigit = id[id.length - 1];
+        const expectedCheckDigit = checkDigitFn(idWithoutCheck);
+
+        expect(checkDigit).toBe(expectedCheckDigit);
+      }
+    },
+  );
 });
 
 describe.each(["", " ", "invalid", undefined, null, 1, {}])("The tax-ID generator", (invalidInput) => {
