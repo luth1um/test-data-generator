@@ -122,29 +122,25 @@ describe("The generator for BICs", () => {
     },
   );
 
-  it(
-    "should only produce X at position 8 (0-indexed) if branch code is XXX",
-    { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT },
-    () => {
-      //given
-      const countryCode = BIC_SUPPORTED_COUNTRY_CODES[0]; // specific country does not matter
-      const numberOfBics = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
+  it("should only produce X at position 8 (0-indexed) if branch code is XXX", () => {
+    //given
+    const countryCode = BIC_SUPPORTED_COUNTRY_CODES[0]; // specific country does not matter
+    const numberOfBics = RANDOM_FUNCTION_TEST_CALL_COUNT * 10;
 
-      // when
-      // produce a few BICs such that at least some results have 'X' at pos 8
-      const bics = Array.from({ length: numberOfBics }, () => generateBIC(countryCode)).filter((bic) => bic[8] === "X");
+    // when
+    // produce a few BICs such that at least some results have 'X' at pos 8
+    const bics = Array.from({ length: numberOfBics }, () => generateBIC(countryCode)).filter((bic) => bic[8] === "X");
 
-      // throw error if no BIC with 'X' at pos 8 is produced
-      if (bics.length === 0) {
-        throw new Error(`Did not produce BIC with 'X' at pos 8 (0-indexed)  after ${numberOfBics} iterations.`);
-      }
+    // throw error if no BIC with 'X' at pos 8 is produced
+    if (bics.length === 0) {
+      throw new Error(`Did not produce BIC with 'X' at pos 8 (0-indexed)  after ${numberOfBics} iterations.`);
+    }
 
-      // then
-      bics.forEach((bic) => {
-        expect(bic.substring(9, 11)).toBe("XX");
-      });
-    },
-  );
+    // then
+    bics.forEach((bic) => {
+      expect(bic.substring(9, 11)).toBe("XX");
+    });
+  });
 });
 
 describe("The error handling of the BIC generator", () => {
