@@ -26,9 +26,7 @@ export function createTaxIdOption() {
 /**
  * Creates and returns DOM elements for type selection controls.
  *
- * @returns {Object} An object containing the type label and select elements.
- * @returns {HTMLLabelElement} returns.typeLabel - The label element for the type selector.
- * @returns {HTMLSelectElement} returns.typeSelect - The select element with type options.
+ * @returns {Object} An object containing the typeLabel and typeSelect.
  *
  * @example
  * const { typeLabel, typeSelect } = createTypeControls();

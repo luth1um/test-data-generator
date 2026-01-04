@@ -27,9 +27,7 @@ export function createBicOption() {
 /**
  * Creates and returns DOM elements for country selection controls for BIC.
  *
- * @returns {Object} An object containing the country label and select elements.
- * @returns {HTMLLabelElement} returns.countryLabel - The label element for the country selector.
- * @returns {HTMLSelectElement} returns.countrySelect - The select element with country options.
+ * @returns {Object} An object containing the countryLabel and countrySelect.
  *
  * @example
  * const { countryLabel, countrySelect } = createBicCountryControls();
@@ -72,7 +70,6 @@ export function showBicCountryControls(type, countryLabel) {
  *
  * @param {HTMLSelectElement} countrySelect - The country selection dropdown element.
  * @returns {Object} An object containing the selected country code.
- * @returns {string} returns.country - The two-letter country code (e.g., 'DE', 'NO').
  *
  * @example
  * const args = getBicArgs(countrySelect);

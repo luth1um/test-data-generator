@@ -35,7 +35,7 @@ export function randomElement(input) {
 
 /**
  * @param {string} input
- * @returns string
+ * @returns {string}
  */
 export function randomChar(input) {
   return randomElement(Array.from(input));

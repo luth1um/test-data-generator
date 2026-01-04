@@ -21,9 +21,7 @@ export function createCuidOption() {
 /**
  * Creates and returns DOM elements for CUID v2 length controls.
  *
- * @returns {Object} An object containing the length label and input elements.
- * @returns {HTMLLabelElement} returns.lengthLabel - The label element for the length input.
- * @returns {HTMLInputElement} returns.lengthInput - The number input for CUID length.
+ * @returns {Object} An object containing the lengthLabel and lengthInput.
  */
 export function createCuidLengthControls() {
   const lengthLabel = document.createElement("label");

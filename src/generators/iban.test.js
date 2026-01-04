@@ -340,7 +340,9 @@ function generateIBANCheckDigits(iban) {
   const converted = rearranged
     .split("")
     .map((char) => {
-      if (/[0-9]/.test(char)) return char;
+      if (/[0-9]/.test(char)) {
+        return char;
+      }
       return (char.toUpperCase().charCodeAt(0) - 55).toString();
     })
     .join("");

@@ -12,7 +12,7 @@ describe.each(BIC_SUPPORTED_COUNTRY_CODES)("The generator for %s BICs", (country
 
     // then
     const hasLength8or11 = bic.length === 8 || bic.length === 11;
-    expect(hasLength8or11).toBe(true);
+    expect(hasLength8or11).toBeTruthy();
   });
 
   it("should sometimes generate string with length 8", () => {

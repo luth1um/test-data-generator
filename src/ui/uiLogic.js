@@ -331,7 +331,9 @@ export function setupUI(header, mainLandmark) {
   });
 
   downloadButton.addEventListener("click", () => {
-    if (!lastResults.length) return;
+    if (!lastResults.length) {
+      return;
+    }
     const blob = new Blob([lastResults.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

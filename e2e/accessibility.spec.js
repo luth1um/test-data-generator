@@ -67,7 +67,9 @@ test.describe("The test-data generator", () => {
 
     const actualElementSelectors = [];
     for (let i = 0; i < expectedElementOrder.length; i++) {
+      // oxlint-disable-next-line no-await-in-loop
       await page.keyboard.press(KEYBOARD_KEYS.TAB);
+      // oxlint-disable-next-line no-await-in-loop
       actualElementSelectors.push(await getActiveElementSelector(page));
     }
 

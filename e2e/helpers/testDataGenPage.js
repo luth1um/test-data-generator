@@ -117,11 +117,13 @@ export class TestDataGenPage {
     const allOptions = await this.#page.getByTestId(selectTestId).locator("option").all();
 
     const valueContentPairs = [];
-    for (const option of allOptions) {
-      const value = await option.getAttribute("value");
-      const textContent = await option.textContent();
-      valueContentPairs.push({ value: value, textContent: textContent });
-    }
+    await Promise.all(
+      allOptions.map(async (option) => {
+        const value = await option.getAttribute("value");
+        const textContent = await option.textContent();
+        valueContentPairs.push({ value: value, textContent: textContent });
+      }),
+    );
 
     return valueContentPairs;
   }
@@ -143,6 +145,7 @@ export class TestDataGenPage {
   async clickButton(testId, times = 1) {
     const button = await this.#page.getByTestId(testId);
     for (let i = 0; i < times; i++) {
+      // oxlint-disable-next-line no-await-in-loop
       await button.click();
     }
   }
@@ -183,14 +186,7 @@ export class TestDataGenPage {
   async getGeneratedResults() {
     await this.#page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
     const resultLines = await this.#page.locator(`#${RESULT_DIV_ID} div`).all();
-
-    const results = [];
-    for (const line of resultLines) {
-      const result = await line.textContent();
-      results.push(result);
-    }
-
-    return results;
+    return await Promise.all(resultLines.map((line) => line.textContent()));
   }
 
   /**

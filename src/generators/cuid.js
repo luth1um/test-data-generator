@@ -6,7 +6,7 @@ export const CUID_V2_DEFAULT_LENGTH = 24;
 /**
  * Generates a random CUID v2 string.
  *
- * @param length {number | undefined} - length of the CUID v2 (defaults to 24)
+ * @param {number | undefined} length - length of the CUID v2 (defaults to 24)
  * @returns {string} a random CUID v2 with the specified length
  *
  * @example

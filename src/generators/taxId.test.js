@@ -126,7 +126,7 @@ describe("The tax-ID generator", () => {
         const current = idWithoutCheck[i];
         const threeEqualSubsequently = currentMinusTwo === currentMinusOne && currentMinusOne === current;
 
-        expect(threeEqualSubsequently).toBe(false);
+        expect(threeEqualSubsequently).toBeFalsy();
       }
     },
   );
