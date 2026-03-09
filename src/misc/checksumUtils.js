@@ -1,6 +1,36 @@
 import { ALL_DIGITS } from "./randomUtils.js";
 import { singleDigitSum } from "./numberUtils.js";
 
+const VIN_CHECKSUM_LETTER_TRANSLATION = {
+  A: "1",
+  B: "2",
+  C: "3",
+  D: "4",
+  E: "5",
+  F: "6",
+  G: "7",
+  H: "8",
+  I: "9",
+  J: "1",
+  K: "2",
+  L: "3",
+  M: "4",
+  N: "5",
+  O: "6",
+  P: "7",
+  Q: "8",
+  R: "9",
+  S: "2",
+  T: "3",
+  U: "4",
+  V: "5",
+  W: "6",
+  X: "7",
+  Y: "8",
+  Z: "9",
+};
+const VIN_CHECKSUM_WEIGHTS = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
+
 /**
  * Calculates the check digit according to ISO/IEC 7064, MOD 11, 10.
  * @param {string} input
@@ -139,4 +169,20 @@ export function checkDigitGermanStNr11erVerfahrenModifiedRp(partialStNr) {
   }
 
   return String(10 - (sum % 10));
+}
+
+/**
+ * @param {string} vinWithoutChecksum
+ * @returns {string}
+ */
+export function vinChecksum(vinWithoutChecksum) {
+  const vinAsNumbers = vinWithoutChecksum.replace(/[A-Z]/g, (c) => VIN_CHECKSUM_LETTER_TRANSLATION[c]);
+
+  let sum = 0;
+  for (let i = 0; i < vinAsNumbers.length; i++) {
+    sum += Number(vinAsNumbers[i]) * VIN_CHECKSUM_WEIGHTS[i];
+  }
+
+  const remainder = sum % 11;
+  return remainder === 10 ? "X" : String(remainder);
 }

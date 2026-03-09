@@ -30,11 +30,13 @@ import {
   showTaxIdTypeControls,
 } from "./taxIdUi.js";
 import { UUIDV4_OPTION_VALUE, createUuidOption, getUuidArgs } from "./uuidUi.js";
+import { VIN_OPTION_VALUE, createVinOption, getVinArgs } from "./vinUi.js";
 import { generateBIC } from "../generators/bic.js";
 import { generateCUIDv2 } from "../generators/cuid.js";
 import { generateIBAN } from "../generators/iban.js";
 import { generateTaxId } from "../generators/taxId.js";
 import { generateUUIDv4 } from "../generators/uuid.js";
+import { generateVin } from "../generators/vin.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";
@@ -75,6 +77,7 @@ export function setupUI(header, mainLandmark) {
   typeSelect.appendChild(createIbanOption());
   typeSelect.appendChild(createTaxIdOption());
   typeSelect.appendChild(createUuidOption());
+  typeSelect.appendChild(createVinOption());
   typeSelect.value = IBAN_OPTION_VALUE; // Preselect IBAN
   typeLabel.appendChild(typeSelect);
 
@@ -236,6 +239,7 @@ export function setupUI(header, mainLandmark) {
     iban: (args) => generateIBAN(args.country),
     [TAX_ID_OPTION_VALUE]: (args) => generateTaxId(args.type),
     uuidv4: () => generateUUIDv4(),
+    [VIN_OPTION_VALUE]: () => generateVin(),
     // Add more generators here as needed
   };
 
@@ -264,6 +268,9 @@ export function setupUI(header, mainLandmark) {
     }
     if (type === UUIDV4_OPTION_VALUE) {
       return getUuidArgs();
+    }
+    if (type === VIN_OPTION_VALUE) {
+      return getVinArgs();
     }
     return {};
   }

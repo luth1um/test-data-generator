@@ -15,6 +15,7 @@ import { TAX_ID_OPTION_VALUE, TEST_ID_SELECT_TAX_ID_TYPE } from "../../src/ui/ta
 import { TEST_BASE_URL } from "../../playwright.config.js";
 import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
 import { UUIDV4_OPTION_VALUE } from "../../src/ui/uuidUi.js";
+import { VIN_OPTION_VALUE } from "../../src/ui/vinUi.js";
 
 export class TestDataGenPage {
   #page;
@@ -107,6 +108,13 @@ export class TestDataGenPage {
    */
   async selectUuid4Generator() {
     await this.selectGeneratorType(UUIDV4_OPTION_VALUE);
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async selectVinGenerator() {
+    await this.selectGeneratorType(VIN_OPTION_VALUE);
   }
 
   /**

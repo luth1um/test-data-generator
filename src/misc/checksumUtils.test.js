@@ -5,6 +5,7 @@ import {
   checkDigitGermanStNr11erVerfahrenModifiedRp,
   checkDigitGermanStNr2erVerfahren,
   checkDigitIsoIec7064Mod1110,
+  vinChecksum,
 } from "./checksumUtils.js";
 import { describe, expect, it } from "vitest";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "./testgenConstants.js";
@@ -308,4 +309,17 @@ describe("The checksum calculation for the modified '11er-Verfahren' of the Germ
       expect(checksumFn).toThrowError("Length of partial stNr must be 12");
     },
   );
+});
+
+describe("The checksum calculation for VINs", () => {
+  it.each([
+    ["11111111011111111", "1"],
+    ["1M8GDM9A0KP042788", "X"],
+  ])("should calculate the correct check digit when the input is %s", (input, expected) => {
+    // when
+    const result = vinChecksum(input);
+
+    // then
+    expect(result).toBe(expected);
+  });
 });

@@ -20,7 +20,6 @@
     "no-useless-return": "error",
     "no-var": "error",
     "prefer-exponentiation-operator": "error",
-    "sort-imports": "error",
     "yoda": "error",
     "import/no-amd": "error",
     "import/no-commonjs": "error",
