@@ -29,6 +29,7 @@ export class TestDataGenPage {
 
   async goto() {
     await this.#page.goto(TEST_BASE_URL);
+    await this.#page.addStyleTag({ content: "*, *::before, *::after { transition: none !important; }" });
   }
 
   /**

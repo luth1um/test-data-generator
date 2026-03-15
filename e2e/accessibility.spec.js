@@ -7,7 +7,7 @@ import { KEYBOARD_KEYS } from "../src/misc/testgenConstants.js";
 import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The test-data generator", () => {
-  GENERATOR_THEMES.filter((t) => t.name.startsWith("Light")).forEach((theme) => {
+  GENERATOR_THEMES.forEach((theme) => {
     test(`should satisfy all a11y checks provided by axe-core when the page is opened (${theme.name})`, async ({
       page,
     }) => {
@@ -48,7 +48,7 @@ test.describe("The test-data generator", () => {
     page,
   }, testInfo) => {
     skipMobileBrowsers(testInfo); // tab order does not make sense for smartphones
-    skipDesktopSafari(testInfo); // Safari only focuses on inputs when a11y is not specifically activated
+    skipDesktopSafari(testInfo); // Safari only focuses on inputs when a11y is specifically activated
 
     // given
     const expectedElementOrder = [
