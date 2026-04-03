@@ -39,7 +39,7 @@ jobs:
         run: npx oxlint --deny-warnings --format=github
 
       - name: Check formatting
-        run: npx prettier --check .
+        run: npm run format:check
 
   # Build the project
   build:

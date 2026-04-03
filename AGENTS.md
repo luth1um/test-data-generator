@@ -24,8 +24,9 @@ npm run clean      # Remove dist/, playwright-report/, test-results/
 ### Code Quality
 
 ```bash
-npm run format     # Prettier --write all .css/.html/.js/.json/.md/.yaml files
-npm run lint       # oxlint --fix --deny-warnings (treats warnings as errors)
+npm run format         # oxfmt (formats files)
+npm run format:check   # oxfmt (checks formatting)
+npm run lint           # oxlint --fix --deny-warnings (treats warnings as errors)
 ```
 
 ### Unit Tests (Vitest)
@@ -81,10 +82,10 @@ e2e/
 - All imports must include explicit `.js` file extensions (e.g., `import { foo } from "./foo.js"`).
 - No barrel `index.js` files.
 
-### Formatting (Prettier)
+### Formatting (Oxfmt)
 
-- `printWidth: 120`; all other Prettier defaults apply (2-space indent, double quotes, semicolons, trailing commas).
-- Run `npm run format` before committing, or rely on the Husky pre-commit hook which runs Prettier automatically.
+- `printWidth: 120`; all other Oxfmt defaults apply (2-space indent, double quotes, semicolons, trailing commas).
+- Run `npm run format` before committing, or rely on the Husky pre-commit hook which runs Oxfmt automatically.
 
 ### Imports
 
