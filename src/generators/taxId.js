@@ -1,4 +1,3 @@
-import { ALL_DIGITS, ALL_DIGITS_EXCEPT_0, generateRandomStringOfChars, randomElement } from "../misc/randomUtils.js";
 import {
   checkDigitGermanStNr11erVerfahren,
   checkDigitGermanStNr11erVerfahrenBerlin,
@@ -8,6 +7,7 @@ import {
 } from "../misc/checksumUtils.js";
 import { COUNTRIES } from "../misc/countries.js";
 import { digitCount } from "../misc/numberUtils.js";
+import { ALL_DIGITS, ALL_DIGITS_EXCEPT_0, generateRandomStringOfChars, randomElement } from "../misc/randomUtils.js";
 
 export const TAX_ID_GERMANY_ST_NR = "tax-id-germany-st-nr";
 export const TAX_ID_GERMANY_STEUER_ID = "tax-id-germany-steuer-id";

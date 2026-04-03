@@ -1,3 +1,16 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  checkDigitGermanStNr11erVerfahren,
+  checkDigitGermanStNr11erVerfahrenBerlin,
+  checkDigitGermanStNr11erVerfahrenModifiedRp,
+  checkDigitGermanStNr2erVerfahren,
+  checkDigitIsoIec7064Mod1110,
+} from "../misc/checksumUtils.js";
+import { COUNTRIES } from "../misc/countries.js";
+import { digitCount } from "../misc/numberUtils.js";
+import { ALL_DIGITS } from "../misc/randomUtils.js";
+import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 import {
   TAX_ID_GERMANY_STEUER_ID,
   TAX_ID_GERMANY_ST_NR,
@@ -7,18 +20,6 @@ import {
   TYPE_DISPLAY_NAME_MAP,
   generateTaxId,
 } from "./taxId.js";
-import {
-  checkDigitGermanStNr11erVerfahren,
-  checkDigitGermanStNr11erVerfahrenBerlin,
-  checkDigitGermanStNr11erVerfahrenModifiedRp,
-  checkDigitGermanStNr2erVerfahren,
-  checkDigitIsoIec7064Mod1110,
-} from "../misc/checksumUtils.js";
-import { describe, expect, it } from "vitest";
-import { ALL_DIGITS } from "../misc/randomUtils.js";
-import { COUNTRIES } from "../misc/countries.js";
-import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
-import { digitCount } from "../misc/numberUtils.js";
 
 describe.each(TAX_ID_TYPES)("The tax-ID generator", (type) => {
   it(

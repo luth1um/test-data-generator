@@ -1,6 +1,9 @@
+import { TEST_BASE_URL } from "../../playwright.config.js";
 import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/ui/bicUi.js";
 import { CUID_V2_OPTION_VALUE, TEST_ID_CUID_V2_LENGTH_INPUT } from "../../src/ui/cuidUi.js";
 import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ui/ibanUi.js";
+import { TAX_ID_OPTION_VALUE, TEST_ID_SELECT_TAX_ID_TYPE } from "../../src/ui/taxIdUi.js";
+import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
 import {
   RESULT_DIV_ID,
   TEST_ID_BUTTON_DOWNLOAD,
@@ -11,9 +14,6 @@ import {
   TEST_ID_INPUT_AMOUNT,
   TEST_ID_SELECT_TYPE,
 } from "../../src/ui/uiLogic.js";
-import { TAX_ID_OPTION_VALUE, TEST_ID_SELECT_TAX_ID_TYPE } from "../../src/ui/taxIdUi.js";
-import { TEST_BASE_URL } from "../../playwright.config.js";
-import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
 import { UUIDV4_OPTION_VALUE } from "../../src/ui/uuidUi.js";
 import { VIN_OPTION_VALUE } from "../../src/ui/vinUi.js";
 

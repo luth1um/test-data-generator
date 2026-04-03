@@ -1,12 +1,13 @@
+import { describe, expect, it } from "vitest";
+
+import { vinChecksum } from "../misc/checksumUtils.js";
 import {
   ALL_DIGITS,
   ALL_LETTERS_EXCEPT_IOQUZ_AND_ALL_DIGITS_EXCEPT_0,
   ALL_LETTERS_EXCEPT_IOQ_AND_ALL_DIGITS,
 } from "../misc/randomUtils.js";
-import { describe, expect, it } from "vitest";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
 import { generateVin } from "./vin.js";
-import { vinChecksum } from "../misc/checksumUtils.js";
 
 describe("The VIN generator", () => {
   it("should only generate VINs with a length of 17 when called", { repeats: RANDOM_FUNCTION_TEST_CALL_COUNT }, () => {

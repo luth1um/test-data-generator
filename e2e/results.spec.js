@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
-import { TestDataGenPage } from "./helpers/testDataGenPage.js";
+
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The results section", () => {
   [1, 3].forEach((amount) => {

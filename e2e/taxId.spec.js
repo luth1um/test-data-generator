@@ -1,8 +1,9 @@
-import { TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP } from "../src/generators/taxId.js";
 import { expect, test } from "@playwright/test";
+
+import { TAX_ID_TYPES, TYPE_DISPLAY_NAME_MAP } from "../src/generators/taxId.js";
 import { TEST_ID_SELECT_TAX_ID_TYPE } from "../src/ui/taxIdUi.js";
-import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The tax ID generator", () => {
   TAX_ID_TYPES.forEach((type) => {

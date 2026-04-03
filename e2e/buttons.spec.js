@@ -1,8 +1,10 @@
-import { expect, test } from "@playwright/test";
-import { DOWNLOAD_FILENAME } from "../src/ui/uiLogic.js";
-import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 import fs from "fs/promises";
+
+import { expect, test } from "@playwright/test";
+
+import { DOWNLOAD_FILENAME } from "../src/ui/uiLogic.js";
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 test.describe("The buttons for increasing and decreased the amount of results", () => {
   test("should increase and decrease the number of results correctly", async ({ page }, testInfo) => {

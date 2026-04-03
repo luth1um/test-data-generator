@@ -1,9 +1,10 @@
+import { test } from "@playwright/test";
+
 import {
   PROJECT_NAME_DESKTOP_SAFARI,
   PROJECT_NAME_MOBILE_CHROME,
   PROJECT_NAME_MOBILE_SAFARI,
 } from "../../playwright.config.js";
-import { test } from "@playwright/test";
 
 /**
  * @param {import('@playwright/test').TestInfo} testInfo

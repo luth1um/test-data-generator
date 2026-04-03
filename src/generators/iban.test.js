@@ -1,7 +1,8 @@
-import { IBAN_SUPPORTED_COUNTRIES, generateIBAN } from "./iban.js";
 import { describe, expect, it } from "vitest";
+
 import { COUNTRIES } from "../misc/countries.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "../misc/testgenConstants.js";
+import { IBAN_SUPPORTED_COUNTRIES, generateIBAN } from "./iban.js";
 
 const INVALID_COUNTRY_CODES = ["", "D", "DEU", "de"];
 

@@ -1,5 +1,5 @@
-import { ALL_DIGITS } from "./randomUtils.js";
 import { singleDigitSum } from "./numberUtils.js";
+import { ALL_DIGITS } from "./randomUtils.js";
 
 const VIN_CHECKSUM_LETTER_TRANSLATION = {
   A: "1",

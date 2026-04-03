@@ -1,3 +1,4 @@
+import { vinChecksum } from "../misc/checksumUtils.js";
 import {
   ALL_DIGITS,
   ALL_LETTERS_EXCEPT_IOQ_AND_ALL_DIGITS,
@@ -6,7 +7,6 @@ import {
   randomChar,
   randomElement,
 } from "../misc/randomUtils.js";
-import { vinChecksum } from "../misc/checksumUtils.js";
 
 const VIN_CHECKSUM_PLACEHOLER = "0";
 

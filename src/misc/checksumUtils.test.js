@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { TAX_ID_GERMANY_STEUER_ID, generateTaxId } from "../generators/taxId.js";
 import {
   checkDigitGermanStNr11erVerfahren,
@@ -7,7 +9,6 @@ import {
   checkDigitIsoIec7064Mod1110,
   vinChecksum,
 } from "./checksumUtils.js";
-import { describe, expect, it } from "vitest";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "./testgenConstants.js";
 
 describe("The checksum calculation for ISO/IEC 7064, MOD 11, 10", () => {

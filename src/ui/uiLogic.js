@@ -1,5 +1,12 @@
 /* global document, Blob, URL, setTimeout */
 
+import { generateBIC } from "../generators/bic.js";
+import { generateCUIDv2 } from "../generators/cuid.js";
+import { generateIBAN } from "../generators/iban.js";
+import { generateTaxId } from "../generators/taxId.js";
+import { generateUUIDv4 } from "../generators/uuid.js";
+import { generateVin } from "../generators/vin.js";
+import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
 import {
   BIC_OPTION_VALUE,
   createBicCountryControls,
@@ -14,7 +21,6 @@ import {
   getCuidArgs,
   showCuidLengthControls,
 } from "./cuidUi.js";
-import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
 import {
   IBAN_OPTION_VALUE,
   createCountryControls,
@@ -31,12 +37,6 @@ import {
 } from "./taxIdUi.js";
 import { UUIDV4_OPTION_VALUE, createUuidOption, getUuidArgs } from "./uuidUi.js";
 import { VIN_OPTION_VALUE, createVinOption, getVinArgs } from "./vinUi.js";
-import { generateBIC } from "../generators/bic.js";
-import { generateCUIDv2 } from "../generators/cuid.js";
-import { generateIBAN } from "../generators/iban.js";
-import { generateTaxId } from "../generators/taxId.js";
-import { generateUUIDv4 } from "../generators/uuid.js";
-import { generateVin } from "../generators/vin.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";

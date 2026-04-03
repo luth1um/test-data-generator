@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { digitCount, digitSum, singleDigitSum } from "./numberUtils.js";
 
 describe("The function for counting digits", () => {

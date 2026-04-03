@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
-import { TestDataGenPage } from "./helpers/testDataGenPage.js";
+
 import { skipMobileBrowsers } from "./helpers/miscHelpers.js";
+import { TestDataGenPage } from "./helpers/testDataGenPage.js";
 
 const VIN_LENGTH = 17;
 
