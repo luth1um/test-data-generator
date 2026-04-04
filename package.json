@@ -5,6 +5,7 @@
   "description": "A simple web app for generating test data.",
   "keywords": [
     "generator",
+    "test",
     "test data"
   ],
   "license": "MIT",
