@@ -4,6 +4,7 @@
   "private": true,
   "description": "A simple web app for generating test data.",
   "keywords": [
+    "ci test",
     "generator",
     "test data"
   ],
