@@ -16,6 +16,8 @@ env:
   NODE_VERSION: "24"
   BUILD_ARTIFACT_NAME: "test-data-generator-build-output"
   BUILD_ARTIFACT_FOLDER: "dist/test-data-generator"
+  PLAYWRIGHT_BLOB_REPORT_PREFIX: "playwright-blob-report"
+  PLAYWRIGHT_BLOB_REPORT_FOLDER: "blob-report"
 
 jobs:
   # Check linting and formatting
@@ -94,6 +96,11 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
@@ -115,15 +122,54 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run E2E tests
-        run: npm run e2e
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-      - name: Upload Playwright results
-        if: failure()
+      - name: Upload blob report
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
         with:
-          name: playwright-results
-          path: test-results/
-          retention-days: 7
+          name: ${{ env.PLAYWRIGHT_BLOB_REPORT_PREFIX }}-${{ matrix.shardIndex }}
+          path: ${{ env.PLAYWRIGHT_BLOB_REPORT_FOLDER }}
+          retention-days: 1
+
+  # Merge Playwright blob reports into a single report
+  merge-playwright-reports:
+    needs:
+      - e2e
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f #v6.3.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download Playwright blob reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
+        with:
+          path: ${{ env.PLAYWRIGHT_BLOB_REPORT_FOLDER }}
+          pattern: ${{ env.PLAYWRIGHT_BLOB_REPORT_PREFIX }}-*
+          merge-multiple: true
+
+      - name: Merge into GitHub report
+        run: npx playwright merge-reports --reporter github ${{ env.PLAYWRIGHT_BLOB_REPORT_FOLDER }}
+
+      - name: Merge into HTML report
+        run: npx playwright merge-reports --reporter html ${{ env.PLAYWRIGHT_BLOB_REPORT_FOLDER }}
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #v7.0.0
+        with:
+          name: playwright-html-report-attempt-${{ github.run_attempt }}
+          path: playwright-report
+          retention-days: 14
 
   # Deploy to GitHub Pages
   deploy-gh-pages:
