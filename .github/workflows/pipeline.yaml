@@ -93,10 +93,6 @@ jobs:
 
   # Run end-to-end tests with Playwright
   e2e:
-    needs:
-      - static-analysis
-      - build
-      - test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
@@ -132,6 +128,9 @@ jobs:
   # Deploy to GitHub Pages
   deploy-gh-pages:
     needs:
+      - static-analysis
+      - build
+      - test
       - e2e
     runs-on: ubuntu-latest
     permissions:
@@ -162,6 +161,9 @@ jobs:
   # Deploy to Cloudflare Pages
   deploy-cf-pages:
     needs:
+      - static-analysis
+      - build
+      - test
       - e2e
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
