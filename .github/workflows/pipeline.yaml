@@ -96,6 +96,8 @@ jobs:
   # Run end-to-end tests with Playwright
   e2e:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2
     strategy:
       fail-fast: false
       matrix:
