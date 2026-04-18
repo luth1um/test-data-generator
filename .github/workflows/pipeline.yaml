@@ -19,6 +19,8 @@ env:
   PLAYWRIGHT_BLOB_REPORT_PREFIX: "playwright-blob-report"
   PLAYWRIGHT_BLOB_REPORT_FOLDER: "blob-report"
 
+permissions: {}
+
 jobs:
   # Check linting and formatting
   static-analysis:

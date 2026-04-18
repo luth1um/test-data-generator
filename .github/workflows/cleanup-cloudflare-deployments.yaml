@@ -5,6 +5,8 @@ on:
     - cron: "0 0 * * 2" # Every Tuesday at midnight UTC
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   cleanup:
     name: Cleanup old deployments
