@@ -89,6 +89,23 @@ export class TestDataGenPage {
   }
 
   /**
+   * @param {string} countryCode
+   * @param {string} displayName
+   * @returns {Promise<void>}
+   */
+  async addIbanCountryOption(countryCode, displayName) {
+    await this.#page.getByTestId(TEST_ID_SELECT_IBAN_COUNTRY).evaluate(
+      (select, option) => {
+        const countryOption = document.createElement("option");
+        countryOption.value = option.countryCode;
+        countryOption.textContent = option.displayName;
+        select.appendChild(countryOption);
+      },
+      { countryCode: countryCode, displayName: displayName },
+    );
+  }
+
+  /**
    * @returns {Promise<void>}
    */
   async selectTaxIdGenerator() {
@@ -196,6 +213,15 @@ export class TestDataGenPage {
     await this.#page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
     const resultLines = await this.#page.locator(`#${RESULT_DIV_ID} div`).all();
     return await Promise.all(resultLines.map((line) => line.textContent()));
+  }
+
+  /**
+   * @param {string} testId
+   * @returns {Promise<number>}
+   */
+  async countGeneratedResultElementsByTestId(testId) {
+    await this.#page.getByTestId(TEST_ID_DIV_RESULT).waitFor({ state: "visible" });
+    return await this.#page.locator(`#${RESULT_DIV_ID}`).getByTestId(testId).count();
   }
 
   /**

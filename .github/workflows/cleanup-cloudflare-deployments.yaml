@@ -24,6 +24,8 @@ jobs:
       - name: Cleanup old Cloudflare Pages deployments
         run: |
           set -euo pipefail
+          echo "::add-mask::${CLOUDFLARE_ACCOUNT_ID}"
+          echo "::add-mask::${CLOUDFLARE_API_TOKEN}"
 
           API_BASE="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/deployments"
 
@@ -35,7 +37,7 @@ jobs:
 
           while :; do
             echo "Fetching page $page..."
-            response=$(curl -s -X GET \
+            response=$(curl --fail-with-body --silent --show-error -X GET \
               "${API_BASE}?page=${page}&per_page=${per_page}" \
               -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
               -H "Content-Type: application/json")
@@ -71,8 +73,8 @@ jobs:
 
           for id in "${delete_ids[@]}"; do
             echo "Deleting deployment: $id"
-            curl -s -X DELETE \
+            curl --fail-with-body --silent --show-error --output /dev/null -X DELETE \
               "${API_BASE}/${id}" \
               -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-              -H "Content-Type: application/json" > /dev/null
+              -H "Content-Type: application/json"
           done

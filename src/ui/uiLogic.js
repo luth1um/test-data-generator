@@ -301,7 +301,12 @@ export function setupUI(header, mainLandmark) {
     }
     lastResults = results;
     // Display all results
-    resultDiv.innerHTML = results.map((r) => `<div>${r}</div>`).join("");
+    resultDiv.replaceChildren();
+    results.forEach((result) => {
+      const resultLine = document.createElement("div");
+      resultLine.textContent = result;
+      resultDiv.appendChild(resultLine);
+    });
     if (results.length === 0) {
       downloadButton.style.display = "none";
       resultHeading.style.display = "none";
