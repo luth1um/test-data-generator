@@ -186,6 +186,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     concurrency:
       group: deploy_gh_pages
+    outputs:
+      deployment_status: ${{ steps.step-deploy-gh-pages.outputs.deployment-status }}
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
@@ -202,19 +204,26 @@ jobs:
           ls -R "${{ env.BUILD_ARTIFACT_FOLDER }}"
 
       - name: Deploy to GitHub Pages
+        id: step-deploy-gh-pages
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f #v4.8.0
         with:
           folder: ${{ env.BUILD_ARTIFACT_FOLDER }}
 
+      - name: Verify GitHub Pages deployment status
+        run: |
+          set -euo pipefail
+          if [ -z "${deployment_status:-}" ]; then
+            echo "deployment_status is missing or empty."
+            exit 1
+          fi
+          echo "GitHub Pages deployment status: ${deployment_status}"
+
   # Deploy to Cloudflare Pages
   deploy-cf-pages:
     needs:
-      - static-analysis
-      - build
-      - test
-      - e2e
+      - deploy-gh-pages
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: ${{ needs.deploy-gh-pages.outputs.deployment_status == 'success' }}
     concurrency:
       group: deploy_cf_pages
     env:
