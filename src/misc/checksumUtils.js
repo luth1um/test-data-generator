@@ -30,6 +30,7 @@ const VIN_CHECKSUM_LETTER_TRANSLATION = {
   Z: "9",
 };
 const VIN_CHECKSUM_WEIGHTS = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
+const VIN_GERMAN_CHECKSUM_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2, 10, 9, 8, 7, 6, 5, 4, 3, 2];
 
 /**
  * Calculates the check digit according to ISO/IEC 7064, MOD 11, 10.
@@ -181,6 +182,26 @@ export function vinChecksum(vinWithoutChecksum) {
   let sum = 0;
   for (let i = 0; i < vinAsNumbers.length; i++) {
     sum += Number(vinAsNumbers[i]) * VIN_CHECKSUM_WEIGHTS[i];
+  }
+
+  const remainder = sum % 11;
+  return remainder === 10 ? "X" : String(remainder);
+}
+
+/**
+ * @param {string} vin
+ * @returns {string}
+ */
+export function vinGermanChecksum(vin) {
+  const vinAsNumbers = vin
+    .replace("Ä", "A")
+    .replace("Ö", "O")
+    .replace("Ü", "U")
+    .replace(/[A-Z]/g, (c) => VIN_CHECKSUM_LETTER_TRANSLATION[c]);
+
+  let sum = 0;
+  for (let i = 0; i < vinAsNumbers.length; i++) {
+    sum += Number(vinAsNumbers[i]) * VIN_GERMAN_CHECKSUM_WEIGHTS[i];
   }
 
   const remainder = sum % 11;

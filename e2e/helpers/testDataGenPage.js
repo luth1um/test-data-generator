@@ -15,7 +15,7 @@ import {
   TEST_ID_SELECT_TYPE,
 } from "../../src/ui/uiLogic.js";
 import { UUIDV4_OPTION_VALUE } from "../../src/ui/uuidUi.js";
-import { VIN_OPTION_VALUE } from "../../src/ui/vinUi.js";
+import { TEST_ID_SELECT_VIN_VARIANT, VIN_OPTION_VALUE } from "../../src/ui/vinUi.js";
 
 export class TestDataGenPage {
   #page;
@@ -133,6 +133,15 @@ export class TestDataGenPage {
    */
   async selectVinGenerator() {
     await this.selectGeneratorType(VIN_OPTION_VALUE);
+  }
+
+  /**
+   * @param {string} variant
+   * @returns {Promise<void>}
+   */
+  async selectVinWithVariant(variant) {
+    await this.selectVinGenerator();
+    await this.#page.getByTestId(TEST_ID_SELECT_VIN_VARIANT).selectOption(variant);
   }
 
   /**

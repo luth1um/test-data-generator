@@ -8,6 +8,7 @@ import {
   checkDigitGermanStNr2erVerfahren,
   checkDigitIsoIec7064Mod1110,
   vinChecksum,
+  vinGermanChecksum,
 } from "./checksumUtils.js";
 import { RANDOM_FUNCTION_TEST_CALL_COUNT } from "./testgenConstants.js";
 
@@ -322,5 +323,51 @@ describe("The checksum calculation for VINs", () => {
 
     // then
     expect(result).toBe(expected);
+  });
+});
+
+describe("The German checksum calculation for VINs", () => {
+  it.each([
+    ["A1BS31Z0430336179", "4"],
+    ["A1BF35Z5430336179", "X"],
+  ])("should calculate the correct check digit when the input is %s", (input, expected) => {
+    // when
+    const result = vinGermanChecksum(input);
+
+    // then
+    expect(result).toBe(expected);
+  });
+
+  it("should calculate the correct check digit when the VIN contains Ä", () => {
+    // given
+    const vin = "ÄM8GDM9A0KP042788";
+
+    // when
+    const result = vinGermanChecksum(vin);
+
+    // then
+    expect(result).toBe("6");
+  });
+
+  it("should calculate the correct check digit when the VIN contains Ö", () => {
+    // given
+    const vin = "ÖM8GDM9A0KP042788";
+
+    // when
+    const result = vinGermanChecksum(vin);
+
+    // then
+    expect(result).toBe("7");
+  });
+
+  it("should calculate the correct check digit when the VIN contains Ü", () => {
+    // given
+    const vin = "ÜM8GDM9A0KP042788";
+
+    // when
+    const result = vinGermanChecksum(vin);
+
+    // then
+    expect(result).toBe("0");
   });
 });

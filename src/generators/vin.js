@@ -1,4 +1,4 @@
-import { vinChecksum } from "../misc/checksumUtils.js";
+import { vinChecksum, vinGermanChecksum } from "../misc/checksumUtils.js";
 import {
   ALL_DIGITS,
   ALL_LETTERS_EXCEPT_IOQ_AND_ALL_DIGITS,
@@ -7,6 +7,20 @@ import {
   randomChar,
   randomElement,
 } from "../misc/randomUtils.js";
+
+export const VIN_VARIANT_WITH_GERMAN_CHECKSUM = "vin-with-german-checksum";
+export const VIN_VARIANT_WITHOUT_GERMAN_CHECKSUM = "vin-without-german-checksum";
+
+export const VIN_VARIANTS = [VIN_VARIANT_WITH_GERMAN_CHECKSUM, VIN_VARIANT_WITHOUT_GERMAN_CHECKSUM];
+export const VIN_VARIANT_DISPLAY_NAME_MAP = new Map([
+  [VIN_VARIANT_WITH_GERMAN_CHECKSUM, "w/ German checksum"],
+  [VIN_VARIANT_WITHOUT_GERMAN_CHECKSUM, "w/o German checksum"],
+]);
+
+export const VIN_VARIANT_FUNCTION_MAP = new Map([
+  [VIN_VARIANT_WITH_GERMAN_CHECKSUM, generateVinWithGermanChecksum],
+  [VIN_VARIANT_WITHOUT_GERMAN_CHECKSUM, generateVin],
+]);
 
 const VIN_CHECKSUM_PLACEHOLER = "0";
 
@@ -25,6 +39,15 @@ export function generateVin() {
   const checksum = vinChecksum(vinWithoutChecksum);
 
   return wmi + vehicleAttributes + checksum + modelYearCode + plantCode + sequentialNumber;
+}
+
+/**
+ * @returns {string}
+ */
+export function generateVinWithGermanChecksum() {
+  const vin = generateVin();
+  const germanChecksum = vinGermanChecksum(vin);
+  return `${vin} - ${germanChecksum}`;
 }
 
 // known WMIs from https://en.wikipedia.org/wiki/Vehicle_identification_number

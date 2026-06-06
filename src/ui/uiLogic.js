@@ -5,7 +5,7 @@ import { generateCUIDv2 } from "../generators/cuid.js";
 import { generateIBAN } from "../generators/iban.js";
 import { generateTaxId } from "../generators/taxId.js";
 import { generateUUIDv4 } from "../generators/uuid.js";
-import { generateVin } from "../generators/vin.js";
+import { VIN_VARIANT_FUNCTION_MAP } from "../generators/vin.js";
 import { DATA_TEST_ID, KEYBOARD_KEYS } from "../misc/testgenConstants.js";
 import {
   BIC_OPTION_VALUE,
@@ -36,7 +36,13 @@ import {
   showTaxIdTypeControls,
 } from "./taxIdUi.js";
 import { UUIDV4_OPTION_VALUE, createUuidOption, getUuidArgs } from "./uuidUi.js";
-import { VIN_OPTION_VALUE, createVinOption, getVinArgs } from "./vinUi.js";
+import {
+  VIN_OPTION_VALUE,
+  createVinOption,
+  createVinVariantControls,
+  getVinArgs,
+  showVinVariantControls,
+} from "./vinUi.js";
 
 export const RESULT_DIV_ID = "result";
 export const DOWNLOAD_FILENAME = "test-data.txt";
@@ -86,6 +92,7 @@ export function setupUI(header, mainLandmark) {
   const { countryLabel: bicCountryLabel, countrySelect: bicCountrySelect } = createBicCountryControls();
   const { lengthLabel: cuidLengthLabel, lengthInput: cuidLengthInput } = createCuidLengthControls();
   const { typeLabel: taxIdTypeLabel, typeSelect: taxIdTypeSelect } = createTypeControls();
+  const { variantLabel: vinVariantLabel, variantSelect: vinVariantSelect } = createVinVariantControls();
 
   /**
    * Updates the visibility of country/length/type controls based on the selected generation type.
@@ -116,6 +123,7 @@ export function setupUI(header, mainLandmark) {
     showBicCountryControls(type, bicCountryLabel);
     showCuidLengthControls(type, cuidLengthLabel);
     showTaxIdTypeControls(type, taxIdTypeLabel);
+    showVinVariantControls(type, vinVariantLabel);
   }
 
   typeSelect.addEventListener("change", updateGeneratorSpecificDropdown);
@@ -209,6 +217,7 @@ export function setupUI(header, mainLandmark) {
   bicCountryLabel.style.marginLeft = "";
   cuidLengthLabel.style.marginLeft = "";
   taxIdTypeLabel.style.marginLeft = "";
+  vinVariantLabel.style.marginLeft = "";
   amountLabel.style.marginLeft = "";
   generateButton.style.marginLeft = "";
 
@@ -225,6 +234,7 @@ export function setupUI(header, mainLandmark) {
   formRow.appendChild(ibanCountryLabel);
   formRow.appendChild(cuidLengthLabel);
   formRow.appendChild(taxIdTypeLabel);
+  formRow.appendChild(vinVariantLabel);
   formRow.appendChild(amountGroup);
   formRow.appendChild(generateButton);
 
@@ -239,7 +249,7 @@ export function setupUI(header, mainLandmark) {
     iban: (args) => generateIBAN(args.country),
     [TAX_ID_OPTION_VALUE]: (args) => generateTaxId(args.type),
     uuidv4: () => generateUUIDv4(),
-    [VIN_OPTION_VALUE]: () => generateVin(),
+    [VIN_OPTION_VALUE]: (args) => VIN_VARIANT_FUNCTION_MAP.get(args.variant)(),
     // Add more generators here as needed
   };
 
@@ -270,7 +280,7 @@ export function setupUI(header, mainLandmark) {
       return getUuidArgs();
     }
     if (type === VIN_OPTION_VALUE) {
-      return getVinArgs();
+      return getVinArgs(vinVariantSelect);
     }
     return {};
   }
