@@ -1,6 +1,7 @@
 import { TEST_BASE_URL } from "../../playwright.config.js";
 import { BIC_OPTION_VALUE, TEST_ID_SELECT_BIC_COUNTRY } from "../../src/ui/bicUi.js";
 import { CUID_V2_OPTION_VALUE, TEST_ID_CUID_V2_LENGTH_INPUT } from "../../src/ui/cuidUi.js";
+import { TEST_ID_FOOTER_GITHUB_LINK } from "../../src/ui/footerUi.js";
 import { IBAN_OPTION_VALUE, TEST_ID_SELECT_IBAN_COUNTRY } from "../../src/ui/ibanUi.js";
 import { TAX_ID_OPTION_VALUE, TEST_ID_SELECT_TAX_ID_TYPE } from "../../src/ui/taxIdUi.js";
 import { TEST_ID_SELECT_THEME } from "../../src/ui/theme.js";
@@ -239,5 +240,12 @@ export class TestDataGenPage {
    */
   async selectTheme(optionValue) {
     await this.#page.getByTestId(TEST_ID_SELECT_THEME).selectOption(optionValue);
+  }
+
+  /**
+   * @returns {import('@playwright/test').Locator}
+   */
+  getGithubLink() {
+    return this.#page.getByTestId(TEST_ID_FOOTER_GITHUB_LINK);
   }
 }

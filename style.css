@@ -108,6 +108,31 @@ main {
   text-align: left;
 }
 
+footer {
+  border-top: 1px solid #e3e8ee;
+  padding-top: 1.2em;
+  text-align: center;
+  transition: border-top 0.2s;
+}
+
+footer a {
+  color: #1976d2;
+  font-weight: 500;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: #0d47a1;
+}
+
+footer a:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 label {
   font-weight: 500;
   margin-right: 0.5em;

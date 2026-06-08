@@ -60,6 +60,7 @@ test.describe("The test-data generator", () => {
       "button#plus-button",
       "button#generate-button",
       "select#theme-select",
+      "a", // footer link
     ];
     const pom = new TestDataGenPage(page);
 

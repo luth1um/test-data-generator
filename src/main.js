@@ -1,5 +1,6 @@
 /* global document */
 
+import { initFooter } from "./ui/footerUi.js";
 import { initTheme } from "./ui/theme.js";
 import { setupUI } from "./ui/uiLogic.js";
 
@@ -16,3 +17,4 @@ app.appendChild(mainLandmark);
 
 setupUI(header, mainLandmark);
 initTheme(mainLandmark);
+initFooter(app);
