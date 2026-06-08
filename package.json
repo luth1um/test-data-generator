@@ -41,6 +41,10 @@
     "vitest": "4.1.7"
   },
   "nano-staged": {
-    "*": "oxfmt --no-error-on-unmatched-pattern"
+    "*.js": [
+      "oxlint --fix || true",
+      "oxfmt --no-error-on-unmatched-pattern"
+    ],
+    "!(*.js)": "oxfmt --no-error-on-unmatched-pattern"
   }
 }
