@@ -31,7 +31,7 @@
     "@paralleldrive/cuid2": "3.3.0"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.11.3",
+    "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.61.0",
     "husky": "9.1.7",
     "nano-staged": "1.0.2",
