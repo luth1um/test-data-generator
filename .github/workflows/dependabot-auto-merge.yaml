@@ -7,13 +7,8 @@ env:
 permissions: {}
 
 jobs:
-  dependabot:
+  verify-pr:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    env:
-      GH_TOKEN: ${{ github.token }}
     if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'luth1um/test-data-generator'
     steps:
       - name: Checkout repository
@@ -33,5 +28,14 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
+  auto-merge:
+    needs: verify-pr
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
