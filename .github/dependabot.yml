@@ -6,7 +6,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 10
     cooldown:
-      default-days: 14
+      default-days: 7
       semver-major-days: 28
     versioning-strategy: increase
   - package-ecosystem: "github-actions"
