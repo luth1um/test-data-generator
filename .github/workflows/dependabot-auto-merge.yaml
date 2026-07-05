@@ -23,7 +23,10 @@ jobs:
           package-manager-cache: false
 
       - name: Verify PR only contains allowed changes
-        run: node .github/scripts/verify-dependabot-pr.mjs
+        # Never run the verify script from the PR's own (untrusted) checkout - a PR could
+        # otherwise rewrite this script to bypass its own checks. Always execute the trusted
+        # version from the base branch instead.
+        run: git show "${BASE_SHA}:.github/scripts/verify-dependabot-pr.mjs" | node --input-type=module -
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
