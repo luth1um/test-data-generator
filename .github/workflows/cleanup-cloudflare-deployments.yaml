@@ -56,8 +56,8 @@ jobs:
           deployments="{\"result\": $all_results}"
 
           successful_ids=($(echo "$deployments" | jq -r '.result | sort_by(.created_on) | reverse | map(select(.latest_stage.status == "success")) | .[].id'))
-          keep_ids=("${successful_ids[@]:0:3}")
-          echo "Keeping the latest ${#keep_ids[@]} successful deployments"
+          keep_ids=("${successful_ids[@]:0:1}")
+          echo "Keeping the latest ${#keep_ids[@]} successful deployment(s)"
 
           all_ids=($(echo "$deployments" | jq -r '.result[].id'))
 
@@ -69,7 +69,7 @@ jobs:
           done
 
           echo
-          echo "Deleting ${#delete_ids[@]} old or skipped deployments..."
+          echo "Deleting ${#delete_ids[@]} old or skipped deployment(s)..."
 
           for id in "${delete_ids[@]}"; do
             echo "Deleting deployment: $id"
